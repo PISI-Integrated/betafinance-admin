@@ -4,58 +4,117 @@ export interface SideBarItem {
   icon: React.ReactNode;
 }
 
-export interface overviewItemProps {
-  overview_head: overviewHead[];
-  overview_table: overviewTableProps[];
-  // overview_chart: OverviewChart[];
-}
-
-export interface overviewHead {
+export interface OverviewHead {
   title: string;
   content: string;
   footer: string;
 }
 
-export interface overviewTableProps {
-  table_name: string;
-  rows: overviewTableRowProps[];
+export interface OverviewTableRow {
+  holder: {
+    id: string;
+    icon: string;
+    initial: string;
+    name: string;
+    username: string;
+  };
+  email: string;
+  noOfLoan?: string;
+  score?: number;
 }
 
-export interface overviewTableRowProps {
-  holder: tableHolderProps,
-  email: string,
-  noOfLoan: string,
+export interface OverviewTable {
+  tableName: string;
+  rows: OverviewTableRow[];
 }
 
-export interface tableHolderProps {
-  id: string,
-  icon: string
-  initial: string,
-  name: string,
-  username: string,
+export interface OverviewItems {
+  overviewHead: OverviewHead[];
+  overviewTables: OverviewTable[];
+  chartData: {
+    labels: string[];
+    values: number[];
+  };
 }
 
-export interface loanItemsProps {
-  loan_head: loanHead[];
-  loan_table: loanTableProps[];
+export interface LoanData {
+  loanHead: Array<{
+    title: string;
+    content: string;
+    footer: string;
+  }>;
+  loanTableHead: {
+    p2p: Array<{
+      header: string;
+      accessor: string;
+    }>;
+    betaLoans: Array<{
+      header: string;
+      accessor: string;
+    }>;
+  };
+  loanTableBody: {
+    p2p: Array<{
+      id: string;
+      amount: string;
+      type?: string;
+      interest?: string;
+      lender?: string;
+      borrower: string;
+      loanPeriod: string;
+    }>;
+    betaLoans: Array<{
+      id: string;
+      amount: string;
+      borrower: string;
+      loanPeriod: string;
+    }>;
+  };
 }
 
-export interface loanHead {
-  title: string;
-  content: string;
-  footer: string;
+export interface CustomerData {
+  customerTableHead: {
+    p2p: Array<{
+    header: string;
+    accessor: String;
+    }>;
+    betaLoans: Array<{
+      header: string;
+      accessor: string;
+    }>;
+  };
+  customerTableBody: {
+    p2p: Array<{
+      id: string;
+      name: string;
+      username: string;
+      creditScore: number;
+      loansTaken: string;
+      loansGiven: string;
+    }>;
+    betaLoans: Array<{
+      id: string;
+      name: string;
+      username: string;
+      creditScore: number;
+      loansTaken: string;
+      loansGiven: string;
+    }>;
+  };
 }
 
-export interface loanTableProps {
-  rows: loanTableRowProps[];
-}
-
-export interface loanTableRowProps {
-  id: string,
-  amount: string,
-  type: string,
-  interest: string,
-  lender: string,
-  borrower: string,
-  loanPeriod: string,
+export interface UserDetails {
+  phoneNumber: string;
+  dateJoined: string;
+  highestAmountLent: string;
+  loansGiven: number;
+  longestLendingPeriod: string;
+  shortestLendingPeriod: string;
+  totalAmountBorrowed: string;
+  highestAmountBorrowed: string;
+  loansCollected: number;
+  creditHistoryLength: string;
+  longestLoanPeriod: string;
+  shortestLoanPeriod: string;
+  creditScore: number;
 }
