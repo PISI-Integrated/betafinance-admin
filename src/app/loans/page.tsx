@@ -12,28 +12,53 @@ import { Button } from "../../components/ui/button";
 import { loanData } from "@/lib/constants";
 import TableWithPagination from "@/components/TableWithPagination";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
 
 const Loan = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get("tab") || "Active";
 
-  const [activeTab, setActiveTab] = useState("Pending");
+  const initialTab = searchParams.get("tab") || "P2P";
+  const initialStatus = searchParams.get("status") || "Pending";
 
-  const columns = activeTab === "P2P" ? loanData.loanTableHead.p2p : loanData.loanTableHead.betaLoans;
-  const data = activeTab === "P2P" ? loanData.loanTableBody.p2p : loanData.loanTableBody.betaLoans;
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeStatus, setActiveStatus] = useState(initialStatus);
+
+  const columns =
+    activeTab === "P2P"
+      ? (loanData.loanTableHead.p2p as Column<LoanP2PRow>[])
+      : (loanData.loanTableHead.betaLoans as Column<LoanBetaRow>[]);
+
+  const data =
+    activeTab === "P2P"
+      ? loanData.loanTableBody.p2p
+      : loanData.loanTableBody.betaLoans;
+
+  const updateUrl = (tab: string, status: string) => {
+    router.push(`?tab=${tab}&status=${status}`);
+  };
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    router.push(`?tab=${tab}`);
+    updateUrl(tab, activeStatus);
+  };
+
+  const handleStatusChange = (status: string) => {
+    setActiveStatus(status);
+    updateUrl(activeTab, status);
   };
 
   useEffect(() => {
     const currentTab = searchParams.get("tab");
+    const currentStatus = searchParams.get("status");
+
     if (currentTab && currentTab !== activeTab) {
       setActiveTab(currentTab);
     }
-  }, [searchParams, activeTab]);
+    if (currentStatus && currentStatus !== activeStatus) {
+      setActiveTab(currentStatus);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,7 +70,7 @@ const Loan = () => {
               ? "bg-primary-light text-primary"
               : "bg-white text-gray-700"
           }
-          onClick={() => handleTabChange(tab)}
+          onClick={() => handleTabChange("P2P")}
         >
           P2P Market Place
         </Button>
@@ -56,7 +81,7 @@ const Loan = () => {
               ? "bg-primary-light text-primary"
               : "bg-white text-gray-700"
           }
-          onClick={() => handleTabChange(tab)}
+          onClick={() => handleTabChange("Beta")}
         >
           Beta Loans
         </Button>
@@ -82,22 +107,22 @@ const Loan = () => {
         <Button
           variant="ghost"
           className={`px-4 py-2 ${
-            activeTab === "Pending"
+            activeStatus === "Pending"
               ? "rounded-none border-b-2 border-primary text-primary"
               : "text-black"
           }`}
-          onClick={() => setActiveTab("Pending")}
+          onClick={() => handleStatusChange("Pending")}
         >
           Pending
         </Button>
         <Button
           variant="ghost"
           className={`px-4 py-2 ${
-            activeTab === "Completed"
+            activeStatus === "Completed"
               ? "rounded-none border-b-2 border-primary text-primary"
               : "text-black"
           }`}
-          onClick={() => setActiveTab("Completed")}
+          onClick={() => handleStatusChange("Completed")}
         >
           Completed
         </Button>

@@ -6,7 +6,7 @@ import TableWithPagination from "../../components/TableWithPagination";
 import { customerData } from "@/lib/constants";
 import UserDetailsSidebar from "../../components/UserDetailSideBar";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CustomerData } from "@/types/types";
+import { CustomerData, CustomerRow } from "@/types/types";
 
 const Customers = () => {
   const router = useRouter();
@@ -14,12 +14,16 @@ const Customers = () => {
   const initialTab = searchParams.get("tab") || "Active";
 
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [selectedUser, setSelectedUser] = useState<CustomerData | null>(null);
+  const [selectedUser, setSelectedUser] = useState<
+    CustomerData['customerTableBody']['p2p'][number] |
+    CustomerData['customerTableBody']['p2p'][number] | 
+    null
+    >(null);
 
   const columns = activeTab === "P2P" ? customerData.customerTableHead.p2p : customerData.customerTableHead.betaLoans;
   const data = activeTab === "P2P" ? customerData.customerTableBody.p2p : customerData.customerTableBody.betaLoans;
 
-  const handleRowClick = (user: customerTableBody) => {
+  const handleRowClick = (user: typeof data[number]) => {
     setSelectedUser(user);
   };
 

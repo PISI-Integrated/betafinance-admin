@@ -4,6 +4,11 @@ export interface SideBarItem {
   icon: React.ReactNode;
 }
 
+export interface Column<T> {
+  header: string;
+  accessor: keyof T;
+}
+
 export interface OverviewHead {
   title: string;
   content: string;
@@ -46,62 +51,63 @@ export interface LoanData {
   loanTableHead: {
     p2p: Array<{
       header: string;
-      accessor: string;
+      accessor: keyof LoanP2PRow;
     }>;
     betaLoans: Array<{
       header: string;
-      accessor: string;
+      accessor: keyof LoanBetaRow;
     }>;
   };
   loanTableBody: {
-    p2p: Array<{
-      id: string;
-      amount: string;
-      type?: string;
-      interest?: string;
-      lender?: string;
-      borrower: string;
-      loanPeriod: string;
-    }>;
-    betaLoans: Array<{
-      id: string;
-      amount: string;
-      borrower: string;
-      loanPeriod: string;
-    }>;
+    p2p: LoanP2PRow[]; 
+    betaLoans: LoanBetaRow[];
   };
 }
+
+export interface LoanP2PRow {
+  id: string;
+  amount: string;
+  type?: string;
+  interest?: string;
+  lender?: string;
+  borrower: string;
+  loanPeriod: string;
+}
+
+export interface LoanBetaRow {
+  id: string;
+  amount: string;
+  borrower: string;
+  loanPeriod: string;
+}
+
 
 export interface CustomerData {
   customerTableHead: {
     p2p: Array<{
-    header: string;
-    accessor: String;
+      header: string;
+      accessor: keyof CustomerRow; 
     }>;
     betaLoans: Array<{
       header: string;
-      accessor: string;
+      accessor: keyof CustomerRow;
     }>;
   };
   customerTableBody: {
-    p2p: Array<{
-      id: string;
-      name: string;
-      username: string;
-      creditScore: number;
-      loansTaken: string;
-      loansGiven: string;
-    }>;
-    betaLoans: Array<{
-      id: string;
-      name: string;
-      username: string;
-      creditScore: number;
-      loansTaken: string;
-      loansGiven: string;
-    }>;
+    p2p: CustomerRow[];
+    betaLoans: CustomerRow[];
   };
 }
+
+export interface CustomerRow {
+  id: string;
+  name: string;
+  username: string;
+  creditScore: number;
+  loansTaken: string;
+  loansGiven: string;
+}
+
 
 export interface UserDetails {
   phoneNumber: string;
