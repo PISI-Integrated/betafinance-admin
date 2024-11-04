@@ -1,3 +1,4 @@
+
 export interface SideBarItem {
   title: string;
   path: string;
@@ -107,6 +108,37 @@ export interface CustomerRow {
   loansTaken: string;
   loansGiven: string;
 }
+
+export interface AdminRow {
+  id: string;
+  name: string;
+  username: string;
+  phoneNumber: string;
+  email: string;
+  status: "active" | "suspended";
+  dateAdded: string;
+  dateJoined: string;
+  highestAmountLent: string;
+  loansGiven: number;
+  longestLendingPeriod: string;
+  shortestLendingPeriod: string;
+  totalAmountBorrowed: string;
+  highestAmountBorrowed: string;
+  loansCollected: number;
+  creditHistoryLength: string;
+  longestLoanPeriod: string;
+  shortestLoanPeriod: string;
+  creditScore: number;
+}
+
+export interface AdminData {
+  adminTableHead: Array<{
+    header: string;
+    accessor: keyof AdminRow;
+  }>;
+  adminTableBody: AdminRow[];
+}
+
 
 
 export interface UserDetails {
