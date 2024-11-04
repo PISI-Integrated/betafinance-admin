@@ -9,7 +9,7 @@ import {
   CardHeader,
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { loanData } from "@/lib/constants";
+import { loanData, LoanStatus, LoanTabs } from "@/lib/constants";
 import TableWithPagination from "@/components/TableWithPagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
@@ -18,19 +18,19 @@ const Loan = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialTab = searchParams.get("tab") || "P2P";
-  const initialStatus = searchParams.get("status") || "Pending";
+  const initialTab = searchParams.get("tab") || LoanTabs.P2P;
+  const initialStatus = searchParams.get("status") || LoanStatus.PENDING;
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [activeStatus, setActiveStatus] = useState(initialStatus);
 
   const columns =
-    activeTab === "P2P"
+    activeTab === LoanTabs.P2P
       ? (loanData.loanTableHead.p2p as Column<LoanP2PRow>[])
       : (loanData.loanTableHead.betaLoans as Column<LoanBetaRow>[]);
 
   const data =
-    activeTab === "P2P"
+    activeTab === LoanTabs.P2P
       ? loanData.loanTableBody.p2p
       : loanData.loanTableBody.betaLoans;
 
@@ -64,24 +64,24 @@ const Loan = () => {
     <div className="flex flex-col gap-6">
       <div className="flex gap-4">
         <Button
-          variant={activeTab === "P2P" ? "default" : "outline"}
+          variant={activeTab === LoanTabs.P2P ? "default" : "outline"}
           className={
-            activeTab === "P2P"
+            activeTab === LoanTabs.P2P
               ? "bg-primary-light text-primary"
               : "bg-white text-gray-700"
           }
-          onClick={() => handleTabChange("P2P")}
+          onClick={() => handleTabChange(LoanTabs.P2P)}
         >
           P2P Market Place
         </Button>
         <Button
-          variant={activeTab === "Beta" ? "default" : "outline"}
+          variant={activeTab === LoanTabs.BETA_LOANS ? "default" : "outline"}
           className={
-            activeTab === "Beta"
+            activeTab === LoanTabs.BETA_LOANS
               ? "bg-primary-light text-primary"
               : "bg-white text-gray-700"
           }
-          onClick={() => handleTabChange("Beta")}
+          onClick={() => handleTabChange(LoanTabs.BETA_LOANS)}
         >
           Beta Loans
         </Button>
@@ -107,22 +107,22 @@ const Loan = () => {
         <Button
           variant="ghost"
           className={`px-4 py-2 ${
-            activeStatus === "Pending"
+            activeStatus === LoanStatus.PENDING
               ? "rounded-none border-b-2 border-primary text-primary"
               : "text-black"
           }`}
-          onClick={() => handleStatusChange("Pending")}
+          onClick={() => handleStatusChange(LoanStatus.PENDING)}
         >
           Pending
         </Button>
         <Button
           variant="ghost"
           className={`px-4 py-2 ${
-            activeStatus === "Completed"
+            activeStatus === LoanStatus.COMPLETED
               ? "rounded-none border-b-2 border-primary text-primary"
               : "text-black"
           }`}
-          onClick={() => handleStatusChange("Completed")}
+          onClick={() => handleStatusChange(LoanStatus.COMPLETED)}
         >
           Completed
         </Button>

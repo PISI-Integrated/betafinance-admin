@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import TableWithPagination from "../../components/TableWithPagination";
-import { customerData } from "@/lib/constants";
+import { customerData, CustomerStatus, CustomerTabs, LoanTabs } from "@/lib/constants";
 import UserDetailsSidebar from "../../components/UserDetailSideBar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CustomerData, CustomerRow } from "@/types/types";
@@ -11,17 +11,17 @@ import { CustomerData, CustomerRow } from "@/types/types";
 const Customers = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get("tab") || "Active";
+  const initialTab = searchParams.get("tab") || CustomerStatus.ACTIVE;
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [selectedUser, setSelectedUser] = useState<
-    CustomerData['customerTableBody']['p2p'][number] |
-    CustomerData['customerTableBody']['p2p'][number] | 
+    CustomerData['customerTableBody'][CustomerTabs.P2P][number] |
+    CustomerData['customerTableBody'][CustomerTabs.P2P][number] | 
     null
     >(null);
 
-  const columns = activeTab === "P2P" ? customerData.customerTableHead.p2p : customerData.customerTableHead.betaLoans;
-  const data = activeTab === "P2P" ? customerData.customerTableBody.p2p : customerData.customerTableBody.betaLoans;
+  const columns = activeTab === CustomerTabs.P2P ? customerData.customerTableHead.p2p : customerData.customerTableHead.betaLoans;
+  const data = activeTab === CustomerTabs.P2P ? customerData.customerTableBody.p2p : customerData.customerTableBody.betaLoans;
 
   const handleRowClick = (user: typeof data[number]) => {
     setSelectedUser(user);
@@ -46,11 +46,11 @@ const Customers = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex gap-4 border-b border-gray-700">
-        {["Active", "Suspended"].map((tab) => (
+        {[CustomerStatus.ACTIVE, CustomerStatus.SUSPENDED].map((tab) => (
           <Button
             key={tab}
             variant="ghost"
-            className={`px-4 py-2 ${activeTab === tab ? "rounded-none border-b-[1px] border-primary text-primary" : "text-gray-700"}`}
+            className={`px-4 py-2 capitalize ${activeTab === tab ? "rounded-none border-b-[1px] border-primary text-primary" : "text-gray-700"}`}
             onClick={() => handleTabChange(tab)}
           >
             {tab}
