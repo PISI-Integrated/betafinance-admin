@@ -15,6 +15,8 @@ import LoanActive from "../../../public/assets/loan-active.svg";
 import Loan from "../../../public/assets/loan.svg";
 import Customer from "../../../public/assets/customer.svg";
 import CustomerActive from "../../../public/assets/customer-active.svg";
+import Marketer from "../../../public/assets/marketer.svg";
+import MarketerActive from "../../../public/assets/marketer-active.svg";
 import Admin from "../../../public/assets/admin.svg";
 import AdminActive from "../../../public/assets/admin-active.svg";
 import Settings from "../../../public/assets/settings.svg";
@@ -44,6 +46,8 @@ export default {
   Loan,
   Customer,
   CustomerActive,
+  Marketer,
+  MarketerActive,
   Admin,
   AdminActive,
   Settings,

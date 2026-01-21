@@ -1,34 +1,33 @@
 "use client";
 
-import { useSideBarToggle } from "@/hooks/useSidebarToggle";
 import { usePathname } from "next/navigation";
-import React from "react";
-import Icon from "../../lib/constants/icons";
-import Image from "next/image";
 import { routes } from "@/lib/constants";
 import HeaderSearch from "./HeaderSearch";
 import HeaderOps from "./HeaderOps";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { PanelRight } from "lucide-react";
 
 const Header = () => {
-  const { isSidebarVisible } = useSideBarToggle();
   const pathname = usePathname();
+  const currentRoute = routes.sidebarItems.find(
+    (item) => item.path === pathname,
+  );
 
   return (
-    <div className={`bg-white w-full p-6 border-b sticky top-0 z-40`}>
-      <div className="flex items-center justify-between">
-        <div>
-          {routes.sidebarItems.map((item, index) => (
-            <div key={index}>
-              <h2 className="text-xl font-bold">
-                {pathname === item.path && <div className="">{item.title}</div>}
-              </h2>
-            </div>
-          ))}
-        </div>
-        <HeaderSearch currentPath={pathname} />
+    <header className="sticky top-0 z-40 flex items-center justify-between gap-x-2 border-b border-gray-200 bg-white px-6 py-4">
+      <div className="flex items-center gap-x-2">
+        <SidebarTrigger className="hover:bg-gray-100">
+          <PanelRight className="h-5 w-5 text-gray-600" />
+        </SidebarTrigger>
+        <h1 className="text-xl font-bold text-gray-900 w-fit">
+          {currentRoute?.title || "Overview"}
+        </h1>
+      </div>
+      <HeaderSearch currentPath={pathname} />
+      <div className="flex items-center gap-x-2">
         <HeaderOps currentPath={pathname} />
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
-import AdminContent from "@/components/admin/AdminContent";
+import { Suspense } from "react";
+import CustomersContent from "@/components/customers/CustomersContent";
 import { Card, CardContent } from "@/components/ui/card";
 
-function AdminSkeleton() {
+function MarketersSkeleton() {
   return (
     <div className="space-y-6">
       <div className="flex gap-2 border-b border-gray-200 h-10 bg-gray-100 animate-pulse" />
@@ -13,10 +13,10 @@ function AdminSkeleton() {
   );
 }
 
-export default function Admin() {
+export default function Marketers() {
   return (
-    <Suspense fallback={<AdminSkeleton />}>
-      <AdminContent />
+    <Suspense fallback={<MarketersSkeleton />}>
+      <CustomersContent />
     </Suspense>
   );
 }

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Sidebar from "@/components/global/Sidebar";
-import Header from "@/components/global/Header";
+import SidebarLayout from "@/components/layout/SidebarLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,17 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex h-screen">
-            <div className="hidden lg:block fixed top-0 left-0 h-full w-[250px]">
-              <Sidebar />
-            </div>
-            <div className="flex flex-col flex-1 lg:ml-[250px] overflow-hidden">
-              <Header />
-              <main className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6">
-                {children}
-              </main>
-            </div>
-          </div>
+          <SidebarLayout>{children}</SidebarLayout>
         </ThemeProvider>
       </body>
     </html>
