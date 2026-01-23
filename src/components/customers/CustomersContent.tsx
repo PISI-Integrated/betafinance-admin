@@ -1,30 +1,30 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
 import { customerData, CustomerStatus } from "@/lib/constants";
 import UserDetailsSidebar from "@/components/UserDetailSideBar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
+import useCreateQueryString from "@/hooks/useCreateQueryString";
 
 const CustomersContent = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialTab = searchParams.get("tab") || CustomerStatus.ACTIVE;
+  const pathname = usePathname();
+  const { createQueryParams } = useCreateQueryString();
 
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") || CustomerStatus.ACTIVE;
+
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
-  const columns =
+  const data = [
+    ...customerData.customerTableBody.p2p,
+    ...customerData.customerTableBody.betaLoans,
+  ].filter((user) =>
     activeTab === CustomerStatus.ACTIVE
-      ? customerData.customerTableHead.p2p
-      : customerData.customerTableHead.betaLoans;
-
-  const data =
-    activeTab === CustomerStatus.ACTIVE
-      ? customerData.customerTableBody.p2p
-      : customerData.customerTableBody.betaLoans;
+      ? user.status === "active"
+      : user.status === "suspended",
+  );
 
   const handleRowClick = (user: any) => {
     setSelectedUser(user);
@@ -35,17 +35,9 @@ const CustomersContent = () => {
   };
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
     setSelectedUser(null);
-    router.push(`/customers?tab=${tab}`);
+    router.replace(pathname + "?" + createQueryParams("tab", tab));
   };
-
-  useEffect(() => {
-    const currentTab = searchParams.get("tab");
-    if (currentTab && currentTab !== activeTab) {
-      setActiveTab(currentTab);
-    }
-  }, [searchParams, activeTab]);
 
   return (
     <div className="space-y-6">
@@ -79,7 +71,7 @@ const CustomersContent = () => {
           <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
             <CardContent className="p-0">
               <TableWithPagination
-                columns={columns}
+                columns={customerData.customerTableHead.p2p}
                 data={data}
                 onRowClick={handleRowClick}
               />

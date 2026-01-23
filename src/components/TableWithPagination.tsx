@@ -24,7 +24,7 @@ const TableWithPagination = <T,>({
 }: TableWithPaginationProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const totalPages = 6; // Fixed as shown in design
+  const totalPages = 6;
 
   const paginatedData = data.slice(
     (currentPage - 1) * itemsPerPage,
@@ -41,12 +41,12 @@ const TableWithPagination = <T,>({
     <div className="w-full">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-[#F9FAFB]">
             <TableRow className="border-b border-gray-200 hover:bg-transparent">
               {columns.map((column, index) => (
                 <TableHead
                   key={index}
-                  className="h-12 px-4 text-left align-middle text-xs font-medium text-gray-600"
+                  className="text-left align-middle text-xs font-medium text-[#757575]"
                 >
                   {column.header}
                 </TableHead>

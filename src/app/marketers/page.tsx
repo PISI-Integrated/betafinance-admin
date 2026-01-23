@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import CustomersContent from "@/components/customers/CustomersContent";
 import { Card, CardContent } from "@/components/ui/card";
+import MarketersContent from "@/components/marketers/MarketersContent";
 
 function MarketersSkeleton() {
   return (
@@ -16,7 +16,7 @@ function MarketersSkeleton() {
 export default function Marketers() {
   return (
     <Suspense fallback={<MarketersSkeleton />}>
-      <CustomersContent />
+      <MarketersContent />
     </Suspense>
   );
 }

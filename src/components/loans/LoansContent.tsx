@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -88,7 +87,7 @@ const LoansContent = () => {
       </div>
 
       {/* KPI Card */}
-      <Card className="rounded-lg border-gray-200 bg-white">
+      <Card className="rounded-lg border-gray-200 bg-white w-fit">
         <CardHeader className="pb-3">
           <CardDescription className="text-xs font-medium text-gray-500">
             {activeTab === LoanTabs.P2P
@@ -130,10 +129,8 @@ const LoansContent = () => {
       )}
 
       {/* Table */}
-      <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
-        <CardContent className="p-0">
-          <TableWithPagination columns={columns} data={data} />
-        </CardContent>
+      <Card className="overflow-hidden rounded-lg border-gray-200 bg-white p-0">
+        <TableWithPagination columns={columns} data={data} />
       </Card>
     </div>
   );

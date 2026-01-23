@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import AdminContent from "@/components/admin/AdminContent";
 import { Card, CardContent } from "@/components/ui/card";
 
