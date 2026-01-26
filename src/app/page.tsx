@@ -1,3 +1,5 @@
+"use client";
+
 import { Chart } from "@/components/Chart";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -11,9 +13,19 @@ import { overviewItems } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
+import {
+  useFetchOverviewService,
+  useFetchTopRankingCreditScoresService,
+  useFetchTopRankingLendersService,
+} from "@/services/analytics.service";
 
 export default function Home() {
   const table = overviewItems.overviewTables;
+
+  const { overviewData } = useFetchOverviewService();
+
+  const { topRankingLenders } = useFetchTopRankingLendersService();
+  const { topRankingCreditScores } = useFetchTopRankingCreditScoresService();
 
   return (
     <main className="space-y-6">

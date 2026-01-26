@@ -21,6 +21,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { routes } from "@/lib/constants";
 import Header from "@/components/global/Header";
 
+const nonDashboardPaths = ["/login"];
+
 function SidebarNav() {
   const pathname = usePathname();
   const { state } = useSidebar();
@@ -155,6 +157,14 @@ interface SidebarLayoutProps {
 }
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
+  const pathname = usePathname();
+  const isOnboardingPage = nonDashboardPaths.some((path) =>
+    pathname?.startsWith(path),
+  );
+
+  if (isOnboardingPage) {
+    return <>{children}</>;
+  }
   return (
     <SidebarProvider defaultOpen={true}>
       <SidebarNav />

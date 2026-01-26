@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import SidebarLayout from "@/components/layout/SidebarLayout";
+import QueryProvider from "@/lib/query/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +27,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarLayout>{children}</SidebarLayout>
+          <QueryProvider>
+            <SidebarLayout>{children}</SidebarLayout>
+            <Toaster />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
