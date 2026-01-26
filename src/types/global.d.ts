@@ -31,11 +31,14 @@ interface IOverviewResponse {
   average_credit_score: number;
 }
 
-interface ITopRankssResponse {
+interface ITopRankItem {
   rank: number;
   user_id: string;
   name: string;
   username: string;
   email: null | string;
   total_loans?: number;
+  credit_score?: number;
 }
+
+type ITopRankssResponse = ITopRankItem[];
