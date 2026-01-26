@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <main className="space-y-6">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 rounded border border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 rounded border border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {overviewItems.overviewHead.map((item, index) => (
           <Card
             key={index}
@@ -46,7 +46,9 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
-              <p className="text-2xl font-bold text-gray-900">{item.content}</p>
+              <p className="text-2xl font-bold text-gray-900 text-wrap break-words">
+                {item.content}
+              </p>
               {item.footer && (
                 <p className="text-xs text-black">
                   {item.footer}{" "}
@@ -132,7 +134,7 @@ export default function Home() {
             Loan collection summary
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 w-full h-[400px]">
           <Chart />
         </CardContent>
       </Card>

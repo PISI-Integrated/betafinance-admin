@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { X, Copy } from "lucide-react";
+import { X } from "lucide-react";
 import { AdminRow } from "@/types/types";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
@@ -10,8 +9,6 @@ interface AdminDetailsSidebarProps {
 }
 
 const AdminDetailsSidebar = ({ user, onClose }: AdminDetailsSidebarProps) => {
-  const [activeTab, setActiveTab] = useState<"account" | "activity">("account");
-
   if (!user) return null;
 
   return (

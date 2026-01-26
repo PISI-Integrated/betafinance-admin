@@ -11,12 +11,13 @@ import { loanData, LoanStatus, LoanTabs } from "@/lib/constants";
 import TableWithPagination from "@/components/TableWithPagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
+import LoanDetailsSidebar from "../LoanDetailsSidebar";
 
 const LoansContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialTab = searchParams.get("tab") || LoanTabs.P2P;
+  const initialTab = searchParams.get("tab") || LoanTabs.BETA_LOANS;
   const initialStatus = searchParams.get("status") || LoanStatus.PENDING;
 
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -58,21 +59,20 @@ const LoansContent = () => {
     }
   }, [searchParams]);
 
+  const [selectedLoan, setSelectedLoan] = useState<any>(null);
+
+  const handleRowClick = (loan: any) => {
+    setSelectedLoan(loan);
+  };
+
+  const handleCloseSidebar = () => {
+    setSelectedLoan(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Main Tabs */}
       <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
-            activeTab === LoanTabs.P2P
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-          }`}
-          onClick={() => handleTabChange(LoanTabs.P2P)}
-        >
-          P2P Market Place
-        </Button>
         <Button
           variant="ghost"
           className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
@@ -83,6 +83,17 @@ const LoansContent = () => {
           onClick={() => handleTabChange(LoanTabs.BETA_LOANS)}
         >
           Beta Loans
+        </Button>
+        <Button
+          variant="ghost"
+          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
+            activeTab === LoanTabs.P2P
+              ? "border-blue-600 bg-blue-50 text-blue-600"
+              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+          }`}
+          onClick={() => handleTabChange(LoanTabs.P2P)}
+        >
+          P2P Market Place
         </Button>
       </div>
 
@@ -129,9 +140,28 @@ const LoansContent = () => {
       )}
 
       {/* Table */}
-      <Card className="overflow-hidden rounded-lg border-gray-200 bg-white p-0">
-        <TableWithPagination columns={columns} data={data} />
-      </Card>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className={selectedLoan ? "lg:col-span-2" : "lg:col-span-3"}>
+          <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
+            <CardContent className="p-0">
+              <TableWithPagination
+                columns={columns}
+                data={data}
+                onRowClick={handleRowClick}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
+        {selectedLoan && (
+          <div className="lg:col-span-1">
+            <LoanDetailsSidebar
+              loan={selectedLoan}
+              onClose={handleCloseSidebar}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 "use client";
-
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Dot } from "recharts";
 import {
   ChartConfig,
@@ -53,7 +52,14 @@ const CustomDot = (props: any) => {
   if (payload.highlight) {
     return (
       <g>
-        <circle cx={cx} cy={cy} r={6} fill="#3b82f6" stroke="#fff" strokeWidth={2} />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={6}
+          fill="#3b82f6"
+          stroke="#fff"
+          strokeWidth={2}
+        />
         <text
           x={cx}
           y={cy - 20}
@@ -72,7 +78,11 @@ const CustomDot = (props: any) => {
 
 export function Chart() {
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="h-full w-full"
+      style={{ height: 300 }}
+    >
       <AreaChart
         data={chartData}
         margin={{
