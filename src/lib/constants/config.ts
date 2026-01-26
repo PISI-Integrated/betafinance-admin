@@ -1,7 +1,7 @@
 const base_url = process.env.NEXT_PUBLIC_API_URL!;
 
 const analytics_url = "admin/analytics";
-const user_url = "admin/users";
+const user_url = "admin/user";
 
 const AUTH = {
   login: "/auth/login",
@@ -17,10 +17,10 @@ const ANALYTICS = {
   topRankCreditScores: `${analytics_url}/top-ranking-credit-score`,
 };
 
-const USER = {
-  users: `${user_url}`,
+const CUSTOMER = {
+  users: `${user_url}s`,
   userAnalytics: (userId: string) => `${user_url}/${userId}/analytics`,
   userActivitiess: (userId: string) => `${user_url}/${userId}/activity`,
 };
 
-export { base_url, AUTH, ANALYTICS, USER };
+export { base_url, AUTH, ANALYTICS, CUSTOMER };

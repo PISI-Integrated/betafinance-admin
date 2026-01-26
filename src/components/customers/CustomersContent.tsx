@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
-import { customerData, CustomerStatus } from "@/lib/constants";
-import UserDetailsSidebar from "@/components/UserDetailSideBar";
+import { CustomerStatus, customerTableHeader } from "@/lib/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
+import { useFetchCustomersService } from "@/services/users.service";
+import UserDetailsSidebar from "./sidebar/UserDetailSideBar";
 
 const CustomersContent = () => {
   const router = useRouter();
@@ -15,18 +16,20 @@ const CustomersContent = () => {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || CustomerStatus.ACTIVE;
 
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const { allCustomers } = useFetchCustomersService();
 
-  const data = [
-    ...customerData.customerTableBody.p2p,
-    ...customerData.customerTableBody.betaLoans,
-  ].filter((user) =>
-    activeTab === CustomerStatus.ACTIVE
-      ? user.status === "active"
-      : user.status === "suspended",
-  );
+  const [selectedUser, setSelectedUser] = useState<
+    ICustomersResponse["items"][0] | null
+  >(null);
 
-  const handleRowClick = (user: any) => {
+  const data =
+    allCustomers?.items?.filter((user) =>
+      activeTab === CustomerStatus.ACTIVE
+        ? user.isVerified === true
+        : user.isVerified === false,
+    ) ?? [];
+
+  const handleRowClick = (user: ICustomersResponse["items"][0]) => {
     setSelectedUser(user);
   };
 
@@ -71,8 +74,8 @@ const CustomersContent = () => {
           <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
             <CardContent className="p-0">
               <TableWithPagination
-                columns={customerData.customerTableHead.p2p}
-                data={data}
+                columns={customerTableHeader}
+                data={data ?? []}
                 onRowClick={handleRowClick}
               />
             </CardContent>
@@ -82,7 +85,8 @@ const CustomersContent = () => {
         {selectedUser && (
           <div className="lg:col-span-1">
             <UserDetailsSidebar
-              user={selectedUser}
+              key={selectedUser?.id}
+              userId={selectedUser?.id}
               onClose={handleCloseSidebar}
             />
           </div>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
 import { marketerData, MarketerTabStatus } from "@/lib/constants";
-import UserDetailsSidebar from "@/components/UserDetailSideBar";
+import UserDetailsSidebar from "@/components/customers/sidebar/UserDetailSideBar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 

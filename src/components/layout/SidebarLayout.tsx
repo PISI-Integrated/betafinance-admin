@@ -20,6 +20,7 @@ import { ChevronDown, Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { routes } from "@/lib/constants";
 import Header from "@/components/global/Header";
+import AuthGuard from "./AuthGuard";
 
 const nonDashboardPaths = ["/login"];
 
@@ -166,12 +167,14 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
     return <>{children}</>;
   }
   return (
-    <SidebarProvider defaultOpen={true}>
-      <SidebarNav />
-      <SidebarInset>
-        <Header />
-        <div className="flex-1 overflow-y-auto p-6">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <AuthGuard>
+      <SidebarProvider defaultOpen={true}>
+        <SidebarNav />
+        <SidebarInset>
+          <Header />
+          <div className="flex-1 overflow-y-auto p-6">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </AuthGuard>
   );
 }

@@ -1028,3 +1028,13 @@ export const marketerData: MarketerData = {
     },
   ],
 };
+
+export const customerTableHeader: Array<{
+  header: string;
+  accessor: keyof ICustomersResponse["items"][0];
+}> = [
+  { header: "Name", accessor: "name" },
+  { header: "Credit score", accessor: "creditScore" },
+  { header: "Total Loans ", accessor: "totalLoans" },
+  { header: "Joined at", accessor: "createdAt" },
+];
