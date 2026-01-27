@@ -3,6 +3,7 @@
 import {
   useGetCustomersApi,
   useGetCustomerAnalyticsApi,
+  useGetCustomerActivityApi,
 } from "@/api/users.api";
 
 const useFetchCustomersService = () => {
@@ -26,4 +27,24 @@ const useFetchCustomerAnalyticsService = (userId: string) => {
   };
 };
 
-export { useFetchCustomersService, useFetchCustomerAnalyticsService };
+const useFetchCustomerActivitiesService = (
+  userId: string,
+  params?: ICustomerActivityParamsDto,
+) => {
+  const { data, isLoading, refetch } = useGetCustomerActivityApi(
+    userId,
+    params,
+  );
+
+  return {
+    customerActivity: data,
+    isActivityLoading: isLoading,
+    refetchActivities: refetch,
+  };
+};
+
+export {
+  useFetchCustomersService,
+  useFetchCustomerAnalyticsService,
+  useFetchCustomerActivitiesService,
+};

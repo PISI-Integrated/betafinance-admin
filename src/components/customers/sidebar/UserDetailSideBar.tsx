@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useFetchCustomerAnalyticsService } from "@/services/users.service";
+import {
+  useFetchCustomerActivitiesService,
+  useFetchCustomerAnalyticsService,
+} from "@/services/users.service";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { AccountTab } from "./AccountTab";
@@ -17,14 +20,17 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
   const { customer, isCustomerLoading } =
     useFetchCustomerAnalyticsService(userId);
 
-  if (isCustomerLoading) {
+  const { customerActivity, isActivityLoading } =
+    useFetchCustomerActivitiesService(userId);
+
+  if (isCustomerLoading || isActivityLoading) {
     return <Card className="min-h-full animate-pulse bg-gray-200" />;
   }
 
   if (!customer) return null;
 
   return (
-    <Card className="h-full rounded-lg border p-0 pb-4">
+    <Card className="h-full rounded-lg border p-0 pb-4 overflow-y-auto ">
       <CardContent className="flex h-full flex-col p-0">
         {/* Header */}
         <div className="p-4 pb-0">
@@ -67,7 +73,7 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
           {activeTab === "account" ? (
             <AccountTab customer={customer} />
           ) : (
-            <ActivityTab />
+            <ActivityTab customerActivity={customerActivity!} />
           )}
         </div>
 

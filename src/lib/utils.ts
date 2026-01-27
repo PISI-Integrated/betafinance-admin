@@ -25,3 +25,42 @@ export function formatDate(date: string) {
 
   return formattedDate; // Output: April 19, 2024
 }
+
+export const formatTime = (dateString: string) =>
+  new Date(dateString).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+export const formatAmount = (amount: string, type: "debit" | "credit") =>
+  `${type === "credit" ? "+" : "-"}₦${Number(amount).toLocaleString()}`;
+
+export const getTimeBucket = (date: Date) => {
+  const now = new Date();
+
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const startOfDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+
+  const diffInDays =
+    (startOfToday.getTime() - startOfDate.getTime()) / (1000 * 60 * 60 * 24);
+
+  if (diffInDays === 0) return "Today";
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays <= 7) return "Last week";
+  if (diffInDays <= 30) return "Last month";
+
+  const diffInMonths =
+    now.getFullYear() * 12 +
+    now.getMonth() -
+    (date.getFullYear() * 12 + date.getMonth());
+
+  return `${diffInMonths} months ago`;
+};

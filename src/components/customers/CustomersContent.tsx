@@ -69,7 +69,7 @@ const CustomersContent = () => {
       </div>
 
       {/* Content */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 ">
         <div className={selectedUser ? "lg:col-span-2" : "lg:col-span-3"}>
           <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
             <CardContent className="p-0">
@@ -83,7 +83,7 @@ const CustomersContent = () => {
         </div>
 
         {selectedUser && (
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 lg:max-h-[calc(100dvh+50px)] xl:max-h-dvh">
             <UserDetailsSidebar
               key={selectedUser?.id}
               userId={selectedUser?.id}

@@ -5,6 +5,8 @@ const user_url = "admin/user";
 
 const AUTH = {
   login: "/auth/login",
+  refresh: (refreshToken: string) =>
+    `${base_url}auth/refresh?refresh_token=${refreshToken}`,
 };
 
 const ANALYTICS = {

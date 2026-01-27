@@ -15,7 +15,7 @@ const useLoginService = () => {
         onSuccess: async (data) => {
           await Promise.all([
             saveToken("accessToken", data.token),
-            saveToken("refreshToken", data.token),
+            saveToken("refreshToken", data.refreshToken),
           ]);
           toast.success("Signed in successfully");
           const search =

@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { CUSTOMER } from "@/lib/constants/config";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const useGetCustomersApi = () => {
   return useQuery<ICustomersResponse, Error>({
@@ -18,4 +18,24 @@ const useGetCustomerAnalyticsApi = (userId: string) => {
   });
 };
 
-export { useGetCustomersApi, useGetCustomerAnalyticsApi };
+const useGetCustomerActivityApi = (
+  userId: string,
+  params?: ICustomerActivityParamsDto,
+) => {
+  return useQuery<ICustomerActivityResponse[], Error>({
+    queryKey: ["activity", userId, params],
+    queryFn: () =>
+      api.get<ICustomerActivityResponse[]>(
+        CUSTOMER.userActivitiess(userId),
+        params,
+      ),
+    enabled: !!userId,
+    placeholderData: keepPreviousData,
+  });
+};
+
+export {
+  useGetCustomersApi,
+  useGetCustomerAnalyticsApi,
+  useGetCustomerActivityApi,
+};

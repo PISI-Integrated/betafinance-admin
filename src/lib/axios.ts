@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { getToken, saveToken } from "./storage";
-import { base_url } from "./constants/config";
+import { AUTH, base_url } from "./constants/config";
 
 const axiosInstance = axios.create({ baseURL: base_url });
 
@@ -19,18 +19,17 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
-    if (
-      (error.response?.status === 401 || error.response?.status === 401) &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = await getToken("refreshToken");
-        const { data } = await axios.post("/auth/refresh", {
-          refresh: refreshToken,
-        });
-        await Promise.all([saveToken("accessToken", data.access)]);
-        originalRequest.headers["Authorization"] = `Bearer ${data.access}`;
+        const { data } = await axios.post(AUTH.refresh(refreshToken!));
+        await Promise.all([
+          saveToken("accessToken", data.access_token),
+          saveToken("refreshToken", data.refresh_token),
+        ]);
+        originalRequest.headers["Authorization"] =
+          `Bearer ${data.access_token}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);

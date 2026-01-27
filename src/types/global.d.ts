@@ -5,6 +5,7 @@ interface ILoginDto {
 
 interface ILoginResponse {
   token: string;
+  refreshToken: string;
   user: {
     id: string;
     phone: string;
@@ -84,4 +85,30 @@ interface ICustomerAnalyticsResponse {
     longest_lending_period_days: number;
     shortest_lending_period_days: number;
   };
+}
+
+interface ICustomerActivityParamsDto {
+  transaction_status: string;
+  transaction_type: string;
+  from_date: string;
+  to_date: string;
+}
+
+interface ICustomerActivityResponse {
+  amount: string;
+  description: string;
+  status: "completed" | "pending" | "failed";
+  recipient_bank: string | null;
+  recipient_name: string | null;
+  paystack_reference: string | null;
+  authorization_url: string | null;
+  created_at: string;
+  user_id: string;
+  id: string;
+  type: "debit" | "credit";
+  reference: string;
+  payment_method: "wallet" | "card";
+  recipient_account: string | null;
+  loan_id: string;
+  updated_at: string;
 }

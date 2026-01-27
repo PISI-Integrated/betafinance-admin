@@ -38,7 +38,7 @@ const TableWithPagination = <T,>({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="bg-[#F9FAFB]">

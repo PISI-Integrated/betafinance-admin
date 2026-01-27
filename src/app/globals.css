@@ -79,14 +79,14 @@
   overflow-x: auto;
 }
 
-#table::-webkit-scrollbar {
+/* #table::-webkit-scrollbar {
   height: 7px;
 }
 
 #table::-webkit-scrollbar-thumb {
   background-color: var(--primary);
   border-radius: 6px;
-}
+} */
 
 @layer base {
   * {
