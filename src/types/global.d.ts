@@ -112,3 +112,31 @@ interface ICustomerActivityResponse {
   loan_id: string;
   updated_at: string;
 }
+
+interface ICustomerDocsParamsDto {
+  limit: number;
+  page: number;
+  size: number;
+}
+
+type docsStatusType = "pending" | "approved" | "rejected";
+
+interface updateDocsStatusDto {
+  status: docsStatusType;
+}
+
+interface ICustomerDocument {
+  id: string;
+  user_id: string;
+  document_type: string;
+  side: "front" | "back";
+  file_name: string;
+  file_path: string | null;
+  file_size: string | number;
+  file_url_front: string | null;
+  file_url_back: string | null;
+  status: docsStatusType;
+  verified: boolean;
+  uploaded_at: string;
+}
+

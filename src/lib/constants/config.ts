@@ -23,6 +23,9 @@ const CUSTOMER = {
   users: `${user_url}s`,
   userAnalytics: (userId: string) => `${user_url}/${userId}/analytics`,
   userActivitiess: (userId: string) => `${user_url}/${userId}/activity`,
+  userDocuments: (userId: string) => `${user_url}/${userId}/documents`,
+  updateUserDocuments: (userId: string, docsId: string) =>
+    `${user_url}/${userId}/document/${docsId}`,
 };
 
 export { base_url, AUTH, ANALYTICS, CUSTOMER };

@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { AccountTab } from "./AccountTab";
 import { ActivityTab } from "./ActivityTab";
+import { DocumentsTab } from "./DocumentsTab";
 
 interface UserDetailsSidebarProps {
   userId: string;
@@ -15,7 +16,9 @@ interface UserDetailsSidebarProps {
 }
 
 const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
-  const [activeTab, setActiveTab] = useState<"account" | "activity">("account");
+  const [activeTab, setActiveTab] = useState<
+    "account" | "activity" | "documents"
+  >("account");
 
   const { customer, isCustomerLoading } =
     useFetchCustomerAnalyticsService(userId);
@@ -52,17 +55,21 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
 
           {/* Tabs */}
           <div className="mt-4 flex gap-4 border-b">
-            {(["account", "activity"] as const).map((tab) => (
+            {(["account", "activity", "documents"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`text-sm font-medium ${
+                className={`pb-2 text-sm font-medium transition-colors ${
                   activeTab === tab
                     ? "border-b-[1.5px] border-primary text-primary"
-                    : "text-[#010813]"
+                    : "text-[#010813]/80 hover:text-[#010813]"
                 }`}
               >
-                {tab === "account" ? "Account information" : "Activity"}
+                {tab === "account"
+                  ? "Account information"
+                  : tab === "activity"
+                    ? "Activity"
+                    : "Documents"}
               </button>
             ))}
           </div>
@@ -70,10 +77,12 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-4 pt-4">
-          {activeTab === "account" ? (
-            <AccountTab customer={customer} />
-          ) : (
+          {activeTab === "account" && <AccountTab customer={customer} />}
+          {activeTab === "activity" && (
             <ActivityTab customerActivity={customerActivity!} />
+          )}
+          {activeTab === "documents" && (
+            <DocumentsTab userId={customer.user.id} />
           )}
         </div>
 

@@ -47,24 +47,22 @@ const CustomersContent = () => {
       {/* Status Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.ACTIVE
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.ACTIVE
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-gray-900"
-          }`}
+            }`}
           onClick={() => handleTabChange(CustomerStatus.ACTIVE)}
         >
           Active
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.SUSPENDED
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.SUSPENDED
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-gray-900"
-          }`}
+            }`}
           onClick={() => handleTabChange(CustomerStatus.SUSPENDED)}
         >
-          Suspended
+          KYC Review
         </button>
       </div>
 
