@@ -54,6 +54,7 @@ interface ICustomersResponse {
     name: string;
     accountNumber: string;
     isVerified: boolean;
+    kycStatus: "validated" | "pending";
     creditScore: number;
     email: string | null;
     totalLoans: number;
@@ -140,3 +141,37 @@ interface ICustomerDocument {
   uploaded_at: string;
 }
 
+type loanType = "p2p" | "b2c";
+type loanStatus =
+  | "pending"
+  | "approved"
+  | "terms proposed"
+  | "funded"
+  | "active"
+  | "repaid"
+  | "defaulted"
+  | "rejected"
+  | "cancelled";
+
+interface ILoansParamsDto {
+  loan_type: loanType;
+  loan_status?: loanStatus;
+  page?: number;
+  size?: number;
+}
+
+interface ILoansResponse {
+  page: number;
+  page_size: number;
+  total: number;
+  items: {
+    id: string;
+    borrower: string;
+    amount: number;
+    lender: string | null;
+    termdays: number;
+    status: loanStatus;
+    loantype: loanType;
+    interestrate: number;
+  }[];
+}

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,26 +12,71 @@ import TableWithPagination from "@/components/TableWithPagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
 import LoanDetailsSidebar from "../LoanDetailsSidebar";
+import { useFetchAllLoansService } from "@/services/loans.service";
+import { formatCurrency } from "@/lib/utils/formatters";
 
 const LoansContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const initialTab = searchParams.get("tab") || LoanTabs.BETA_LOANS;
-  const initialStatus = searchParams.get("status") || LoanStatus.PENDING;
+  // Default status: "all" for both Beta Loans and P2P
+  const defaultStatus = "all";
+  const initialStatus = searchParams.get("status") || defaultStatus;
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [activeStatus, setActiveStatus] = useState(initialStatus);
+
+  // Map LoanTabs to API LoanType
+  const loanType = activeTab === LoanTabs.P2P ? "p2p" : "b2c";
+
+  // Prepare params for API call
+  // For Beta Loans "all" tab, don't pass loan_status
+  const loanParams = useMemo<ILoansParamsDto>(() => {
+    const params: ILoansParamsDto = {
+      loan_type: loanType as loanType,
+    };
+
+    // Only add loan_status if it's not "all" (for Beta Loans)
+    if (activeStatus !== "all") {
+      params.loan_status = activeStatus as loanStatus;
+    }
+
+    return params;
+  }, [loanType, activeStatus]);
+
+  const { allLoans, isLoansLoading } = useFetchAllLoansService(loanParams);
 
   const columns =
     activeTab === LoanTabs.P2P
       ? (loanData.loanTableHead.p2p as Column<LoanP2PRow>[])
       : (loanData.loanTableHead.betaLoans as Column<LoanBetaRow>[]);
 
-  const data =
-    activeTab === LoanTabs.P2P
-      ? loanData.loanTableBody.p2p
-      : loanData.loanTableBody.betaLoans;
+  // Transform API data to table row format
+  const data = useMemo(() => {
+    const loansResponse = allLoans as ILoansResponse | undefined;
+    if (!loansResponse?.items || !Array.isArray(loansResponse.items)) return [];
+
+    return loansResponse.items.map((loan: ILoansResponse["items"][0]) => {
+      const baseRow = {
+        id: loan.id,
+        amount: formatCurrency(loan.amount),
+        borrower: loan.borrower,
+        loanPeriod: `${loan.termdays} days`,
+      };
+
+      if (activeTab === LoanTabs.P2P) {
+        return {
+          ...baseRow,
+          type: loan.loantype,
+          interest: `${loan.interestrate}%`,
+          lender: loan.lender || "N/A",
+        } as LoanP2PRow;
+      }
+
+      return baseRow as LoanBetaRow;
+    });
+  }, [allLoans, activeTab]);
 
   const updateUrl = (tab: string, status: string) => {
     router.push(`/loans?tab=${tab}&status=${status}`);
@@ -39,7 +84,10 @@ const LoansContent = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    updateUrl(tab, activeStatus);
+    // Reset status when switching tabs: "all" for both tabs
+    const defaultStatusForTab = "all";
+    setActiveStatus(defaultStatusForTab);
+    updateUrl(tab, defaultStatusForTab);
   };
 
   const handleStatusChange = (status: string) => {
@@ -53,11 +101,16 @@ const LoansContent = () => {
 
     if (currentTab && currentTab !== activeTab) {
       setActiveTab(currentTab);
+      // Set default status when tab changes: "all" for both tabs
+      const defaultStatusForTab = "all";
+      if (!currentStatus) {
+        setActiveStatus(defaultStatusForTab);
+      }
     }
     if (currentStatus && currentStatus !== activeStatus) {
       setActiveStatus(currentStatus);
     }
-  }, [searchParams]);
+  }, [searchParams, activeTab, activeStatus]);
 
   const [selectedLoan, setSelectedLoan] = useState<any>(null);
 
@@ -75,22 +128,20 @@ const LoansContent = () => {
       <div className="flex gap-2">
         <Button
           variant="ghost"
-          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
-            activeTab === LoanTabs.BETA_LOANS
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-          }`}
+          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${activeTab === LoanTabs.BETA_LOANS
+            ? "border-blue-600 bg-blue-50 text-blue-600"
+            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           onClick={() => handleTabChange(LoanTabs.BETA_LOANS)}
         >
           Beta Loans
         </Button>
         <Button
           variant="ghost"
-          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
-            activeTab === LoanTabs.P2P
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-          }`}
+          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${activeTab === LoanTabs.P2P
+            ? "border-blue-600 bg-blue-50 text-blue-600"
+            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           onClick={() => handleTabChange(LoanTabs.P2P)}
         >
           P2P Market Place
@@ -113,42 +164,101 @@ const LoansContent = () => {
         </CardContent>
       </Card>
 
-      {/* Status Tabs - Only show for P2P */}
-      {activeTab === LoanTabs.P2P && (
-        <div className="flex gap-4 border-b border-gray-200">
-          <button
-            className={`pb-3 text-sm font-medium transition-colors ${
-              activeStatus === LoanStatus.PENDING
+      {/* Status Tabs */}
+      <div className="flex gap-4 border-b border-gray-200">
+        {activeTab === LoanTabs.BETA_LOANS ? (
+          <>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "all"
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => handleStatusChange(LoanStatus.PENDING)}
-          >
-            Pending
-          </button>
-          <button
-            className={`pb-3 text-sm font-medium transition-colors ${
-              activeStatus === LoanStatus.COMPLETED
+                }`}
+              onClick={() => handleStatusChange("all")}
+            >
+              All
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "pending"
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => handleStatusChange(LoanStatus.COMPLETED)}
-          >
-            Completed
-          </button>
-        </div>
-      )}
+                }`}
+              onClick={() => handleStatusChange("pending")}
+            >
+              Pending
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "funded"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+              onClick={() => handleStatusChange("funded")}
+            >
+              Funded
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "repaid"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+              onClick={() => handleStatusChange("repaid")}
+            >
+              Repaid
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "all"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+              onClick={() => handleStatusChange("all")}
+            >
+              All
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "pending"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+              onClick={() => handleStatusChange("pending")}
+            >
+              Pending
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "repaid"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
+              // For P2P, \"Completed\" tab maps to \"repaid\" status
+              onClick={() => handleStatusChange("repaid")}
+            >
+              Completed
+            </button>
+          </>
+        )}
+      </div>
 
       {/* Table */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className={selectedLoan ? "lg:col-span-2" : "lg:col-span-3"}>
           <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
             <CardContent className="p-0">
-              <TableWithPagination
-                columns={columns}
-                data={data}
-                onRowClick={handleRowClick}
-              />
+              {isLoansLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <p className="text-sm text-gray-500">Loading loans...</p>
+                </div>
+              ) : data.length === 0 ? (
+                <div className="flex items-center justify-center py-12">
+                  <p className="text-sm text-gray-500">No loans found</p>
+                </div>
+              ) : (
+                <TableWithPagination
+                  columns={columns}
+                  data={data}
+                  onRowClick={handleRowClick}
+                />
+              )}
             </CardContent>
           </Card>
         </div>

@@ -2,6 +2,7 @@ const base_url = process.env.NEXT_PUBLIC_API_URL!;
 
 const analytics_url = "admin/analytics";
 const user_url = "admin/user";
+const loans_url = "admin/loans";
 
 const AUTH = {
   login: "/auth/login",
@@ -28,4 +29,9 @@ const CUSTOMER = {
     `${user_url}/${userId}/document/${docsId}`,
 };
 
-export { base_url, AUTH, ANALYTICS, CUSTOMER };
+const LOAN = {
+  loans: `${loans_url}`,
+  loansCount: `${loans_url}/count`,
+};
+
+export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN };
