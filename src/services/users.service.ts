@@ -10,8 +10,8 @@ import {
 import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
 
-const useFetchCustomersService = () => {
-  const { data, isLoading, refetch, error } = useGetCustomersApi();
+const useFetchCustomersService = (params?: ICustomersParamsDto) => {
+  const { data, isLoading, refetch, error } = useGetCustomersApi(params);
 
   return {
     allCustomers: data,
@@ -69,7 +69,7 @@ const useUpdateCustomerDocsService = (userId: string, docsId: string) => {
   const updateDocsStatus = (body: updateDocsStatusDto) => {
     mutateAsync(body, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['documents'] })
+        queryClient.invalidateQueries({ queryKey: ["documents"] });
         toast.success(`Change Document status to "${body.status}"`);
       },
 

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,6 +14,7 @@ import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
 import LoanDetailsSidebar from "../LoanDetailsSidebar";
 import { useFetchAllLoansService } from "@/services/loans.service";
 import { formatCurrency } from "@/lib/utils/formatters";
+import TableSkeleton from "../TableSkeleton";
 
 const LoansContent = () => {
   const router = useRouter();
@@ -26,10 +27,15 @@ const LoansContent = () => {
 
   const loanType = activeTab === LoanTabs.P2P ? "p2p" : "b2c";
 
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+
   // Prepare params for API call
   const loanParams = useMemo<ILoansParamsDto>(() => {
     const params: ILoansParamsDto = {
       loan_type: loanType as loanType,
+      page,
+      size,
     };
 
     if (activeStatus !== "all") {
@@ -37,9 +43,10 @@ const LoansContent = () => {
     }
 
     return params;
-  }, [loanType, activeStatus]);
+  }, [loanType, activeStatus, page, size]);
 
   const { allLoans, isLoansLoading } = useFetchAllLoansService(loanParams);
+  const totalPagesFromApi = Math.ceil(allLoans?.total! / allLoans?.page_size!);
 
   const columns =
     activeTab === LoanTabs.P2P
@@ -95,6 +102,10 @@ const LoansContent = () => {
   const handleCloseSidebar = () => {
     setSelectedLoan(null);
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [activeTab]);
 
   return (
     <div className="space-y-6">
@@ -225,12 +236,10 @@ const LoansContent = () => {
       {/* Table */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className={selectedLoan ? "lg:col-span-2" : "lg:col-span-3"}>
-          <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
+          <Card className="overflow-hidden rounded-lg p-0 border-gray-200 bg-white">
             <CardContent className="p-0">
               {isLoansLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <p className="text-sm text-gray-500">Loading loans...</p>
-                </div>
+                <TableSkeleton columnsCount={columns.length} rows={5} />
               ) : data.length === 0 ? (
                 <div className="flex items-center justify-center py-12">
                   <p className="text-sm text-gray-500">No loans found</p>
@@ -240,6 +249,10 @@ const LoansContent = () => {
                   columns={columns}
                   data={data}
                   onRowClick={handleRowClick}
+                  currentPage={page}
+                  itemsPerPage={size}
+                  totalPages={totalPagesFromApi ?? 0}
+                  onPageChange={setPage}
                 />
               )}
             </CardContent>

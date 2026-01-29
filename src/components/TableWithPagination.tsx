@@ -11,7 +11,14 @@ import { Button } from "./ui/button";
 import { Column } from "@/types/types";
 import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 
-interface TableWithPaginationProps<T> {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+}
+
+interface TableWithPaginationProps<T> extends PaginationProps {
   columns: Column<T>[];
   data: T[];
   onRowClick?: (row: T) => void;
@@ -21,19 +28,14 @@ const TableWithPagination = <T,>({
   columns,
   data,
   onRowClick,
+  currentPage,
+  totalPages,
+  itemsPerPage,
+  onPageChange,
 }: TableWithPaginationProps<T>) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalPages = 6;
-
-  const paginatedData = data.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      onPageChange(page);
     }
   };
 
@@ -55,7 +57,7 @@ const TableWithPagination = <T,>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedData.map((row, rowIndex) => (
+            {data.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 onClick={() => onRowClick?.(row)}
@@ -80,9 +82,11 @@ const TableWithPagination = <T,>({
         </Table>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination — unchanged styles */}
       <div className="flex items-center justify-between border-t border-gray-200 px-4 py-4">
-        <p className="text-sm text-gray-500">Page {currentPage} of 6</p>
+        <p className="text-sm text-gray-500">
+          Page {currentPage} of {totalPages}
+        </p>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
@@ -93,7 +97,8 @@ const TableWithPagination = <T,>({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          {[1, 2, 3, 4, 5, 6].map((page) => (
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <Button
               key={page}
               variant={page === currentPage ? "default" : "ghost"}
@@ -108,6 +113,7 @@ const TableWithPagination = <T,>({
               {page}
             </Button>
           ))}
+
           <Button
             variant="ghost"
             size="icon"

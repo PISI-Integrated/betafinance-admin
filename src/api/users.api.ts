@@ -2,10 +2,11 @@ import { api } from "@/lib/axios";
 import { CUSTOMER } from "@/lib/constants/config";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 
-const useGetCustomersApi = () => {
+const useGetCustomersApi = (params?: ICustomersParamsDto) => {
   return useQuery<ICustomersResponse, Error>({
-    queryKey: ["users"],
-    queryFn: () => api.get<ICustomersResponse>(CUSTOMER.users),
+    queryKey: ["users", params],
+    queryFn: () => api.get<ICustomersResponse>(CUSTOMER.users, params),
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -41,10 +42,7 @@ const useGetCustomerDocumentsApi = (
   return useQuery<ICustomerDocument[], Error>({
     queryKey: ["documents", userId, params],
     queryFn: () =>
-      api.get<ICustomerDocument[]>(
-        CUSTOMER.userDocuments(userId),
-        params,
-      ),
+      api.get<ICustomerDocument[]>(CUSTOMER.userDocuments(userId), params),
     enabled: !!userId,
     placeholderData: keepPreviousData,
   });

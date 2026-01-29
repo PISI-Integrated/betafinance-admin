@@ -43,6 +43,24 @@ interface ITopRankItem {
 }
 
 type ITopRankssResponse = ITopRankItem[];
+type loanType = "p2p" | "b2c";
+type loanStatus =
+  | "pending"
+  | "approved"
+  | "terms proposed"
+  | "funded"
+  | "active"
+  | "repaid"
+  | "defaulted"
+  | "rejected"
+  | "cancelled";
+type kycStatus =
+  | "not_started"
+  | "in_progress"
+  | "pending_validation"
+  | "validated"
+  | "failed"
+  | "rejected";
 
 interface ICustomersResponse {
   page: number;
@@ -54,7 +72,7 @@ interface ICustomersResponse {
     name: string;
     accountNumber: string;
     isVerified: boolean;
-    kycStatus: "validated" | "pending";
+    kycStatus: kycStatus;
     creditScore: number;
     email: string | null;
     totalLoans: number;
@@ -141,18 +159,6 @@ interface ICustomerDocument {
   uploaded_at: string;
 }
 
-type loanType = "p2p" | "b2c";
-type loanStatus =
-  | "pending"
-  | "approved"
-  | "terms proposed"
-  | "funded"
-  | "active"
-  | "repaid"
-  | "defaulted"
-  | "rejected"
-  | "cancelled";
-
 interface ILoansParamsDto {
   loan_type: loanType;
   loan_status?: loanStatus;
@@ -174,4 +180,10 @@ interface ILoansResponse {
     loantype: loanType;
     interestrate: number;
   }[];
+}
+
+interface ICustomersParamsDto {
+  kyc_status?: kycStatus;
+  page?: number;
+  size?: number;
 }

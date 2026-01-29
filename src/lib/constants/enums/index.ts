@@ -11,6 +11,7 @@ export enum LoanStatus {
 export enum CustomerStatus {
   ACTIVE = "active",
   SUSPENDED = "suspended",
+  PENDING = "pending_validation",
 }
 
 export enum MarketerTabStatus {

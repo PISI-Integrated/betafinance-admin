@@ -10,12 +10,20 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     useFetchCustomersService();
 
   useEffect(() => {
-    if (isCustomersLoading) return;
+    if (isCustomersLoading && !allCustomers) return;
 
-    if (!allCustomers && error) {
+    if (error) {
       router.replace(`/login?from=${encodeURIComponent(pathname)}`);
     }
-  }, [allCustomers, error, isCustomersLoading, router, pathname]);
+  }, [error, isCustomersLoading, allCustomers, router, pathname]);
+
+  if (isCustomersLoading && !allCustomers) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center animate-pulse">
+        Loading...
+      </div>
+    );
+  }
 
   if (isCustomersLoading) {
     return (
