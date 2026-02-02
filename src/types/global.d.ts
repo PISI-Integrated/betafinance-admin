@@ -187,3 +187,60 @@ interface ICustomersParamsDto {
   page?: number;
   size?: number;
 }
+
+type rewardType = "airtime" | "discount" | "cash" | "bonus";
+type PrizeType =
+  | "cash"
+  | "zero"
+  | "nothing"
+  | "jackpot"
+  | "discount"
+  | "interest"
+  | "cashback"
+  | "reward";
+
+interface ISpinHistoryParamsDto {
+  page: number;
+  reward_type: rewardType;
+  page_size: number;
+  start_date: string;
+  end_date: string;
+  user_id: string;
+  reward_id: string;
+  min_value: number;
+  max_value: number;
+  sort_order: "asc" | "desc";
+}
+
+interface LottoHistoryItem {
+  created_at: string;
+  id: string;
+  reward_id: string;
+  reward_name: string;
+  reward_type: PrizeType;
+  reward_value: number;
+  user_id: string;
+}
+
+interface ISpinHistoryResponse {
+  items: LottoHistoryItem[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+interface IRewardDto {
+  name: string;
+  value: number;
+  weight: number;
+  type: rewardType;
+  is_active: boolean;
+  color: string;
+  textColour: string;
+}
+
+interface ISpinRewardsParamsDto {
+  page: number;
+  size: number;
+  is_active: boolean;
+}

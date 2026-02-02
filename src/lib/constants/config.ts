@@ -34,4 +34,11 @@ const LOAN = {
   loansCount: `${loans_url}/count`,
 };
 
-export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN };
+const SPIN = {
+  history: `/admin/spin-histories`,
+  rewards: `/admin/rewards`,
+  createReward: `/admin/reward`,
+  rewardByID: (rewardId: string) => `/admin/reward/${rewardId}`,
+};
+
+export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN };
