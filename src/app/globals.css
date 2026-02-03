@@ -88,6 +88,12 @@
   border-radius: 6px;
 } */
 
+#userDetailsSidebar::-webkit-scrollbar {
+  display: none;
+}
+
+
+
 @layer base {
   * {
     @apply border-border;

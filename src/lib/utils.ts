@@ -14,16 +14,18 @@ export function formatCurrency(amount: number) {
   return formatted;
 }
 
-export function formatDate(date: string) {
+export function formatDate(date: string, time = false) {
   const newDate = new Date(date);
 
   const formattedDate = newDate.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: time ? "2-digit" : undefined,
+    minute: time ? "2-digit" : undefined,
   });
 
-  return formattedDate; // Output: April 19, 2024
+  return formattedDate;
 }
 
 export const formatTime = (dateString: string) =>

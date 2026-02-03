@@ -29,8 +29,8 @@ function SidebarNav() {
   const { state } = useSidebar();
 
   const firstPartItems = routes.sidebarItems.slice(0, 4);
-  const lastPartItems = routes.sidebarItems.slice(4, 5);
-  const finalPartItems = routes.sidebarItems.slice(5);
+  const lastPartItems = routes.sidebarItems.slice(4, 6);
+  const finalPartItems = routes.sidebarItems.slice(6);
 
   return (
     <Sidebar collapsible="icon">

@@ -59,11 +59,10 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 text-sm font-medium transition-colors ${
-                  activeTab === tab
-                    ? "border-b-[1.5px] border-primary text-primary"
-                    : "text-[#010813]/80 hover:text-[#010813]"
-                }`}
+                className={`pb-2 text-sm font-medium transition-colors ${activeTab === tab
+                  ? "border-b-[1.5px] border-primary text-primary"
+                  : "text-[#010813]/80 hover:text-[#010813]"
+                  }`}
               >
                 {tab === "account"
                   ? "Account information"
@@ -76,7 +75,7 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-4 pt-4">
+        <div id="userDetailsSidebar" className="flex-1 overflow-y-auto px-4 pt-4">
           {activeTab === "account" && <AccountTab customer={customer} />}
           {activeTab === "activity" && (
             <ActivityTab customerActivity={customerActivity!} />

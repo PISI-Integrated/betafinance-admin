@@ -8,6 +8,7 @@ import useCreateQueryString from "@/hooks/useCreateQueryString";
 import { useFetchCustomersService } from "@/services/users.service";
 import UserDetailsSidebar from "./sidebar/UserDetailSideBar";
 import TableSkeleton from "../TableSkeleton";
+import { formatDate } from "@/lib/utils";
 
 const CustomersContent = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const CustomersContent = () => {
       size,
     };
 
-    if (activeTab === "pending_validation") {
+    if (activeTab === "pending_validation" || activeTab === "rejected") {
       params.kyc_status = activeTab as kycStatus;
     }
 
@@ -48,7 +49,9 @@ const CustomersContent = () => {
     allCustomers?.items?.filter((user) =>
       activeTab === CustomerStatus.ACTIVE
         ? user.kycStatus === "validated"
-        : user.kycStatus === "pending_validation",
+        : activeTab === CustomerStatus.PENDING
+          ? user.kycStatus === "pending_validation"
+          : user.kycStatus === "rejected",
     ) ?? [];
 
   const handleRowClick = (user: ICustomersResponse["items"][0]) => {
@@ -68,29 +71,42 @@ const CustomersContent = () => {
     setPage(1);
   }, [activeTab]);
 
+  const tableData: ICustomersResponse["items"] = data.map((item) => ({
+    ...item,
+    createdAt: formatDate(item.createdAt, true),
+  }));
+
+
   return (
     <div className="space-y-6">
       {/* Status Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.ACTIVE
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.ACTIVE
+            ? "border-b-2 border-blue-600 text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => handleTabChange(CustomerStatus.ACTIVE)}
         >
           Active
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.PENDING
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.PENDING
+            ? "border-b-2 border-blue-600 text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => handleTabChange(CustomerStatus.PENDING)}
         >
           KYC Review
+        </button>
+        <button
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.REJECTED
+            ? "border-b-2 border-blue-600 text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
+          onClick={() => handleTabChange(CustomerStatus.REJECTED)}
+        >
+          Rejected
         </button>
       </div>
 
@@ -107,7 +123,7 @@ const CustomersContent = () => {
               ) : (
                 <TableWithPagination
                   columns={customerTableHeader}
-                  data={data ?? []}
+                  data={tableData ?? []}
                   onRowClick={handleRowClick}
                   currentPage={page}
                   itemsPerPage={size}

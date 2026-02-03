@@ -13,21 +13,25 @@ import {
   useUpdateCustomerDocsService,
 } from "@/services/users.service";
 import { formatDate } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DocumentsTabProps {
   userId: string;
 }
 
 export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
+  const [page, setPage] = useState(1);
+  const size = 5;
+
   const {
     customerDocs,
     isDocsLoading,
     refetchDocs: refetchDocuments,
   } = useFetchCustomerDocsService(userId, {
-    page: 1,
-    limit: 20,
-    size: 20,
+    page: page,
+    limit: size,
+    size: size,
   });
 
   const documents = (customerDocs ?? []) as ICustomerDocument[];
@@ -52,21 +56,55 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
       </Card>
 
       {isDocsLoading ? (
-        <p className="text-sm text-gray-400">Loading documents...</p>
-      ) : documents.length === 0 ? (
-        <p className="text-sm text-gray-400">
-          No documents have been uploaded for this user yet.
-        </p>
-      ) : (
         <div className="space-y-3">
-          {documents.map((doc) => (
-            <DocumentRow
-              key={doc.id}
-              userId={userId}
-              doc={doc}
-              onUpdated={() => refetchDocuments()}
-            />
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 w-full animate-pulse rounded-md bg-gray-100" />
           ))}
+        </div>
+      ) : documents.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <p className="text-sm text-gray-400">
+            No documents have been uploaded for this user yet.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <div className="space-y-3">
+            {documents.map((doc) => (
+              <DocumentRow
+                key={doc.id}
+                userId={userId}
+                doc={doc}
+                onUpdated={() => refetchDocuments()}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between border-t border-gray-100 pt-4 px-1">
+            <span className="text-xs font-medium text-gray-500">
+              Page {page}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={page === 1}
+                className="h-8 w-8 text-gray-600 hover:bg-gray-100 disabled:opacity-30"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={documents.length < size}
+                className="h-8 w-8 text-gray-600 hover:bg-gray-100 disabled:opacity-30"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

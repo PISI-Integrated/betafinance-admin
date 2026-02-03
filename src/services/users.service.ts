@@ -74,7 +74,7 @@ const useUpdateCustomerDocsService = (userId: string, docsId: string) => {
       },
 
       onError: () => {
-        toast.success(`Document status change to "${body.status}" failed`);
+        toast.error(`Document status change to "${body.status}" failed`);
       },
     });
   };

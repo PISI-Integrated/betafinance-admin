@@ -188,7 +188,7 @@ interface ICustomersParamsDto {
   size?: number;
 }
 
-type rewardType = "airtime" | "discount" | "cash" | "bonus";
+type rewardType = "airtime" | "discount" | "cash" | "bonus" | "none";
 type PrizeType =
   | "cash"
   | "zero"
@@ -197,7 +197,7 @@ type PrizeType =
   | "discount"
   | "interest"
   | "cashback"
-  | "reward";
+  | "reward"
 
 interface ISpinHistoryParamsDto {
   page: number;
@@ -243,4 +243,24 @@ interface ISpinRewardsParamsDto {
   page: number;
   size: number;
   is_active: boolean;
+}
+
+interface SpinRewardItem {
+  id: string;
+  name: string;
+  value: number;
+  weight: number;
+  type: rewardType;
+  is_active: boolean;
+  textColour: string;
+  color: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ISpinRewardsResponse {
+  rewards: SpinRewardItem[];
+  page: number;
+  size: number;
+  total: number;
 }

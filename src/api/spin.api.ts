@@ -11,30 +11,30 @@ const useGetSpinHistoryApi = (params?: ISpinHistoryParamsDto) => {
 };
 
 const useGetSpinRewardsApi = (params?: ISpinRewardsParamsDto) => {
-  return useQuery<ISpinHistoryResponse, Error>({
+  return useQuery<ISpinRewardsResponse, Error>({
     queryKey: ["spin", "rewards", params],
-    queryFn: () => api.get<ISpinHistoryResponse>(SPIN.rewards, params),
+    queryFn: () => api.get<ISpinRewardsResponse>(SPIN.rewards, params),
     placeholderData: keepPreviousData,
   });
 };
 
 const useGetSingleSpinRewardsApi = (rewardId: string) => {
-  return useQuery<ISpinHistoryResponse, Error>({
+  return useQuery<SpinRewardItem, Error>({
     queryKey: ["spin", "reward", rewardId],
-    queryFn: () => api.get<ISpinHistoryResponse>(SPIN.rewardByID(rewardId)),
+    queryFn: () => api.get<SpinRewardItem>(SPIN.rewardByID(rewardId)),
     enabled: !!rewardId,
   });
 };
 
 const useCreateRewardApi = () => {
-  return useMutation<string, Error, IRewardDto>({
+  return useMutation<SpinRewardItem, Error, IRewardDto>({
     mutationFn: (body) => api.patch(SPIN.createReward, body),
   });
 };
 
-const useUpdateRewardApi = (rewardId: string) => {
-  return useMutation<string, Error, IRewardDto>({
-    mutationFn: (body) => api.patch(SPIN.rewardByID(rewardId), body),
+const useUpdateRewardApi = () => {
+  return useMutation<SpinRewardItem, Error, { id: string; body: IRewardDto }>({
+    mutationFn: ({ id, body }) => api.put(SPIN.rewardByID(id), body),
   });
 };
 

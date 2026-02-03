@@ -35,6 +35,13 @@ export const routes = {
       alt: "marketers",
     },
     {
+      title: "Spin Wheel",
+      path: "/admin/spin",
+      icon: Icon.Settings,
+      activeIcon: Icon.SettingsActive,
+      alt: "spin",
+    },
+    {
       title: "Admin",
       path: "/admin",
       icon: Icon.Admin,
