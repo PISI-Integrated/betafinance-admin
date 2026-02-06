@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Help | Betafinance",
+  description: "Help & Support",
+};
+
 const Help = () => {
   return (
     <div className="space-y-6">

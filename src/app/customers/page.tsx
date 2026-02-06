@@ -2,6 +2,13 @@ import { Suspense } from "react";
 import CustomersContent from "@/components/customers/CustomersContent";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Customers | Betafinance",
+  description: "Customers Management",
+};
+
 function CustomersSkeleton() {
   return (
     <div className="space-y-6">

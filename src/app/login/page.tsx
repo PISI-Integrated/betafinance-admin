@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { LoginFormValues, loginSchema } from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login | Betafinance",
+  description: "Login to Betafinance Admin Dashboard",
+};
+
 export default function LoginPage() {
   const { loginAdvertiser, isLoggingIn } = useLoginService();
 

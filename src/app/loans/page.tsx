@@ -2,6 +2,13 @@ import React, { Suspense } from "react";
 import LoansContent from "@/components/loans/LoansContent";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Loans | Betafinance",
+  description: "Loans Management",
+};
+
 function LoansSkeleton() {
   return (
     <div className="space-y-6">

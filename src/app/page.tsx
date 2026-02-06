@@ -24,6 +24,12 @@ import {
 } from "@/lib/utils/formatters";
 import Icon from "@/lib/constants/icons";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Betafinance",
+  description: "Dashboard Overview",
+};
 
 export default function Home() {
   const { overviewData, isOverviewLoading } = useFetchOverviewService();
@@ -35,34 +41,34 @@ export default function Home() {
   // Map overview data to KPI cards
   const kpiCards = overviewData
     ? [
-        {
-          title: "Total Transaction Volume",
-          content: formatCurrencyWithHash(
-            overviewData.total_transaction_volume,
-          ),
-          footer: formatCurrency(overviewData.volume_this_month),
-        },
-        {
-          title: "Total Users",
-          content: formatNumber(overviewData.total_users),
-          footer: "",
-        },
-        {
-          title: "New Users This Month",
-          content: formatNumber(overviewData.new_users_this_month),
-          footer: "",
-        },
-        {
-          title: "Active Loans",
-          content: formatNumber(overviewData.active_loans),
-          footer: "",
-        },
-        {
-          title: "Average Credit Score",
-          content: formatNumber(overviewData.average_credit_score),
-          footer: "",
-        },
-      ]
+      {
+        title: "Total Transaction Volume",
+        content: formatCurrencyWithHash(
+          overviewData.total_transaction_volume,
+        ),
+        footer: formatCurrency(overviewData.volume_this_month),
+      },
+      {
+        title: "Total Users",
+        content: formatNumber(overviewData.total_users),
+        footer: "",
+      },
+      {
+        title: "New Users This Month",
+        content: formatNumber(overviewData.new_users_this_month),
+        footer: "",
+      },
+      {
+        title: "Active Loans",
+        content: formatNumber(overviewData.active_loans),
+        footer: "",
+      },
+      {
+        title: "Average Credit Score",
+        content: formatNumber(overviewData.average_credit_score),
+        footer: "",
+      },
+    ]
     : [];
 
   return (
@@ -71,69 +77,69 @@ export default function Home() {
       <div className="grid grid-cols-1 rounded border border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {isOverviewLoading
           ? // Loading skeletons
-            Array.from({ length: 5 }).map((_, index) => (
-              <Card
-                key={index}
-                className={cn(
-                  "border-y-0 border-l-0 rounded-none bg-white",
-                  "border-r-0",
-                  "border-b-[#E5E7EB]",
-                  index !== 4 && "border-b",
-                  index === 4 && "border-b-0",
-                  "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
-                  (index + 1) % 2 === 0 && "md:border-r-0",
-                  index < 3 && "md:border-b-[#E5E7EB] md:border-b",
-                  "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
-                  index === 4 && "border-0 md:border-0 lg:border-0",
-                )}
-              >
-                <CardHeader className="pb-2">
-                  <Skeleton className="h-4 w-32" />
-                </CardHeader>
-                <CardContent className="space-y-1">
-                  <Skeleton className="h-8 w-24" />
-                  <Skeleton className="h-3 w-40" />
-                </CardContent>
-              </Card>
-            ))
+          Array.from({ length: 5 }).map((_, index) => (
+            <Card
+              key={index}
+              className={cn(
+                "border-y-0 border-l-0 rounded-none bg-white",
+                "border-r-0",
+                "border-b-[#E5E7EB]",
+                index !== 4 && "border-b",
+                index === 4 && "border-b-0",
+                "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
+                (index + 1) % 2 === 0 && "md:border-r-0",
+                index < 3 && "md:border-b-[#E5E7EB] md:border-b",
+                "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
+                index === 4 && "border-0 md:border-0 lg:border-0",
+              )}
+            >
+              <CardHeader className="pb-2">
+                <Skeleton className="h-4 w-32" />
+              </CardHeader>
+              <CardContent className="space-y-1">
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-3 w-40" />
+              </CardContent>
+            </Card>
+          ))
           : kpiCards.map((item, index) => (
-              <Card
-                key={index}
-                className={cn(
-                  "border-y-0 border-l-0 rounded-none bg-white",
-                  "border-r-0",
-                  "border-b-[#E5E7EB]",
-                  index !== kpiCards.length - 1 && "border-b",
-                  index === kpiCards.length - 1 && "border-b-0",
-                  "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
-                  (index + 1) % 2 === 0 && "md:border-r-0",
-                  index < kpiCards.length - 2 &&
-                    "md:border-b-[#E5E7EB] md:border-b",
-                  "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
-                  index === kpiCards.length - 1 &&
-                    "border-0 md:border-0 lg:border-0",
-                )}
-              >
-                <CardHeader className="pb-2">
-                  <CardDescription className="text-xs text-[#95989E] truncate">
-                    {item.title}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-1">
-                  <p className="text-2xl font-bold text-gray-900 text-wrap break-words">
-                    {item.content}
+            <Card
+              key={index}
+              className={cn(
+                "border-y-0 border-l-0 rounded-none bg-white",
+                "border-r-0",
+                "border-b-[#E5E7EB]",
+                index !== kpiCards.length - 1 && "border-b",
+                index === kpiCards.length - 1 && "border-b-0",
+                "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
+                (index + 1) % 2 === 0 && "md:border-r-0",
+                index < kpiCards.length - 2 &&
+                "md:border-b-[#E5E7EB] md:border-b",
+                "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
+                index === kpiCards.length - 1 &&
+                "border-0 md:border-0 lg:border-0",
+              )}
+            >
+              <CardHeader className="pb-2">
+                <CardDescription className="text-xs text-[#95989E] truncate">
+                  {item.title}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-1">
+                <p className="text-2xl font-bold text-gray-900 text-wrap break-words">
+                  {item.content}
+                </p>
+                {item.footer && (
+                  <p className="text-xs text-black">
+                    {item.footer}{" "}
+                    <span className="text-[#95989E]">
+                      in the last 30 days
+                    </span>
                   </p>
-                  {item.footer && (
-                    <p className="text-xs text-black">
-                      {item.footer}{" "}
-                      <span className="text-[#95989E]">
-                        in the last 30 days
-                      </span>
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                )}
+              </CardContent>
+            </Card>
+          ))}
       </div>
 
       {/* Top Rankings and Credit Score */}

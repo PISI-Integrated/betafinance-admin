@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Settings | Betafinance",
+  description: "Settings Management",
+};
+
 const Settings = () => {
   return (
     <div className="space-y-6">
