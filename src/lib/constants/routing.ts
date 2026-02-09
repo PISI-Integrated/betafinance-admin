@@ -35,10 +35,10 @@ export const routes = {
       alt: "marketers",
     },
     {
-      title: "Spin Wheel",
+      title: "Spin Game",
       path: "/spin",
-      icon: Icon.Settings,
-      activeIcon: Icon.SettingsActive,
+      icon: Icon.Spin,
+      activeIcon: Icon.SpinActive,
       alt: "spin",
     },
     {
