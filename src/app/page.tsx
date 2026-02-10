@@ -24,12 +24,12 @@ import {
 } from "@/lib/utils/formatters";
 import Icon from "@/lib/constants/icons";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Dashboard | Betafinance",
-  description: "Dashboard Overview",
-};
+// export const metadata: Metadata = {
+//   title: "Dashboard | Betafinance",
+//   description: "Dashboard Overview",
+// };
 
 export default function Home() {
   const { overviewData, isOverviewLoading } = useFetchOverviewService();

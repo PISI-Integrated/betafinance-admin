@@ -3,6 +3,7 @@ import {
   useGetSingleSpinRewardsApi,
   useGetSpinHistoryApi,
   useGetSpinRewardsApi,
+  useGetSpinRewardStats,
   useUpdateRewardApi,
 } from "@/api/spin.api";
 import { queryClient } from "@/lib/query/queryClient";
@@ -35,6 +36,16 @@ const useFetchSingleSpinRewardService = (rewardId: string) => {
     spinReward: data,
     isRewardLoading: isLoading,
     refetchReward: refetch,
+  };
+};
+
+const useFetchSpinRewardStatsService = () => {
+  const { data, isLoading, refetch } = useGetSpinRewardStats();
+
+  return {
+    spinRewardStats: data,
+    isRewardStatsLoading: isLoading,
+    refetchRewardStats: refetch,
   };
 };
 
@@ -91,4 +102,5 @@ export {
   useFetchSpinRewardsService,
   useFetchSingleSpinRewardService,
   useCreateRewardService,
+  useFetchSpinRewardStatsService,
 };

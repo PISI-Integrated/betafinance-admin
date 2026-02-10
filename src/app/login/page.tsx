@@ -6,13 +6,9 @@ import { Form, FormField } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { LoginFormValues, loginSchema } from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
-
-// import { Metadata } from "next";
-
-// export const metadata: Metadata = {
-//   title: "Login | Betafinance",
-//   description: "Login to Betafinance Admin Dashboard",
-// };
+import Image from "next/image";
+import { Phone, Lock } from "lucide-react";
+import logo from '../../../public/assets/logo.svg'
 
 export default function LoginPage() {
   const { loginAdvertiser, isLoggingIn } = useLoginService();
@@ -30,49 +26,62 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="p-5 flex flex-col gap-y-5 justify-center min-h-dvh md:max-w-[400px] md:mx-auto">
-      <div className="flex flex-col gap-y-4 items-center mb-6 text-center text-titleBlack font-medium text-sm">
-        <p>Log in to Betafinance Admin Dashboard</p>
+    <section className="bg-[#FAFBFE] min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="mb-10">
+        <Image src={logo} alt="Beta Finance Logo" width={100} height={41} priority className="h-auto" />
       </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onRegister)}
-          className="flex flex-col gap-y-3"
-        >
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <TextInput
-                label="Phone Number"
-                placeholder="08xxxxxxxxxx"
-                field={field}
-              />
-            )}
-          />
+      <div className="w-full max-w-[400px] bg-white rounded-lg border border-black/10 p-6">
+        <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-8">Admin Sign in</h1>
 
-          <FormField
-            control={form.control}
-            name="pin"
-            render={({ field }) => (
-              <TextInput
-                label="PIN"
-                type="password"
-                placeholder="****"
-                field={field}
-              />
-            )}
-          />
-          <Button
-            loading={isLoggingIn}
-            type="submit"
-            className="mt-9 w-full disabled:cursor-not-allowed"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onRegister)}
+            className="flex flex-col gap-y-6"
           >
-            Login
-          </Button>
-        </form>
-      </Form>
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <TextInput
+                  label="Phone Number"
+                  placeholder="08xxxxxxxxxx"
+                  icon={<Phone size={20} className="text-gray-400" />}
+                  field={field}
+                  labelClassName="text-gray-400 font-medium mb-1"
+                  className="h-12 bg-white border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all px-4"
+                />
+              )}
+            />
+
+            <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="pin"
+                render={({ field }) => (
+                  <TextInput
+                    label="Pin"
+                    type="password"
+                    placeholder="••••••••"
+                    icon={<Lock size={20} className="text-gray-400" />}
+                    field={field}
+                    labelClassName="text-gray-400 font-medium mb-1"
+                    className="h-12 bg-white border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all px-4"
+                  />
+                )}
+              />
+            </div>
+
+            <Button
+              loading={isLoggingIn}
+              type="submit"
+              className="w-full p-2.5 text-sm font-bold bg-primary hover:bg-primary/90 text-white rounded-sm transition-all mt-4"
+            >
+              Sign in
+            </Button>
+          </form>
+        </Form>
+      </div>
     </section>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarProvider,
@@ -21,16 +21,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { routes } from "@/lib/constants";
 import Header from "@/components/global/Header";
 import AuthGuard from "./AuthGuard";
+import { getToken } from "@/lib/storage";
+import { getUserInitials } from "@/lib/utils/formatters";
 
 const nonDashboardPaths = ["/login"];
 
 function SidebarNav() {
   const pathname = usePathname();
   const { state } = useSidebar();
+  const [user, setUser] = useState<ILoginResponse['user'] | null>(null);
 
   const firstPartItems = routes.sidebarItems.slice(0, 4);
   const lastPartItems = routes.sidebarItems.slice(4, 6);
   const finalPartItems = routes.sidebarItems.slice(6);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const user = await getToken("user")
+      const parsedUser: ILoginResponse['user'] | null = user ? JSON.parse(user) : null;
+      setUser(parsedUser)
+    }
+    loadUser()
+  }, [])
+
+
 
   return (
     <Sidebar collapsible="icon">
@@ -39,15 +53,17 @@ function SidebarNav() {
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <Avatar className="h-10 w-10 shrink-0">
-                <AvatarImage src="/assets/avatar.png" alt="Alexis Olayinka" />
+                <AvatarImage src={user?.avatar ?? undefined} alt={user?.name || "Admin"} />
                 <AvatarFallback className="bg-blue-100 text-blue-600">
-                  AO
+                  {user?.name
+                    ? getUserInitials(user.name)
+                    : "AD"}
                 </AvatarFallback>
               </Avatar>
 
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <span className="text-sm font-semibold text-gray-900 truncate">
-                  Alexis Olayinka
+                  {user?.name || "Admin"}
                 </span>
                 <ChevronDown className="w-4 h-4 text-gray-500 shrink-0" />
               </div>
@@ -67,11 +83,10 @@ function SidebarNav() {
               <Link href={item.path} className="w-full">
                 <SidebarMenuButton
                   isActive={pathname === item.path}
-                  className={`justify-start gap-3 rounded-none ${
-                    pathname === item.path
-                      ? "bg-[#DEEBFF] text-primary border-r border-primary"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
+                  className={`justify-start gap-3 rounded-none ${pathname === item.path
+                    ? "bg-[#DEEBFF] text-primary border-r border-primary"
+                    : "text-gray-600 hover:bg-gray-50"
+                    }`}
                 >
                   <Image
                     src={pathname === item.path ? item.activeIcon : item.icon}
@@ -94,11 +109,10 @@ function SidebarNav() {
                 <Link href={item.path} className="w-full">
                   <SidebarMenuButton
                     isActive={pathname === item.path}
-                    className={`justify-start gap-3 rounded-none ${
-                      pathname === item.path
-                        ? "bg-[#DEEBFF] text-primary border-r border-primary"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
+                    className={`justify-start gap-3 rounded-none ${pathname === item.path
+                      ? "bg-[#DEEBFF] text-primary border-r border-primary"
+                      : "text-gray-600 hover:bg-gray-50"
+                      }`}
                   >
                     <Image
                       src={pathname === item.path ? item.activeIcon : item.icon}
@@ -120,11 +134,10 @@ function SidebarNav() {
                 <Link href={item.path} className="w-full">
                   <SidebarMenuButton
                     isActive={pathname === item.path}
-                    className={`justify-start gap-3 rounded-none ${
-                      pathname === item.path
-                        ? "bg-[#DEEBFF] text-primary border-r border-primary"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
+                    className={`justify-start gap-3 rounded-none ${pathname === item.path
+                      ? "bg-[#DEEBFF] text-primary border-r border-primary"
+                      : "text-gray-600 hover:bg-gray-50"
+                      }`}
                   >
                     <Image
                       src={pathname === item.path ? item.activeIcon : item.icon}

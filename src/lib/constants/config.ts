@@ -39,6 +39,7 @@ const SPIN = {
   rewards: `/admin/rewards`,
   createReward: `/admin/reward`,
   rewardByID: (rewardId: string) => `/admin/reward/${rewardId}`,
+  rewardStats: `/admin/reward/stats`,
 };
 
 export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN };

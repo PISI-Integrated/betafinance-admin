@@ -88,6 +88,10 @@
   border-radius: 6px;
 } */
 
+* {
+  scroll-behavior: smooth;
+}
+
 #userDetailsSidebar::-webkit-scrollbar {
   display: none;
 }

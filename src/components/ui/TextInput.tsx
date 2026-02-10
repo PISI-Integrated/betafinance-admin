@@ -15,6 +15,7 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     ref: React.Ref<any>;
   };
   className?: string;
+  labelClassName?: string;
   icon?: React.ReactElement;
   iconPosition?: "left" | "right";
 }
@@ -23,6 +24,7 @@ export function TextInput({
   label,
   field,
   className,
+  labelClassName,
   type = "text",
   icon,
   iconPosition = "left",
@@ -37,7 +39,7 @@ export function TextInput({
 
   return (
     <FormItem>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
 
       <div className="relative w-full">
         <FormControl>

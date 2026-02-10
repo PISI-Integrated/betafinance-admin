@@ -16,6 +16,7 @@ interface ILoginResponse {
     kycStatus: string;
     creditScore: number;
     virtualAccount: null;
+    avatar: string | null;
   };
 }
 
@@ -263,4 +264,9 @@ interface ISpinRewardsResponse {
   page: number;
   size: number;
   total: number;
+}
+
+interface ISpinRewardStatsResponse {
+  total_reward_amount: number;
+  total_reward_used: number;
 }

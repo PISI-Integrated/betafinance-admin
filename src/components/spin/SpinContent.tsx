@@ -1,14 +1,15 @@
 "use client";
-
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useFetchSpinHistoryService, useFetchSpinRewardsService } from "@/services/spin.service";
+import { useFetchSpinHistoryService, useFetchSpinRewardsService, useFetchSpinRewardStatsService } from "@/services/spin.service";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
 import SpinRewardList from "./SpinRewardList";
 import SpinHistoryList from "./SpinHistoryList";
 import { SpinRewardForm } from "./SpinRewardForm";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
+import { Skeleton } from "../ui/skeleton";
 
 
 
@@ -38,7 +39,7 @@ const SpinContent = () => {
         page: activeTab === "history" ? page : 1,
         page_size: 10,
         sort_order: 'desc',
-    } as any);
+    } as ISpinHistoryParamsDto);
 
     const handleTabChange = (tab: "rewards" | "history") => {
         const params = new URLSearchParams(searchParams.toString());
@@ -61,6 +62,9 @@ const SpinContent = () => {
         setIsFormOpen(true);
     };
 
+    const { spinRewardStats, isRewardStatsLoading } = useFetchSpinRewardStatsService();
+    console.log(spinRewardStats);
+
     return (
         <div className="space-y-6">
             {/* <SpinGradients /> */}
@@ -73,6 +77,17 @@ const SpinContent = () => {
                             Add Reward
                         </Button>
                     )}
+                </div>
+            </div>
+
+            <div className="flex flex-col border rounded-sm  border-[#E5E7EB] bg-white w-full sm:w-fit sm:flex-row">
+                <div className="p-4 flex flex-col gap-y-2 border-b  border-[#E5E7EB] sm:border-r">
+                    <p className="text-sm  text-[#95989E]">Amount In Rewards</p>
+                    {isRewardStatsLoading ? <Skeleton className="h-6 w-24" /> : <h2 className="text-lg font-bold text-[#000307]">{formatCurrency(spinRewardStats?.total_reward_amount || 0)}</h2>}
+                </div>
+                <div className="p-4 flex flex-col gap-y-2">
+                    <p className="text-sm  text-[#95989E]">Total Spin Won</p>
+                    {isRewardStatsLoading ? <Skeleton className="h-6 w-24" /> : <h2 className="text-lg font-bold text-[#000307]">{spinRewardStats?.total_reward_used}</h2>}
                 </div>
             </div>
 

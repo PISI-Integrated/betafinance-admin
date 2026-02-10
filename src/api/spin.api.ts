@@ -18,6 +18,13 @@ const useGetSpinRewardsApi = (params?: ISpinRewardsParamsDto) => {
   });
 };
 
+const useGetSpinRewardStats = () => {
+  return useQuery<ISpinRewardStatsResponse, Error>({
+    queryKey: ["spin", "rewards", "stats"],
+    queryFn: () => api.get<ISpinRewardStatsResponse>(SPIN.rewardStats),
+  });
+};
+
 const useGetSingleSpinRewardsApi = (rewardId: string) => {
   return useQuery<SpinRewardItem, Error>({
     queryKey: ["spin", "reward", rewardId],
@@ -44,4 +51,5 @@ export {
   useCreateRewardApi,
   useGetSpinRewardsApi,
   useGetSingleSpinRewardsApi,
+  useGetSpinRewardStats,
 };
