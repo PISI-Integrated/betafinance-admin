@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 import {
@@ -74,24 +73,13 @@ export default function Home() {
   return (
     <main className="space-y-6">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 rounded border border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-1 overflow-hidden rounded-lg border-l border-t border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {isOverviewLoading
           ? // Loading skeletons
           Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
-              className={cn(
-                "border-y-0 border-l-0 rounded-none bg-white",
-                "border-r-0",
-                "border-b-[#E5E7EB]",
-                index !== 4 && "border-b",
-                index === 4 && "border-b-0",
-                "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
-                (index + 1) % 2 === 0 && "md:border-r-0",
-                index < 3 && "md:border-b-[#E5E7EB] md:border-b",
-                "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
-                index === 4 && "border-0 md:border-0 lg:border-0",
-              )}
+              className="rounded-none border-0 border-b border-r border-[#E5E7EB] bg-white shadow-none h-full"
             >
               <CardHeader className="pb-2">
                 <Skeleton className="h-4 w-32" />
@@ -105,20 +93,7 @@ export default function Home() {
           : kpiCards.map((item, index) => (
             <Card
               key={index}
-              className={cn(
-                "border-y-0 border-l-0 rounded-none bg-white",
-                "border-r-0",
-                "border-b-[#E5E7EB]",
-                index !== kpiCards.length - 1 && "border-b",
-                index === kpiCards.length - 1 && "border-b-0",
-                "md:border-r-[#E5E7EB] md:border-r md:border-b-0",
-                (index + 1) % 2 === 0 && "md:border-r-0",
-                index < kpiCards.length - 2 &&
-                "md:border-b-[#E5E7EB] md:border-b",
-                "lg:border-b-0 lg:border-r-[#E5E7EB] lg:border-r",
-                index === kpiCards.length - 1 &&
-                "border-0 md:border-0 lg:border-0",
-              )}
+              className="rounded-none border-0 border-b border-r border-[#E5E7EB] bg-white shadow-none h-full"
             >
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs text-[#95989E] truncate">
