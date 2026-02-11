@@ -9,7 +9,7 @@ export function formatCurrency(amount: number) {
   const formatted = new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format(amount);
   return formatted;
 }
