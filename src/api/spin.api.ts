@@ -35,7 +35,7 @@ const useGetSingleSpinRewardsApi = (rewardId: string) => {
 
 const useCreateRewardApi = () => {
   return useMutation<SpinRewardItem, Error, IRewardDto>({
-    mutationFn: (body) => api.patch(SPIN.createReward, body),
+    mutationFn: (body) => api.post(SPIN.createReward, body),
   });
 };
 

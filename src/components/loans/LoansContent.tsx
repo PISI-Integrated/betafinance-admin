@@ -15,6 +15,8 @@ import LoanDetailsSidebar from "../LoanDetailsSidebar";
 import { useFetchAllLoansService } from "@/services/loans.service";
 import { formatCurrency } from "@/lib/utils/formatters";
 import TableSkeleton from "../TableSkeleton";
+import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/utils";
 
 const LoansContent = () => {
   const router = useRouter();
@@ -64,6 +66,21 @@ const LoansContent = () => {
         amount: formatCurrency(loan.amount),
         borrower: loan.borrower,
         loanPeriod: `${loan.termdays} days`,
+        date: formatDate(loan.createdat, true),
+        status: (
+          <Badge
+            variant={
+              loan.status === "repaid"
+                ? "success"
+                : loan.status === "pending"
+                  ? "pending"
+                  : "outline"
+            }
+            className="capitalize"
+          >
+            {loan.status}
+          </Badge>
+        ),
       };
 
       if (activeTab === LoanTabs.P2P) {
@@ -113,22 +130,20 @@ const LoansContent = () => {
       <div className="flex gap-2">
         <Button
           variant="ghost"
-          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
-            activeTab === LoanTabs.BETA_LOANS
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-          }`}
+          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${activeTab === LoanTabs.BETA_LOANS
+            ? "border-blue-600 bg-blue-50 text-blue-600"
+            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           onClick={() => handleTabChange(LoanTabs.BETA_LOANS)}
         >
           Beta Loans
         </Button>
         <Button
           variant="ghost"
-          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
-            activeTab === LoanTabs.P2P
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-          }`}
+          className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${activeTab === LoanTabs.P2P
+            ? "border-blue-600 bg-blue-50 text-blue-600"
+            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           onClick={() => handleTabChange(LoanTabs.P2P)}
         >
           P2P Market Place
@@ -156,41 +171,37 @@ const LoansContent = () => {
         {activeTab === LoanTabs.BETA_LOANS ? (
           <>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "all"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "all"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("all")}
             >
               All
             </button>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "pending"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "pending"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("pending")}
             >
               Pending
             </button>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "funded"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "funded"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("funded")}
             >
               Funded
             </button>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "repaid"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "repaid"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("repaid")}
             >
               Repaid
@@ -199,31 +210,28 @@ const LoansContent = () => {
         ) : (
           <>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "all"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "all"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("all")}
             >
               All
             </button>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "pending"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "pending"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               onClick={() => handleStatusChange("pending")}
             >
               Pending
             </button>
             <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "repaid"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`pb-3 text-sm font-medium transition-colors ${activeStatus === "repaid"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+                }`}
               // For P2P, \"Completed\" tab maps to \"repaid\" status
               onClick={() => handleStatusChange("repaid")}
             >

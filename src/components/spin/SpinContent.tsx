@@ -11,8 +11,6 @@ import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
 
-
-
 const SpinContent = () => {
     const router = useRouter();
     const pathname = usePathname();
@@ -31,7 +29,6 @@ const SpinContent = () => {
     const { spinRewards, isRewardsLoading } = useFetchSpinRewardsService({
         page: activeTab === "rewards" ? page : 1,
         size: 50,
-        is_active: true
     });
 
     // History Fetching
@@ -86,7 +83,7 @@ const SpinContent = () => {
                     {isRewardStatsLoading ? <Skeleton className="h-6 w-24" /> : <h2 className="text-lg font-bold text-[#000307]">{formatCurrency(spinRewardStats?.total_reward_amount || 0)}</h2>}
                 </div>
                 <div className="p-4 flex flex-col gap-y-2">
-                    <p className="text-sm  text-[#95989E]">Total Spin Won</p>
+                    <p className="text-sm  text-[#95989E]">Total Reward Used</p>
                     {isRewardStatsLoading ? <Skeleton className="h-6 w-24" /> : <h2 className="text-lg font-bold text-[#000307]">{spinRewardStats?.total_reward_used}</h2>}
                 </div>
             </div>

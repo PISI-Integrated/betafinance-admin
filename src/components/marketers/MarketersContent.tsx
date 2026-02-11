@@ -46,21 +46,19 @@ const MarketersContent = () => {
       {/* Status Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === MarketerTabStatus.ACTIVE
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === MarketerTabStatus.ACTIVE
+            ? "border-b-2 border-blue-600 text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => handleTabChange(MarketerTabStatus.ACTIVE)}
         >
           Active
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === MarketerTabStatus.INACTIVE
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === MarketerTabStatus.INACTIVE
+            ? "border-b-2 border-blue-600 text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => handleTabChange(MarketerTabStatus.INACTIVE)}
         >
           Inactive
@@ -74,8 +72,10 @@ const MarketersContent = () => {
             <CardContent className="p-0">
               <TableWithPagination
                 columns={marketerData.marketerTableHead}
-                data={data}
-                // onRowClick={handleRowClick}
+                data={data} currentPage={0} totalPages={0} itemsPerPage={0} onPageChange={function (page: number): void {
+                  throw new Error("Function not implemented.");
+                }}
+              // onRowClick={handleRowClick}
               />
             </CardContent>
           </Card>

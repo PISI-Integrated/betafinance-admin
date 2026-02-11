@@ -72,6 +72,8 @@ export interface LoanP2PRow {
   lender?: string;
   borrower: string;
   loanPeriod: string;
+  date: string;
+  status: React.ReactNode;
 }
 
 export interface LoanBetaRow {
@@ -79,6 +81,8 @@ export interface LoanBetaRow {
   amount: string;
   borrower: string;
   loanPeriod: string;
+  date: string;
+  status: React.ReactNode;
 }
 
 export interface CustomerData {

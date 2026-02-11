@@ -40,21 +40,19 @@ const AdminContent = () => {
       {/* Status Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeStatus === AdminStatus.ACTIVE
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeStatus === AdminStatus.ACTIVE
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-gray-900"
-          }`}
+            }`}
           onClick={() => handleStatusChange(AdminStatus.ACTIVE)}
         >
           Active
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeStatus === AdminStatus.SUSPENDED
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeStatus === AdminStatus.SUSPENDED
               ? "border-b-2 border-blue-600 text-blue-600"
               : "text-gray-600 hover:text-gray-900"
-          }`}
+            }`}
           onClick={() => handleStatusChange(AdminStatus.SUSPENDED)}
         >
           Inactive
@@ -69,8 +67,9 @@ const AdminContent = () => {
               <TableWithPagination
                 columns={columns}
                 data={data}
-                onRowClick={handleRowClick}
-              />
+                onRowClick={handleRowClick} currentPage={0} totalPages={0} itemsPerPage={0} onPageChange={function (page: number): void {
+                  throw new Error("Function not implemented.");
+                }} />
             </CardContent>
           </Card>
         </div>

@@ -169,11 +169,15 @@ export const loanData: LoanData = {
       { header: "Lender", accessor: "lender" },
       { header: "Borrower", accessor: "borrower" },
       { header: "Loan period", accessor: "loanPeriod" },
+      { header: "Date", accessor: "date" },
+      { header: "Status", accessor: "status" },
     ],
     betaLoans: [
       { header: "Amount", accessor: "amount" },
       { header: "Borrower", accessor: "borrower" },
       { header: "Loan period", accessor: "loanPeriod" },
+      { header: "Date", accessor: "date" },
+      { header: "Status", accessor: "status" },
     ],
   },
   loanTableBody: {
@@ -186,6 +190,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "2",
@@ -195,6 +201,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "3",
@@ -204,6 +212,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "4",
@@ -213,6 +223,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "5",
@@ -222,6 +234,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "repaid",
       },
       {
         id: "6",
@@ -231,6 +245,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "7",
@@ -240,6 +256,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "8",
@@ -249,6 +267,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "repaid",
       },
       {
         id: "9",
@@ -258,6 +278,8 @@ export const loanData: LoanData = {
         lender: "@justinlati",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
     ],
     betaLoans: [
@@ -266,54 +288,72 @@ export const loanData: LoanData = {
         amount: "₦4,000",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "2",
         amount: "₦6,000",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "3",
         amount: "₦8,500",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "4",
         amount: "₦1,500",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "5",
         amount: "₦500",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "repaid",
       },
       {
         id: "6",
         amount: "₦6,800",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "funded",
       },
       {
         id: "7",
         amount: "₦10,500",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
       {
         id: "8",
         amount: "₦20,000",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "repaid",
       },
       {
         id: "9",
         amount: "₦2,500",
         borrower: "@johndorsi",
         loanPeriod: "2 weeks",
+        date: "2024-10-25",
+        status: "pending",
       },
     ],
   },
@@ -1033,8 +1073,8 @@ export const customerTableHeader: Array<{
   header: string;
   accessor: keyof ICustomersResponse["items"][0];
 }> = [
-  { header: "Name", accessor: "name" },
-  { header: "Credit score", accessor: "creditScore" },
-  { header: "Total Loans ", accessor: "totalLoans" },
-  { header: "Joined at", accessor: "createdAt" },
-];
+    { header: "Name", accessor: "name" },
+    { header: "Credit score", accessor: "creditScore" },
+    { header: "Total Loans ", accessor: "totalLoans" },
+    { header: "Joined at", accessor: "createdAt" },
+  ];

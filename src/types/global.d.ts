@@ -180,6 +180,7 @@ interface ILoansResponse {
     status: loanStatus;
     loantype: loanType;
     interestrate: number;
+    createdat: string;
   }[];
 }
 
@@ -243,7 +244,7 @@ interface IRewardDto {
 interface ISpinRewardsParamsDto {
   page: number;
   size: number;
-  is_active: boolean;
+  is_active?: boolean;
 }
 
 interface SpinRewardItem {

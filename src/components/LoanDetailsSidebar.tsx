@@ -91,16 +91,31 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
                   <div className="flex flex-col gap-y-1">
                     <span className="text-[#344054] text-xs">Type</span>
                     <span
-                      className={`w-fit text-sm font-medium px-2 py-1 rounded-lg ${
-                        loan.type === "Request"
+                      className={`w-fit text-sm font-medium px-2 py-1 rounded-lg ${loan.type === "Request"
                           ? "text-[#3B82F6] bg-[#EFF6FF]"
                           : "text-[#8B5CF6] bg-[#F5F3FF]"
-                      }`}
+                        }`}
                     >
                       {loan.type}
                     </span>
                   </div>
                 )}
+
+                {/* Date */}
+                <div className="flex flex-col gap-y-1">
+                  <span className="text-[#344054] text-xs">Date</span>
+                  <span className="font-medium text-[#010813] text-sm">
+                    {loan.date}
+                  </span>
+                </div>
+
+                {/* Status */}
+                <div className="flex flex-col gap-y-1">
+                  <span className="text-[#344054] text-xs">Status</span>
+                  <span className="font-medium text-[#010813] text-sm">
+                    {loan.status}
+                  </span>
+                </div>
 
                 {/* Loan ID */}
                 <div className="flex flex-col gap-y-1">
