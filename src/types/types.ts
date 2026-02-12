@@ -1,4 +1,3 @@
-
 export interface SideBarItem {
   title: string;
   path: string;
@@ -60,7 +59,7 @@ export interface LoanData {
     }>;
   };
   loanTableBody: {
-    p2p: LoanP2PRow[]; 
+    p2p: LoanP2PRow[];
     betaLoans: LoanBetaRow[];
   };
 }
@@ -73,6 +72,8 @@ export interface LoanP2PRow {
   lender?: string;
   borrower: string;
   loanPeriod: string;
+  date: string;
+  status: React.ReactNode;
 }
 
 export interface LoanBetaRow {
@@ -80,14 +81,15 @@ export interface LoanBetaRow {
   amount: string;
   borrower: string;
   loanPeriod: string;
+  date: string;
+  status: React.ReactNode;
 }
-
 
 export interface CustomerData {
   customerTableHead: {
     p2p: Array<{
       header: string;
-      accessor: keyof CustomerRow; 
+      accessor: keyof CustomerRow;
     }>;
     betaLoans: Array<{
       header: string;
@@ -103,10 +105,22 @@ export interface CustomerData {
 export interface CustomerRow {
   id: string;
   name: string;
+  dateJoined: string;
   username: string;
+  status: "active" | "suspended";
+  accountNumber: string;
   creditScore: number;
-  loansTaken: string;
-  loansGiven: string;
+  totalAmountBorrowed: number;
+  highestAmountBorrowed: number;
+  numberOfLoansCollected: number;
+  lengthOfCreditHistory: number;
+  longestLoanPeriod: string;
+  shortestLoanPeriod: string;
+  totalAmountLent: number;
+  highestAmountLent: number;
+  numberOfLoansGiven: number;
+  longestLendingPeriod: string;
+  shortestLendingPeriod: string;
 }
 
 export interface AdminRow {
@@ -115,20 +129,10 @@ export interface AdminRow {
   username: string;
   phoneNumber: string;
   email: string;
-  status: "active" | "suspended";
+  status: "active" | "inactive" | "suspended";
   dateAdded: string;
   dateJoined: string;
-  highestAmountLent: string;
-  loansGiven: number;
-  longestLendingPeriod: string;
-  shortestLendingPeriod: string;
-  totalAmountBorrowed: string;
-  highestAmountBorrowed: string;
-  loansCollected: number;
-  creditHistoryLength: string;
-  longestLoanPeriod: string;
-  shortestLoanPeriod: string;
-  creditScore: number;
+  role: string;
 }
 
 export interface AdminData {
@@ -138,8 +142,6 @@ export interface AdminData {
   }>;
   adminTableBody: AdminRow[];
 }
-
-
 
 export interface UserDetails {
   phoneNumber: string;
@@ -155,4 +157,23 @@ export interface UserDetails {
   longestLoanPeriod: string;
   shortestLoanPeriod: string;
   creditScore: number;
+}
+
+export interface MarketerRow {
+  id: string;
+  totalRevenue: number;
+  totalCustomers: number;
+  activeCustomers: number;
+  monthlyCustomers: number;
+  username: string;
+  name: string;
+  isActive: boolean;
+}
+
+export interface MarketerData {
+  marketerTableHead: Array<{
+    header: string;
+    accessor: keyof MarketerRow;
+  }>;
+  marketerTableBody: MarketerRow[];
 }

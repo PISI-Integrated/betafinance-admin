@@ -1,189 +1,53 @@
-import { useSideBarToggle } from "@/hooks/useSidebarToggle";
 import { routes } from "@/lib/constants";
-import Image from "next/image";
-import React from "react";
-import { ChevronDown, Download } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Download, Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 
 const HeaderOps = ({ currentPath }: { currentPath: string }) => {
-  const renderHeaderOps = () => {
-    const matchedItem = routes.sidebarItems.find(
-      (item) => item.path === currentPath,
-    );
-    if (matchedItem) {
-      switch (matchedItem) {
-        case routes.sidebarItems[0]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <Select>
-                <SelectTrigger className="border-0">
-                  <SelectValue placeholder="30 days" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[1]:
-          return (
-            <div className="flex gap-4 items-center">
-              <div
-                className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-              >
-                <Select>
-                  <SelectTrigger className="border-0">
-                    <SelectValue placeholder="30 days" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Fruits</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup> 
-                  </SelectContent>
-                </Select>
-                <div className="rounded-xl">
-                  <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[2]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[3]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[4]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <Select>
-                <SelectTrigger className="border-0">
-                  <SelectValue placeholder="30 days" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[5]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <Select>
-                <SelectTrigger className="border-0">
-                  <SelectValue placeholder="30 days" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        case routes.sidebarItems[6]:
-          return (
-            <div
-              className={`flex flex-col md:flex-row items-center gap-2 md:gap-4 pr-6`}
-            >
-              <div className="rounded-xl">
-                <Button className="bg-primary-light text-primary hover:bg-primary-light/40">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
-          );
-        default:
-          return null;
-      }
-    }
-    return null;
-  };
+  const matchedItem = routes.sidebarItems.find(
+    (item) => item.path === currentPath,
+  );
+
+  // Pages with date filters and download button
+  const hasDateFilters =
+    currentPath === "/" ||
+    currentPath === "/loans" ||
+    currentPath === "/marketers";
+
+  // All pages except help and settings have download button
+  const hasDownload =
+    currentPath !== "/help" &&
+    currentPath !== "/settings" &&
+    currentPath !== "/marketers";
 
   return (
-    <div className={`${currentPath === "/helpcentre" ? "mr-0" : "pl-5"}`}>
-      {renderHeaderOps()}
+    <div className="flex items-center gap-x-2">
+      {hasDateFilters && (
+        <>
+          <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-[6px] py-2 text-sm">
+            <span className="text-xs text-gray-400 font-light">
+              Start date:
+            </span>
+            <span className="font-medium">12/02/25</span>
+            <Calendar className="h-4 w-4 text-gray-500" />
+          </div>
+          <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-[6px] py-2 text-sm">
+            <span className="text-xs text-gray-400 font-light">End date:</span>
+            <span className="font-medium">12/02/25</span>
+            <Calendar className="h-4 w-4 text-gray-500" />
+          </div>
+        </>
+      )}
+      {hasDownload && (
+        <Button className="bg-blue-100 text-blue-600 hover:bg-blue-200">
+          <Download className="mr-2 h-4 w-4" />
+          Download
+        </Button>
+      )}
+      {currentPath === "/marketers" && (
+        <Button className="text-blue-600 text-sm font-normal bg-[#DEEBFF]">
+          + Create new marketer
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,13 +1,17 @@
-import Image from "next/image";
-import React from "react";
 import { Input } from "../ui/input";
+import { Search } from "lucide-react";
 
 const HeaderSearch = ({ currentPath }: { currentPath: string }) => {
+  if (currentPath === "/settings" || currentPath === "/help") {
+    return null;
+  }
+
   return (
-    <div className="flex items-center">
+    <div className="relative w-full max-w-[240px]">
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
       <Input
-        className="text-sm  w-full  border-[1px] bg-white border-gray-300 px-12"
-        placeholder="search anything..."
+        className="w-full border-gray-300 bg-gray-50 pl-10 text-sm focus:bg-white"
+        placeholder="Search anything..."
       />
     </div>
   );
