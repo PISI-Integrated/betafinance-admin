@@ -127,7 +127,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     },
     ref,
   ) => {
-    const { state, isMobile, openMobile } = useSidebar();
+    const { state, isMobile, openMobile, setOpenMobile } = useSidebar();
 
     if (isMobile) {
       return (
@@ -135,13 +135,13 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
           {openMobile && (
             <>
               <div
-                className="fixed inset-0 z-40 bg-black/50"
-                onClick={() => useSidebar().setOpenMobile(false)}
+                className="fixed inset-0 z-[60] bg-black/50"
+                onClick={() => setOpenMobile(false)}
               />
               <aside
                 ref={ref}
                 className={cn(
-                  "fixed inset-y-0 left-0 z-50 flex h-full w-64 flex-col border-r bg-white transition-transform duration-200",
+                  "fixed inset-y-0 left-0 z-[70] flex h-full w-64 flex-col border-r bg-white transition-transform duration-200",
                   className,
                 )}
                 {...props}

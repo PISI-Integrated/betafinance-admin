@@ -7,7 +7,7 @@ const HeaderSearch = ({ currentPath }: { currentPath: string }) => {
   }
 
   return (
-    <div className="relative w-full max-w-[240px]">
+    <div className="relative w-full max-w-[240px] hidden md:block">
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
       <Input
         className="w-full border-gray-300 bg-gray-50 pl-10 text-sm focus:bg-white"

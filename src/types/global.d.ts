@@ -31,6 +31,8 @@ interface IOverviewResponse {
   volume_this_month: number;
   volume_growth_percentage: number;
   average_credit_score: number;
+  total_credit_transactions: number;
+  total_debit_transactions: number;
 }
 
 interface ITopRankItem {
@@ -199,7 +201,7 @@ type PrizeType =
   | "discount"
   | "interest"
   | "cashback"
-  | "reward"
+  | "reward";
 
 interface ISpinHistoryParamsDto {
   page: number;

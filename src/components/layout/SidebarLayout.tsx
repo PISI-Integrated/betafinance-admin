@@ -23,12 +23,14 @@ import Header from "@/components/global/Header";
 import AuthGuard from "./AuthGuard";
 import { getToken } from "@/lib/storage";
 import { getUserInitials } from "@/lib/utils/formatters";
+import logo from '../../../public/assets/logo.svg'
+
 
 const nonDashboardPaths = ["/login"];
 
 function SidebarNav() {
   const pathname = usePathname();
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const [user, setUser] = useState<ILoginResponse['user'] | null>(null);
 
   const firstPartItems = routes.sidebarItems.slice(0, 4);
@@ -83,6 +85,7 @@ function SidebarNav() {
               <Link href={item.path} className="w-full">
                 <SidebarMenuButton
                   isActive={pathname === item.path}
+                  onClick={() => isMobile && setOpenMobile(false)}
                   className={`justify-start gap-3 rounded-none ${pathname === item.path
                     ? "bg-[#DEEBFF] text-primary border-r border-primary"
                     : "text-gray-600 hover:bg-gray-50"
@@ -109,6 +112,7 @@ function SidebarNav() {
                 <Link href={item.path} className="w-full">
                   <SidebarMenuButton
                     isActive={pathname === item.path}
+                    onClick={() => isMobile && setOpenMobile(false)}
                     className={`justify-start gap-3 rounded-none ${pathname === item.path
                       ? "bg-[#DEEBFF] text-primary border-r border-primary"
                       : "text-gray-600 hover:bg-gray-50"
@@ -134,6 +138,7 @@ function SidebarNav() {
                 <Link href={item.path} className="w-full">
                   <SidebarMenuButton
                     isActive={pathname === item.path}
+                    onClick={() => isMobile && setOpenMobile(false)}
                     className={`justify-start gap-3 rounded-none ${pathname === item.path
                       ? "bg-[#DEEBFF] text-primary border-r border-primary"
                       : "text-gray-600 hover:bg-gray-50"
@@ -158,7 +163,7 @@ function SidebarNav() {
       <SidebarFooter className="border-t border-gray-200">
         {state === "expanded" && (
           <div className="px-4 py-2">
-            <h2 className="text-xl font-bold text-gray-900">Beta Finance</h2>
+            <Image src={logo} alt="Beta Finance Logo" width={100} height={41} priority className="h-auto" />
           </div>
         )}
       </SidebarFooter>

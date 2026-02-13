@@ -42,10 +42,22 @@ export default function Home() {
     ? [
       {
         title: "Total Transaction Volume",
-        content: formatCurrencyWithHash(
+        content: formatCurrency(
           overviewData.total_transaction_volume,
         ),
         footer: formatCurrency(overviewData.volume_this_month),
+      },
+      {
+        title: "Total Credit Transactions",
+        content: formatCurrency(
+          overviewData.total_credit_transactions,
+        ),
+      },
+      {
+        title: "Total Debit Transactions",
+        content: formatCurrency(
+          overviewData.total_debit_transactions,
+        ),
       },
       {
         title: "Total Users",
@@ -63,6 +75,11 @@ export default function Home() {
         footer: "",
       },
       {
+        title: "New Loans This Month",
+        content: formatNumber(overviewData.new_loans_this_month),
+        footer: "",
+      },
+      {
         title: "Average Credit Score",
         content: formatNumber(overviewData.average_credit_score),
         footer: "",
@@ -73,7 +90,7 @@ export default function Home() {
   return (
     <main className="space-y-6">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 overflow-hidden rounded-lg border-l border-t border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-1 overflow-hidden rounded-lg border-l border-t border-[#E5E7EB] bg-white md:grid-cols-2 lg:grid-cols-4">
         {isOverviewLoading
           ? // Loading skeletons
           Array.from({ length: 5 }).map((_, index) => (
@@ -282,7 +299,7 @@ export default function Home() {
             Loan collection summary
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6 w-full h-[400px]">
+        <CardContent className="py-4 w-full h-full">
           <Chart />
         </CardContent>
       </Card>
