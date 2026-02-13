@@ -60,7 +60,6 @@ const SpinContent = () => {
     };
 
     const { spinRewardStats, isRewardStatsLoading } = useFetchSpinRewardStatsService();
-    console.log(spinRewardStats);
 
     return (
         <div className="space-y-6">

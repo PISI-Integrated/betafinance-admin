@@ -41,7 +41,7 @@ const TableWithPagination = <T,>({
 
   return (
     <div className="w-full ">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto whitespace-pre">
         <Table>
           <TableHeader className="bg-[#F9FAFB]">
             <TableRow className="border-b border-gray-200 hover:bg-transparent">
@@ -104,11 +104,10 @@ const TableWithPagination = <T,>({
               variant={page === currentPage ? "default" : "ghost"}
               size="icon"
               onClick={() => handlePageChange(page)}
-              className={`h-8 w-8 ${
-                page === currentPage
+              className={`h-8 w-8 ${page === currentPage
                   ? "bg-blue-50 text-gray-900 hover:bg-blue-100"
                   : "text-gray-600"
-              }`}
+                }`}
             >
               {page}
             </Button>
