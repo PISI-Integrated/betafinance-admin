@@ -5,7 +5,7 @@ const user_url = "admin/user";
 const loans_url = "admin/loans";
 
 const AUTH = {
-  login: "/auth/login",
+  login: "/auth/admin-login",
   refresh: (refreshToken: string) =>
     `${base_url}auth/refresh?refresh_token=${refreshToken}`,
 };
@@ -31,6 +31,7 @@ const CUSTOMER = {
 
 const LOAN = {
   loans: `${loans_url}`,
+  loansTotalAmount: `${loans_url}/amount`,
   loansCount: `${loans_url}/count`,
 };
 

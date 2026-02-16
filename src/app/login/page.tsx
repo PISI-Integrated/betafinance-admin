@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { LoginFormValues, loginSchema } from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
 import Image from "next/image";
-import { Phone, Lock } from "lucide-react";
-import logo from '../../../public/assets/logo.svg'
+import { Phone, Lock, Mail } from "lucide-react";
+import logo from "../../../public/assets/logo.svg";
 
 export default function LoginPage() {
   const { loginAdvertiser, isLoggingIn } = useLoginService();
@@ -16,23 +16,32 @@ export default function LoginPage() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      phone: "",
+      email: "",
       pin: "",
     },
   });
 
   const onRegister = (values: LoginFormValues) => {
-    loginAdvertiser(values.phone, values.pin);
+    loginAdvertiser(values.email, values.pin);
   };
 
   return (
     <section className="bg-[#FAFBFE] min-h-screen flex flex-col items-center justify-center p-6">
       <div className="mb-10">
-        <Image src={logo} alt="Beta Finance Logo" width={100} height={41} priority className="h-auto" />
+        <Image
+          src={logo}
+          alt="Beta Finance Logo"
+          width={100}
+          height={41}
+          priority
+          className="h-auto"
+        />
       </div>
 
       <div className="w-full max-w-[400px] bg-white rounded-lg border border-black/10 p-6">
-        <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-8">Admin Sign in</h1>
+        <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-8">
+          Admin Sign in
+        </h1>
 
         <Form {...form}>
           <form
@@ -41,12 +50,12 @@ export default function LoginPage() {
           >
             <FormField
               control={form.control}
-              name="phone"
+              name="email"
               render={({ field }) => (
                 <TextInput
-                  label="Phone Number"
-                  placeholder="08xxxxxxxxxx"
-                  icon={<Phone size={20} className="text-gray-400" />}
+                  label="Email"
+                  placeholder="admin@mail.com"
+                  icon={<Mail size={20} className="text-gray-400" />}
                   field={field}
                   labelClassName="text-gray-400 font-medium mb-1"
                   className="h-12 bg-white border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all px-4"

@@ -1,5 +1,5 @@
 interface ILoginDto {
-  phone: string;
+  email: string;
   pin: string;
 }
 

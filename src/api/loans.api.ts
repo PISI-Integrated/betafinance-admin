@@ -10,15 +10,24 @@ const useGetLoansApi = (params?: ILoansParamsDto) => {
   });
 };
 
-const useGetLoansCountApi = (
+const useGetTotalLoansAmountApi = (
   params?: Omit<ILoansParamsDto, "size" | "page">,
 ) => {
-  return useQuery<ICustomerActivityResponse[], Error>({
-    queryKey: ["loans", "count", params],
-    queryFn: () =>
-      api.get<ICustomerActivityResponse[]>(LOAN.loansCount, params),
+  return useQuery<{ amount: number }, Error>({
+    queryKey: ["loans", "total", params],
+    queryFn: () => api.get<{ amount: number }>(LOAN.loansTotalAmount, params),
     placeholderData: keepPreviousData,
   });
 };
 
-export { useGetLoansApi, useGetLoansCountApi };
+const useGetLoansCountApi = (
+  params?: Omit<ILoansParamsDto, "size" | "page">,
+) => {
+  return useQuery<{ count: number }, Error>({
+    queryKey: ["loans", "count", params],
+    queryFn: () => api.get<{ count: number }>(LOAN.loansCount, params),
+    placeholderData: keepPreviousData,
+  });
+};
+
+export { useGetLoansApi, useGetTotalLoansAmountApi, useGetLoansCountApi };

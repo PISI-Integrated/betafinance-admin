@@ -1,4 +1,8 @@
-import { useGetLoansApi, useGetLoansCountApi } from "@/api/loans.api";
+import {
+  useGetLoansApi,
+  useGetLoansCountApi,
+  useGetTotalLoansAmountApi,
+} from "@/api/loans.api";
 
 const useFetchAllLoansService = (params?: ILoansParamsDto) => {
   const { data, isLoading, refetch } = useGetLoansApi(params);
@@ -10,14 +14,28 @@ const useFetchAllLoansService = (params?: ILoansParamsDto) => {
   };
 };
 
+const useFetchTotalLoansAmountService = (params?: ILoansParamsDto) => {
+  const { data, isLoading, refetch } = useGetTotalLoansAmountApi(params);
+
+  return {
+    totalLoansAmount: data,
+    isTotalLoansAmountLoading: isLoading,
+    refetchTotalLoansAmount: refetch,
+  };
+};
+
 const useFetchLoansCountService = (params?: ILoansParamsDto) => {
   const { data, isLoading, refetch } = useGetLoansCountApi(params);
 
   return {
-    LoanCount: data,
+    loanCount: data,
     isLoanCountLoading: isLoading,
     refetchLoanCount: refetch,
   };
 };
 
-export { useFetchAllLoansService, useFetchLoansCountService };
+export {
+  useFetchAllLoansService,
+  useFetchTotalLoansAmountService,
+  useFetchLoansCountService,
+};
