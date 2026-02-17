@@ -3,6 +3,8 @@ import {
   useGetOverviewsApi,
   useGetTopRankingLendersApi,
   useGetTopRankingCreditScoresApi,
+  useGetRecentActivityApi,
+  useGetMonthlyTrendApi,
 } from "@/api/analytics.api";
 
 const useFetchOverviewService = () => {
@@ -35,8 +37,30 @@ const useFetchTopRankingCreditScoresService = () => {
   };
 };
 
+const useFetchRecentActivityService = (params?: { limit: number }) => {
+  const { data, isLoading, refetch } = useGetRecentActivityApi(params);
+
+  return {
+    recentActivity: data,
+    isRecentActivityLoading: isLoading,
+    refetchRecentActivity: refetch,
+  };
+};
+
+const useFetchMonthlyTrendService = (params?: { months: number }) => {
+  const { data, isLoading, refetch } = useGetMonthlyTrendApi(params);
+
+  return {
+    monthlyTrend: data,
+    isMonthlyTrendLoading: isLoading,
+    refetchMonthlyTrend: refetch,
+  };
+};
+
 export {
   useFetchOverviewService,
   useFetchTopRankingLendersService,
   useFetchTopRankingCreditScoresService,
+  useFetchRecentActivityService,
+  useFetchMonthlyTrendService,
 };

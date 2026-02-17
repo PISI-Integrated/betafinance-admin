@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { ANALYTICS } from "@/lib/constants/config";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const useGetOverviewsApi = () => {
   return useQuery<IOverviewResponse, Error>({
@@ -22,8 +22,29 @@ const useGetTopRankingCreditScoresApi = () => {
     queryFn: () => api.get<ITopRankssResponse>(ANALYTICS.topRankCreditScores),
   });
 };
+
+const useGetRecentActivityApi = (params?: { limit: number }) => {
+  return useQuery<IRecentActivityResponse, Error>({
+    queryKey: ["analytics", "recent-activity"],
+    queryFn: () =>
+      api.get<IRecentActivityResponse>(ANALYTICS.recentActivity, params),
+    placeholderData: keepPreviousData,
+  });
+};
+
+const useGetMonthlyTrendApi = (params?: { months: number }) => {
+  return useQuery<IMonthlyTrendResponse, Error>({
+    queryKey: ["analytics", "monthly-trends"],
+    queryFn: () =>
+      api.get<IMonthlyTrendResponse>(ANALYTICS.monthlyTrends, params),
+    placeholderData: keepPreviousData,
+  });
+};
+
 export {
   useGetOverviewsApi,
   useGetTopRankingLendersApi,
   useGetTopRankingCreditScoresApi,
+  useGetRecentActivityApi,
+  useGetMonthlyTrendApi,
 };

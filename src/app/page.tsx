@@ -3,12 +3,14 @@ import { Chart } from "@/components/Chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   useFetchOverviewService,
+  useFetchRecentActivityService,
   useFetchTopRankingCreditScoresService,
   useFetchTopRankingLendersService,
 } from "@/services/analytics.service";
 import { KPICards } from "@/components/dashboard/KPICards";
 import { RankingSection } from "@/components/dashboard/RankingSection";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
 
 export default function Home() {
   const { overviewData, isOverviewLoading } = useFetchOverviewService();
@@ -17,6 +19,9 @@ export default function Home() {
   const { topRankingCreditScores, isTopScoresLoading } =
     useFetchTopRankingCreditScoresService();
 
+  const { recentActivity, isRecentActivityLoading } =
+    useFetchRecentActivityService();
+
   return (
     <main className="space-y-6">
       {/* KPI Cards */}
@@ -24,7 +29,6 @@ export default function Home() {
         overviewData={overviewData}
         isOverviewLoading={isOverviewLoading}
       />
-
       {/* Top Rankings and Credit Score */}
       <RankingSection
         topRankingLenders={topRankingLenders}
@@ -32,10 +36,12 @@ export default function Home() {
         topRankingCreditScores={topRankingCreditScores}
         isTopScoresLoading={isTopScoresLoading}
       />
-
-      {/* Comparison Charts */}
       <DashboardCharts />
-
+      {/* Recent Activity */}
+      <RecentActivity
+        recentActivity={recentActivity}
+        isLoading={isRecentActivityLoading}
+      />
       {/* Chart */}
       <Card className="overflow-hidden rounded-lg border-gray-200 bg-white shadow-none">
         <CardHeader className="border-b border-gray-200 pb-4">

@@ -273,3 +273,26 @@ interface ISpinRewardStatsResponse {
   total_reward_amount: number;
   total_reward_used: number;
 }
+
+interface IRecentActivityResponse {
+  activities: {
+    id: string;
+    user: {
+      name: string;
+      initials: string;
+      avatar: string | null;
+    };
+    action: string;
+    timestamp: string;
+    status: string;
+  }[];
+}
+
+interface IMonthlyTrendResponse {
+  trends: {
+    name: string;
+    users: number;
+    loans: number;
+    transactions: number;
+  }[];
+}

@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Bar,
   BarChart,
@@ -26,15 +25,7 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { useFetchLoansCountService } from "@/services/loans.service";
-
-const barData = [
-  { month: "Jan", users: 1500, loans: 400 },
-  { month: "Feb", users: 2100, loans: 700 },
-  { month: "Mar", users: 2200, loans: 600 },
-  { month: "Apr", users: 2700, loans: 800 },
-  { month: "May", users: 3100, loans: 1100 },
-  { month: "Jun", users: 3800, loans: 1400 },
-];
+import { useFetchMonthlyTrendService } from "@/services/analytics.service";
 
 const barConfig = {
   users: {
@@ -44,6 +35,10 @@ const barConfig = {
   loans: {
     label: "Active Loans",
     color: "#10b981",
+  },
+  transactions: {
+    label: "Transactions",
+    color: "#f59e0b",
   },
 } satisfies ChartConfig;
 
@@ -73,12 +68,16 @@ export function DashboardCharts() {
       loan_type: "p2p",
     });
 
+  const { monthlyTrend, isMonthlyTrendLoading } = useFetchMonthlyTrendService();
+
+  const dynamicBarData = monthlyTrend?.trends || [];
+
   const dynamicPieData = [
     { type: "p2p", value: p2pCount?.count || 0, fill: "#3b82f6" },
     { type: "b2c", value: b2cCount?.count || 0, fill: "#10b981" },
   ];
 
-  const isLoading = isB2CLoading || isP2PLoading;
+  const isLoading = isB2CLoading || isP2PLoading || isMonthlyTrendLoading;
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -86,16 +85,16 @@ export function DashboardCharts() {
       <Card className="rounded-lg border-gray-200 bg-white shadow-none">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold text-gray-900 font-inter">
-            User & Loan Growth
+            Business Growth
           </CardTitle>
           <CardDescription className="text-sm text-gray-500">
-            Monthly comparison of new users and active loans
+            Monthly comparison of users, loans and transactions
           </CardDescription>
         </CardHeader>
         <CardContent className="h-[350px] w-full pt-4">
           <ChartContainer config={barConfig} className="h-full w-full">
             <BarChart
-              data={barData}
+              data={dynamicBarData}
               margin={{
                 top: 5,
                 right: 10,
@@ -109,7 +108,7 @@ export function DashboardCharts() {
                 stroke="#f0f0f0"
               />
               <XAxis
-                dataKey="month"
+                dataKey="name"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
@@ -133,6 +132,11 @@ export function DashboardCharts() {
               <Bar
                 dataKey="loans"
                 fill="var(--color-loans)"
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey="transactions"
+                fill="var(--color-transactions)"
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>
