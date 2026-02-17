@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  phone: z.string().min(11, "Phone number must be at least 11 characters long"),
-  pin: z.string().min(4, "PIN must be at least 4 characters long"),
+  email: z.string().email("Invalid email address"),
+  pin: z.string().min(4, "PIN must be at least 4 digits"),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;

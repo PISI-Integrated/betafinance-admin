@@ -8,9 +8,9 @@ const useLoginService = () => {
   const router = useRouter();
   const { mutate: login, isPending, error } = useLoginApi();
 
-  const loginAdvertiser = (phone: string, pin: string) => {
+  const loginAdvertiser = (email: string, pin: string) => {
     login(
-      { phone, pin },
+      { email, pin },
       {
         onSuccess: async (data) => {
           await Promise.all([
@@ -23,6 +23,9 @@ const useLoginService = () => {
             typeof window !== "undefined" ? window.location.search : "";
           const redirectParam = new URLSearchParams(search).get("from");
           router.replace(redirectParam || "/");
+        },
+        onError: (error) => {
+          toast.error("Something went wrong");
         },
       },
     );
