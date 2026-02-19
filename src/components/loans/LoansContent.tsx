@@ -198,7 +198,7 @@ const LoansContent = () => {
             >
               All
             </button>
-            <button
+            {/* <button
               className={`pb-3 text-sm font-medium transition-colors ${
                 activeStatus === "pending"
                   ? "border-b-2 border-blue-600 text-blue-600"
@@ -207,7 +207,7 @@ const LoansContent = () => {
               onClick={() => handleStatusChange("pending")}
             >
               Pending
-            </button>
+            </button> */}
             <button
               className={`pb-3 text-sm font-medium transition-colors ${
                 activeStatus === "funded"
@@ -216,7 +216,7 @@ const LoansContent = () => {
               }`}
               onClick={() => handleStatusChange("funded")}
             >
-              Funded
+              Active
             </button>
             <button
               className={`pb-3 text-sm font-medium transition-colors ${
@@ -240,6 +240,16 @@ const LoansContent = () => {
               onClick={() => handleStatusChange("all")}
             >
               All
+            </button>
+            <button
+              className={`pb-3 text-sm font-medium transition-colors ${
+                activeStatus === "funded"
+                  ? "border-b-2 border-blue-600 text-blue-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+              onClick={() => handleStatusChange("funded")}
+            >
+              Active
             </button>
             <button
               className={`pb-3 text-sm font-medium transition-colors ${

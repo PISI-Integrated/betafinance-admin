@@ -21,7 +21,7 @@ export const routes = {
       alt: "loans",
     },
     {
-      title: "Customers",
+      title: "Users",
       path: "/customers",
       icon: Icon.Customer,
       activeIcon: Icon.CustomerActive,
