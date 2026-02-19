@@ -63,7 +63,7 @@ export function RankingSection({
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">
+                        <p className="capitalize text-sm font-semibold text-gray-900 truncate">
                           {item.name}
                         </p>
                         <p className="text-xs text-gray-500 truncate">
@@ -127,7 +127,7 @@ export function RankingSection({
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">
+                        <p className="capitalize text-sm font-semibold text-gray-900 truncate">
                           {item.name}
                         </p>
                         <p className="text-xs text-gray-500 truncate">

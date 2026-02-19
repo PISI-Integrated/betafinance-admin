@@ -76,34 +76,36 @@ const CustomersContent = () => {
     createdAt: formatDate(item.createdAt, true),
   }));
 
-
   return (
     <div className="space-y-6">
       {/* Status Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.ACTIVE
-            ? "border-b-2 border-blue-600 text-blue-600"
-            : "text-gray-600 hover:text-gray-900"
-            }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${
+            activeTab === CustomerStatus.ACTIVE
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
           onClick={() => handleTabChange(CustomerStatus.ACTIVE)}
         >
           Active
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.PENDING
-            ? "border-b-2 border-blue-600 text-blue-600"
-            : "text-gray-600 hover:text-gray-900"
-            }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${
+            activeTab === CustomerStatus.PENDING
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
           onClick={() => handleTabChange(CustomerStatus.PENDING)}
         >
           KYC Review
         </button>
         <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${activeTab === CustomerStatus.REJECTED
-            ? "border-b-2 border-blue-600 text-blue-600"
-            : "text-gray-600 hover:text-gray-900"
-            }`}
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${
+            activeTab === CustomerStatus.REJECTED
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
           onClick={() => handleTabChange(CustomerStatus.REJECTED)}
         >
           Rejected
