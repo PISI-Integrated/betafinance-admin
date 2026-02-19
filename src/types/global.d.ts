@@ -296,3 +296,17 @@ interface IMonthlyTrendResponse {
     transactions: number;
   }[];
 }
+
+interface ILoanCollectionSummaryDto {
+  period: "day" | "week" | "month" | "year";
+  year: number;
+  month?: number;
+}
+
+interface ILoanCollectionSummaryResponse {
+  period: ILoanCollectionSummaryDto["period"];
+  data: {
+    label: number;
+    total_collected: number;
+  }[];
+}

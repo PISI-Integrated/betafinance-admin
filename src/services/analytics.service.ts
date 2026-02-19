@@ -5,6 +5,7 @@ import {
   useGetTopRankingCreditScoresApi,
   useGetRecentActivityApi,
   useGetMonthlyTrendApi,
+  useGetLoanCollectionSummaryApi,
 } from "@/api/analytics.api";
 
 const useFetchOverviewService = () => {
@@ -57,10 +58,23 @@ const useFetchMonthlyTrendService = (params?: { months: number }) => {
   };
 };
 
+const useFetchLoanCollectionSummaryService = (
+  params: ILoanCollectionSummaryDto,
+) => {
+  const { data, isLoading, refetch } = useGetLoanCollectionSummaryApi(params);
+
+  return {
+    loanCollectionSummary: data,
+    isLoanCollectionSummaryLoading: isLoading,
+    refetchLoanCollectionSummary: refetch,
+  };
+};
+
 export {
   useFetchOverviewService,
   useFetchTopRankingLendersService,
   useFetchTopRankingCreditScoresService,
   useFetchRecentActivityService,
   useFetchMonthlyTrendService,
+  useFetchLoanCollectionSummaryService,
 };
