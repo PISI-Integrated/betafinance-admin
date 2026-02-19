@@ -1,11 +1,10 @@
-
 export const SPIN_REWARD_THEMES = [
   {
     id: "blue_gradient",
     label: "Blue Gradient",
     color: "url(#blueGradientSegment)",
     textColour: "#FFFFFF",
-    previewBg: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)", // Approximation for UI
+    previewBg: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
     previewText: "#FFFFFF",
   },
   {
@@ -14,14 +13,14 @@ export const SPIN_REWARD_THEMES = [
     color: "#FFFFFF",
     textColour: "url(#purpleGradient2)",
     previewBg: "#FFFFFF",
-    previewText: "#8B7FD9", // Fallback/Approx
+    previewText: "#8B7FD9",
   },
   {
     id: "purple_gradient",
     label: "Purple Gradient",
     color: "url(#purpleGradient1)",
     textColour: "#FFFFFF",
-    previewBg: "linear-gradient(to right, #a18cd1 0%, #fbc2eb 100%)", // Approx
+    previewBg: "linear-gradient(to right, #a18cd1 0%, #fbc2eb 100%)",
     previewText: "#FFFFFF",
   },
   {

@@ -25,7 +25,7 @@ const useGetTopRankingCreditScoresApi = () => {
 
 const useGetRecentActivityApi = (params?: { limit: number }) => {
   return useQuery<IRecentActivityResponse, Error>({
-    queryKey: ["analytics", "recent-activity"],
+    queryKey: ["analytics", "recent-activity", params],
     queryFn: () =>
       api.get<IRecentActivityResponse>(ANALYTICS.recentActivity, params),
     placeholderData: keepPreviousData,
@@ -34,9 +34,18 @@ const useGetRecentActivityApi = (params?: { limit: number }) => {
 
 const useGetMonthlyTrendApi = (params?: { months: number }) => {
   return useQuery<IMonthlyTrendResponse, Error>({
-    queryKey: ["analytics", "monthly-trends"],
+    queryKey: ["analytics", "monthly-trends", params],
     queryFn: () =>
       api.get<IMonthlyTrendResponse>(ANALYTICS.monthlyTrends, params),
+    placeholderData: keepPreviousData,
+  });
+};
+
+const useGetLoanCollectionSummaryApi = (params: ILoanCollectionSummaryDto) => {
+  return useQuery<ILoanCollectionSummaryResponse, Error>({
+    queryKey: ["analytics", "loan-collection", params],
+    queryFn: () =>
+      api.get<ILoanCollectionSummaryResponse>(ANALYTICS.loanSummary, params),
     placeholderData: keepPreviousData,
   });
 };
@@ -47,4 +56,5 @@ export {
   useGetTopRankingCreditScoresApi,
   useGetRecentActivityApi,
   useGetMonthlyTrendApi,
+  useGetLoanCollectionSummaryApi,
 };

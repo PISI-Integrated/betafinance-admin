@@ -18,6 +18,7 @@ const ANALYTICS = {
   userStats: `${analytics_url}/user-stats`,
   topRankLenders: `${analytics_url}/top-ranking-lenders`,
   topRankCreditScores: `${analytics_url}/top-ranking-credit-score`,
+  loanSummary: `${analytics_url}/loan-collection-summary`,
 };
 
 const CUSTOMER = {

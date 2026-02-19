@@ -1,5 +1,5 @@
 "use client";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Dot } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -7,38 +7,14 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { month: "1st", value: 120000 },
-  { month: "2nd", value: 180000 },
-  { month: "3rd", value: 190000 },
-  { month: "4th", value: 180000 },
-  { month: "5th", value: 150000 },
-  { month: "6th", value: 100000 },
-  { month: "7th", value: 80000 },
-  { month: "8th", value: 70000 },
-  { month: "9th", value: 75000 },
-  { month: "10th", value: 80000 },
-  { month: "11th", value: 90000 },
-  { month: "12th", value: 85000 },
-  { month: "13th", value: 70000 },
-  { month: "14th", value: 50000 },
-  { month: "15th", value: 80000 },
-  { month: "16th", value: 120000 },
-  { month: "17th", value: 150000 },
-  { month: "18th", value: 220000 },
-  { month: "19th", value: 240000 },
-  { month: "20th", value: 230000 },
-  { month: "21st", value: 210000 },
-  { month: "22nd", value: 200000 },
-  { month: "23rd", value: 280000 },
-  { month: "24th", value: 284900, highlight: true },
-  { month: "25th", value: 260000 },
-  { month: "26th", value: 180000 },
-  { month: "27th", value: 140000 },
-  { month: "28th", value: 100000 },
-  { month: "29th", value: 150000 },
-  { month: "30th", value: 400000 },
-];
+interface ChartProps {
+  data?: {
+    label: number;
+    total_collected: number;
+  }[];
+  isLoading?: boolean;
+  period?: "day" | "week" | "month" | "year";
+}
 
 const chartConfig = {
   value: {
@@ -49,7 +25,7 @@ const chartConfig = {
 
 const CustomDot = (props: any) => {
   const { cx, cy, payload } = props;
-  if (payload.highlight) {
+  if (payload.isLast) {
     return (
       <g>
         <circle
@@ -76,7 +52,64 @@ const CustomDot = (props: any) => {
   return null;
 };
 
-export function Chart() {
+const getLabelSuffix = (period: string | undefined, label: number) => {
+  if (period === "day") {
+    const v = label % 10;
+    const k = label % 100;
+    if (v === 1 && k !== 11) return label + "st";
+    if (v === 2 && k !== 12) return label + "nd";
+    if (v === 3 && k !== 13) return label + "rd";
+    return label + "th";
+  }
+  if (period === "month") {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return months[label - 1] || label.toString();
+  }
+  return label.toString();
+};
+
+export function Chart({
+  data = [],
+  isLoading = false,
+  period = "month",
+}: ChartProps) {
+  const formattedData = data.map((item, index) => ({
+    displayLabel: getLabelSuffix(period, item.label),
+    value: item.total_collected,
+    isLast: index === data.length - 1,
+  }));
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[300px] w-full items-center justify-center">
+        <p className="text-sm text-gray-500">Loading chart data...</p>
+      </div>
+    );
+  }
+
+  if (formattedData.length === 0) {
+    return (
+      <div className="flex h-[300px] w-full items-center justify-center">
+        <p className="text-sm text-gray-500">
+          No data available for this period.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <ChartContainer
       config={chartConfig}
@@ -84,11 +117,11 @@ export function Chart() {
       style={{ height: 300 }}
     >
       <AreaChart
-        data={chartData}
+        data={formattedData}
         margin={{
-          top: 20,
-          right: 20,
-          left: 0,
+          top: 30,
+          right: 30,
+          left: 10,
           bottom: 0,
         }}
       >
@@ -104,17 +137,19 @@ export function Chart() {
           stroke="#e5e7eb"
         />
         <XAxis
-          dataKey="month"
+          dataKey="displayLabel"
           tickLine={false}
           axisLine={{ stroke: "#e5e7eb" }}
           tick={{ fill: "#6b7280", fontSize: 12 }}
-          tickFormatter={(value) => value.slice(0, -2)}
+          tickMargin={10}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
           tick={{ fill: "#6b7280", fontSize: 12 }}
-          tickFormatter={(value) => `${value / 1000}k`}
+          tickFormatter={(value) =>
+            `₦${value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value}`
+          }
         />
         <ChartTooltip
           content={<ChartTooltipContent />}
