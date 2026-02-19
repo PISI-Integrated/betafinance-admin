@@ -23,6 +23,7 @@ export function formatDate(date: string, time = false) {
     day: "numeric",
     hour: time ? "2-digit" : undefined,
     minute: time ? "2-digit" : undefined,
+    timeZone: "Africa/Lagos",
   });
 
   return formattedDate;
@@ -32,6 +33,7 @@ export const formatTime = (dateString: string) =>
   new Date(dateString).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Africa/Lagos",
   });
 
 export const formatAmount = (amount: string, type: "debit" | "credit") =>
