@@ -28,6 +28,7 @@ const CUSTOMER = {
   userDocuments: (userId: string) => `${user_url}/${userId}/documents`,
   updateUserDocuments: (userId: string, docsId: string) =>
     `${user_url}/${userId}/document/${docsId}`,
+  suspendUser: (userId: string) => `${user_url}/${userId}/suspend`,
 };
 
 const LOAN = {
@@ -44,4 +45,9 @@ const SPIN = {
   rewardStats: `/admin/reward/stats`,
 };
 
-export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN };
+const ADMIN = {
+  list: `/admin/admin-users`,
+  invite: `/admin/invite-admin`,
+};
+
+export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN, ADMIN };

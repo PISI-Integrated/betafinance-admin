@@ -80,6 +80,8 @@ interface ICustomersResponse {
     email: string | null;
     totalLoans: number;
     createdAt: string;
+    isSuspended: boolean;
+    suspensionReason: string;
   }[];
 }
 
@@ -309,4 +311,34 @@ interface ILoanCollectionSummaryResponse {
     label: number;
     total_collected: number;
   }[];
+}
+
+interface IPaginationParamsDto {
+  page: number;
+  page_size: number;
+}
+
+interface IAdminListItem {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+interface IAdminListResponse {
+  items: IAdminListItem[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+interface IInviteAdminDto {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface ISuspendUserDto {
+  suspend: boolean;
+  reason?: string;
 }

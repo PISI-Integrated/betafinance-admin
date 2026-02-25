@@ -3,28 +3,52 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   useFetchCustomerActivitiesService,
   useFetchCustomerAnalyticsService,
+  useSuspendCustomerService,
 } from "@/services/users.service";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { AccountTab } from "./AccountTab";
 import { ActivityTab } from "./ActivityTab";
 import { DocumentsTab } from "./DocumentsTab";
+import SuspendConfirmationModal from "./SuspendConfirmationModal";
 
 interface UserDetailsSidebarProps {
   userId: string;
   onClose: () => void;
+  isSuspended: boolean;
+  suspensionReason: string;
 }
 
-const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
+const UserDetailsSidebar = ({
+  userId,
+  onClose,
+  isSuspended,
+  suspensionReason,
+}: UserDetailsSidebarProps) => {
   const [activeTab, setActiveTab] = useState<
     "account" | "activity" | "documents"
   >("account");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { customer, isCustomerLoading } =
     useFetchCustomerAnalyticsService(userId);
 
   const { customerActivity, isActivityLoading } =
     useFetchCustomerActivitiesService(userId);
+
+  const { suspendUser, isSuspendLoading } = useSuspendCustomerService(userId);
+
+  const handleSuspendConfirm = (reason?: string) => {
+    suspendUser(
+      {
+        suspend: !isSuspended,
+        reason,
+      },
+      onClose,
+    );
+    setIsModalOpen(false);
+  };
 
   if (isCustomerLoading || isActivityLoading) {
     return <Card className="min-h-full animate-pulse bg-gray-200" />;
@@ -59,10 +83,11 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 text-sm font-medium transition-colors ${activeTab === tab
-                  ? "border-b-[1.5px] border-primary text-primary"
-                  : "text-[#010813]/80 hover:text-[#010813]"
-                  }`}
+                className={`pb-2 text-sm font-medium transition-colors ${
+                  activeTab === tab
+                    ? "border-b-[1.5px] border-primary text-primary"
+                    : "text-[#010813]/80 hover:text-[#010813]"
+                }`}
               >
                 {tab === "account"
                   ? "Account information"
@@ -75,7 +100,10 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
         </div>
 
         {/* Content */}
-        <div id="userDetailsSidebar" className="flex-1 overflow-y-auto px-4 pt-4">
+        <div
+          id="userDetailsSidebar"
+          className="flex-1 overflow-y-auto px-4 pt-4"
+        >
           {activeTab === "account" && <AccountTab customer={customer} />}
           {activeTab === "activity" && (
             <ActivityTab customerActivity={customerActivity!} />
@@ -86,11 +114,23 @@ const UserDetailsSidebar = ({ userId, onClose }: UserDetailsSidebarProps) => {
         </div>
 
         <div className="px-4">
-          <Button variant="destructive" className="mt-4 w-full">
-            Suspend
+          <Button
+            variant={isSuspended ? "default" : "destructive"}
+            className="mt-4 w-full"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {isSuspended ? "Unsuspend" : "Suspend"}
           </Button>
         </div>
       </CardContent>
+
+      <SuspendConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleSuspendConfirm}
+        isLoading={isSuspendLoading}
+        isSuspending={!isSuspended}
+      />
     </Card>
   );
 };

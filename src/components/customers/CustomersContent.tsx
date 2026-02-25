@@ -21,7 +21,6 @@ const CustomersContent = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
 
-  // Prepare params for API call
   const customerParams = useMemo<ICustomersParamsDto>(() => {
     const params: ICustomersParamsDto = {
       page,
@@ -47,11 +46,13 @@ const CustomersContent = () => {
 
   const data =
     allCustomers?.items?.filter((user) =>
-      activeTab === CustomerStatus.ACTIVE
+      activeTab === CustomerStatus.ACTIVE && !user.isSuspended
         ? user.kycStatus === "validated"
         : activeTab === CustomerStatus.PENDING
           ? user.kycStatus === "pending_validation"
-          : user.kycStatus === "rejected",
+          : activeTab === CustomerStatus.SUSPENDED
+            ? user.isSuspended
+            : user.kycStatus === "rejected",
     ) ?? [];
 
   const handleRowClick = (user: ICustomersResponse["items"][0]) => {
@@ -108,7 +109,17 @@ const CustomersContent = () => {
           }`}
           onClick={() => handleTabChange(CustomerStatus.REJECTED)}
         >
-          Rejected
+          KYC Rejected
+        </button>
+        <button
+          className={`pb-3 text-sm font-medium capitalize transition-colors ${
+            activeTab === CustomerStatus.SUSPENDED
+              ? "border-b-2 border-blue-600 text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+          onClick={() => handleTabChange(CustomerStatus.SUSPENDED)}
+        >
+          Suspended
         </button>
       </div>
 
@@ -122,6 +133,10 @@ const CustomersContent = () => {
                   columnsCount={customerTableHeader.length}
                   rows={5}
                 />
+              ) : data.length === 0 ? (
+                <div className="flex items-center justify-center py-12">
+                  <p className="text-sm text-gray-500">No customers found</p>
+                </div>
               ) : (
                 <TableWithPagination
                   columns={customerTableHeader}
@@ -143,6 +158,8 @@ const CustomersContent = () => {
               key={selectedUser?.id}
               userId={selectedUser?.id}
               onClose={handleCloseSidebar}
+              isSuspended={selectedUser?.isSuspended}
+              suspensionReason={selectedUser?.suspensionReason}
             />
           </div>
         )}
