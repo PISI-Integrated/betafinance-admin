@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
 import { adminData, AdminStatus } from "@/lib/constants";
 import { AdminRow, Column } from "@/types/types";
@@ -13,6 +13,17 @@ import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { InviteAdminModal } from "./InviteAdminModal";
 import { Plus } from "lucide-react";
+
+interface AdminTableRow extends Omit<
+  AdminRow,
+  "name" | "email" | "status" | "role"
+> {
+  name: ReactNode;
+  email: ReactNode;
+  status: ReactNode;
+  role: ReactNode;
+  _raw: AdminRow;
+}
 
 const AdminContent = () => {
   const router = useRouter();
@@ -32,24 +43,62 @@ const AdminContent = () => {
       page_size: itemsPerPage,
     });
 
-  const columns = adminData.adminTableHead as Column<AdminRow>[];
+  const filteredAdminList = adminList?.filter((admin) => {
+    if (activeStatus === AdminStatus.ACTIVE) {
+      return !admin.isSuspended;
+    } else if (activeStatus === AdminStatus.SUSPENDED) {
+      return admin.isSuspended;
+    }
+    return true;
+  });
 
-  const data = (adminList || []).map((admin) => ({
-    id: admin.id,
-    name: admin.name,
-    email: admin.email,
-    phoneNumber: "N/A",
-    username: admin.email.split("@")[0],
-    status: activeStatus as AdminRow["status"],
-    dateAdded: formatDate(admin.createdAt),
-    dateJoined: formatDate(admin.createdAt),
-    role: "Admin",
-  }));
+  const columns: Column<AdminTableRow>[] = [
+    { header: "Name", accessor: "name" },
+    { header: "Email", accessor: "email" },
+    { header: "Role", accessor: "role" },
+    { header: "Date Added", accessor: "dateAdded" },
+    { header: "Status", accessor: "status" },
+  ];
+
+  const tableData: AdminTableRow[] = (filteredAdminList || []).map((admin) => {
+    const rawRow: AdminRow = {
+      id: admin.id,
+      name: admin.name || "N/A",
+      email: admin.email || "N/A",
+      phoneNumber: admin.phone || "N/A",
+      username: admin.email?.split("@")[0] || "N/A",
+      status: (admin.isSuspended
+        ? "suspended"
+        : activeStatus) as AdminRow["status"],
+      dateAdded: formatDate(admin.createdAt, true),
+      dateJoined: formatDate(admin.createdAt, true),
+      role: "Admin",
+    };
+
+    return {
+      ...rawRow,
+      name: <span>{rawRow.name}</span>,
+      email: <span className="lowercase">{rawRow.email}</span>,
+      status: (
+        <span
+          className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+            rawRow.status === "active"
+              ? "bg-green-50 text-green-700"
+              : "bg-red-50 text-red-700"
+          }`}
+        >
+          {rawRow.status}
+        </span>
+      ),
+      role: <span className="capitalize font-medium">{rawRow.role}</span>,
+      _raw: rawRow,
+    };
+  });
 
   const totalPages = Math.ceil((total || 0) / itemsPerPage);
 
-  const handleRowClick = (user: AdminRow) => {
-    setSelectedUser(user);
+  const handleRowClick = (row: AdminTableRow) => {
+    setSelectedUser(row._raw);
   };
 
   const handleCloseSidebar = () => {
@@ -83,7 +132,7 @@ const AdminContent = () => {
           >
             Active
           </button>
-          {/* <button
+          <button
             className={`pb-3 text-sm font-medium capitalize transition-colors ${
               activeStatus === AdminStatus.SUSPENDED
                 ? "border-b-2 border-blue-600 text-blue-600"
@@ -92,7 +141,7 @@ const AdminContent = () => {
             onClick={() => handleStatusChange(AdminStatus.SUSPENDED)}
           >
             Inactive
-          </button> */}
+          </button>
         </div>
 
         <Button onClick={() => setIsInviteModalOpen(true)} className="mb-2">
@@ -116,7 +165,7 @@ const AdminContent = () => {
                 <div className="flex h-40 items-center justify-center text-red-500">
                   Failed to load administrators
                 </div>
-              ) : data.length === 0 ? (
+              ) : tableData.length === 0 ? (
                 <div className="flex items-center justify-center py-12">
                   <p className="text-sm text-gray-500">
                     No administrators found
@@ -125,7 +174,7 @@ const AdminContent = () => {
               ) : (
                 <TableWithPagination
                   columns={columns}
-                  data={data}
+                  data={tableData}
                   onRowClick={handleRowClick}
                   currentPage={currentPage}
                   totalPages={totalPages || 1}

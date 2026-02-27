@@ -9,4 +9,10 @@ const useLoginApi = () => {
   });
 };
 
-export { useLoginApi };
+const useSetPinApi = () => {
+  return useMutation<string, Error, ISetPinDto>({
+    mutationFn: (body: ISetPinDto) => api.post<string>(`${AUTH.setPin}`, body),
+  });
+};
+
+export { useLoginApi, useSetPinApi };

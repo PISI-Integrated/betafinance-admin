@@ -58,8 +58,7 @@ const AdminDetailsSidebar = ({ user, onClose }: AdminDetailsSidebarProps) => {
                           : "text-[#AD3307] bg-[#FFECE5]"
                       }`}
                     >
-                      {user.status.charAt(0).toUpperCase() +
-                        user.status.slice(1)}
+                      {user.status}
                     </span>
                   </div>
                 )}

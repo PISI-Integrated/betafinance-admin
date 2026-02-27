@@ -3,6 +3,11 @@ interface ILoginDto {
   pin: string;
 }
 
+interface ISetPinDto {
+  pin: string;
+  reset_token: string;
+}
+
 interface ILoginResponse {
   token: string;
   refreshToken: string;
@@ -226,6 +231,7 @@ interface LottoHistoryItem {
   reward_type: PrizeType;
   reward_value: number;
   user_id: string;
+  name: string;
 }
 
 interface ISpinHistoryResponse {
@@ -322,7 +328,11 @@ interface IAdminListItem {
   id: string;
   name: string;
   email: string;
+  phone?: string;
+  status?: "active" | "inactive" | "suspended";
   createdAt: string;
+  isSuspended: boolean;
+  suspensionReason: string | null;
 }
 
 interface IAdminListResponse {

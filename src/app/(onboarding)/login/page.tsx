@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { LoginFormValues, loginSchema } from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
 import Image from "next/image";
-import { Phone, Lock, Mail } from "lucide-react";
-import logo from "../../../public/assets/logo.svg";
+import { Lock, Mail } from "lucide-react";
+import logo from "../../../../public/assets/logo.svg";
 
 export default function LoginPage() {
   const { loginAdvertiser, isLoggingIn } = useLoginService();

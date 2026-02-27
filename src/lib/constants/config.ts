@@ -8,6 +8,7 @@ const AUTH = {
   login: "/auth/admin-login",
   refresh: (refreshToken: string) =>
     `${base_url}auth/refresh?refresh_token=${refreshToken}`,
+  setPin: "/auth/set-new-pin",
 };
 
 const ANALYTICS = {
