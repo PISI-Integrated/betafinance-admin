@@ -3,6 +3,11 @@ interface ILoginDto {
   pin: string;
 }
 
+interface ISetPinDto {
+  pin: string;
+  reset_token: string;
+}
+
 interface ILoginResponse {
   token: string;
   refreshToken: string;
@@ -80,6 +85,8 @@ interface ICustomersResponse {
     email: string | null;
     totalLoans: number;
     createdAt: string;
+    isSuspended: boolean;
+    suspensionReason: string;
   }[];
 }
 
@@ -224,6 +231,7 @@ interface LottoHistoryItem {
   reward_type: PrizeType;
   reward_value: number;
   user_id: string;
+  name: string;
 }
 
 interface ISpinHistoryResponse {
@@ -309,4 +317,38 @@ interface ILoanCollectionSummaryResponse {
     label: number;
     total_collected: number;
   }[];
+}
+
+interface IPaginationParamsDto {
+  page: number;
+  page_size: number;
+}
+
+interface IAdminListItem {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  status?: "active" | "inactive" | "suspended";
+  createdAt: string;
+  isSuspended: boolean;
+  suspensionReason: string | null;
+}
+
+interface IAdminListResponse {
+  items: IAdminListItem[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+interface IInviteAdminDto {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface ISuspendUserDto {
+  suspend: boolean;
+  reason?: string;
 }

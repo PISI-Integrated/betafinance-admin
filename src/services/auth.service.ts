@@ -1,5 +1,5 @@
 "use client";
-import { useLoginApi } from "@/api/auth.api";
+import { useLoginApi, useSetPinApi } from "@/api/auth.api";
 import { saveToken } from "@/lib/storage";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -38,4 +38,30 @@ const useLoginService = () => {
   };
 };
 
-export { useLoginService };
+const useSetNewPinService = () => {
+  const router = useRouter();
+  const { mutateAsync: setPin, isPending, error } = useSetPinApi();
+
+  const setNewPin = (pin: string, reset_token: string) => {
+    setPin(
+      { pin, reset_token },
+      {
+        onSuccess: async (data) => {
+          toast.success("Pin set successfully");
+          router.replace("/login");
+        },
+        onError: () => {
+          toast.error("Something went wrong");
+        },
+      },
+    );
+  };
+
+  return {
+    setNewPin,
+    isSettingPin: isPending,
+    setPinError: error,
+  };
+};
+
+export { useLoginService, useSetNewPinService };

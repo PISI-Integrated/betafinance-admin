@@ -6,6 +6,7 @@ import {
   useGetCustomerActivityApi,
   useGetCustomerDocumentsApi,
   useUpdateDocsStatusApi,
+  useSuspendUserApi,
 } from "@/api/users.api";
 import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
@@ -85,10 +86,34 @@ const useUpdateCustomerDocsService = (userId: string, docsId: string) => {
   };
 };
 
+const useSuspendCustomerService = (userId: string) => {
+  const { mutateAsync, isPending } = useSuspendUserApi(userId);
+
+  const suspendUser = (body: ISuspendUserDto, onComplete: () => void) => {
+    mutateAsync(body, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+        toast.success(`User suspended successfully`);
+        onComplete();
+      },
+
+      onError: () => {
+        toast.error(`User suspension failed`);
+      },
+    });
+  };
+
+  return {
+    suspendUser,
+    isSuspendLoading: isPending,
+  };
+};
+
 export {
   useFetchCustomersService,
   useFetchCustomerAnalyticsService,
   useFetchCustomerActivitiesService,
   useFetchCustomerDocsService,
   useUpdateCustomerDocsService,
+  useSuspendCustomerService,
 };

@@ -55,10 +55,17 @@ const useUpdateDocsStatusApi = (userId: string, docsId: string) => {
   });
 };
 
+const useSuspendUserApi = (userId: string) => {
+  return useMutation<string, Error, ISuspendUserDto>({
+    mutationFn: (body) => api.patch(CUSTOMER.suspendUser(userId), body),
+  });
+};
+
 export {
   useGetCustomersApi,
   useGetCustomerAnalyticsApi,
   useGetCustomerActivityApi,
   useGetCustomerDocumentsApi,
   useUpdateDocsStatusApi,
+  useSuspendUserApi,
 };

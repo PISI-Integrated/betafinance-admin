@@ -17,7 +17,7 @@ interface SpinHistoryListProps {
 // Internal View Model
 interface SpinHistoryTableRow {
   date: ReactNode;
-  userId: ReactNode;
+  name: ReactNode;
   reward: ReactNode;
   type: ReactNode;
   value: number;
@@ -41,7 +41,7 @@ const SpinHistoryList = ({
 
   const columns: Column<SpinHistoryTableRow>[] = [
     { header: "Date", accessor: "date" },
-    { header: "User ID", accessor: "userId" },
+    { header: "User", accessor: "name" },
     { header: "Reward", accessor: "reward" },
     { header: "Type", accessor: "type" },
     { header: "Value", accessor: "value" },
@@ -49,7 +49,7 @@ const SpinHistoryList = ({
 
   const tableData: SpinHistoryTableRow[] = data.map((item) => ({
     date: formatDate(item.created_at, true),
-    userId: <span className="font-mono text-xs">{item.user_id}</span>,
+    name: <span>{item.name || item.user_id || "N/A"}</span>,
     reward: <span className="font-medium">{item.reward_name}</span>,
     type: <span className="capitalize">{item.reward_type}</span>,
     value: item.reward_value,
@@ -59,22 +59,22 @@ const SpinHistoryList = ({
 
   return (
     <div className="rounded-md border bg-white">
-      {
-        isLoading ? (
-          <TableSkeleton columnsCount={columns.length} rows={5} />
-        ) : data.length === 0 ? (
-          <div className="flex items-center justify-center py-12">
-            <p className="text-sm text-gray-500">No history found</p>
-          </div>
-        ) :
-          <TableWithPagination
-            columns={columns}
-            data={tableData}
-            currentPage={currentPage}
-            totalPages={totalPages > 0 ? totalPages : 1}
-            itemsPerPage={itemsPerPage}
-            onPageChange={onPageChange}
-          />}
+      {isLoading ? (
+        <TableSkeleton columnsCount={columns.length} rows={5} />
+      ) : data.length === 0 ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-sm text-gray-500">No history found</p>
+        </div>
+      ) : (
+        <TableWithPagination
+          columns={columns}
+          data={tableData}
+          currentPage={currentPage}
+          totalPages={totalPages > 0 ? totalPages : 1}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
+        />
+      )}
     </div>
   );
 };
