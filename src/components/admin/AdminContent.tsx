@@ -1,13 +1,16 @@
 "use client";
-import { useEffect, useState, ReactNode } from "react";
+import { useState, ReactNode } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
-import { adminData, AdminStatus } from "@/lib/constants";
+import { AdminStatus } from "@/lib/constants";
 import { AdminRow, Column } from "@/types/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import AdminDetailsSidebar from "./AdminDetailSidebar";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
-import { useFetchAdminListService } from "@/services/admin.service";
+import {
+  useFetchAdminListService,
+  useResendInviteService,
+} from "@/services/admin.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -43,6 +46,12 @@ const AdminContent = () => {
       page_size: itemsPerPage,
     });
 
+  const { resendInvite, resendInviteLoading } = useResendInviteService();
+
+  const handleResendInvite = (email: string) => {
+    resendInvite({ email });
+  };
+
   const filteredAdminList = adminList?.filter((admin) => {
     if (activeStatus === AdminStatus.ACTIVE) {
       return !admin.isSuspended;
@@ -69,7 +78,7 @@ const AdminContent = () => {
       username: admin.email?.split("@")[0] || "N/A",
       status: (admin.isSuspended
         ? "suspended"
-        : activeStatus) as AdminRow["status"],
+        : admin.status || "active") as AdminRow["status"],
       dateAdded: formatDate(admin.createdAt, true),
       dateJoined: formatDate(admin.createdAt, true),
       role: "Admin",
@@ -80,15 +89,37 @@ const AdminContent = () => {
       name: <span>{rawRow.name}</span>,
       email: <span className="lowercase">{rawRow.email}</span>,
       status: (
-        <span
-          className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-            rawRow.status === "active"
-              ? "bg-green-50 text-green-700"
-              : "bg-red-50 text-red-700"
-          }`}
-        >
-          {rawRow.status}
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+              rawRow.status === "active" || rawRow.status === "validated"
+                ? "bg-green-50 text-green-700"
+                : rawRow.status === "pending_validation"
+                  ? "bg-orange-50 text-orange-700"
+                  : "bg-red-50 text-red-700"
+            }`}
+          >
+            {rawRow.status === "pending_validation"
+              ? "Pending"
+              : rawRow.status === "validated" || rawRow.status === "active"
+                ? "Active"
+                : rawRow.status === "not_started"
+                  ? "Not Started"
+                  : rawRow.status?.replace("_", " ")}
+          </span>
+          {rawRow.status === "pending_validation" && (
+            <button
+              disabled={resendInviteLoading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleResendInvite(rawRow.email);
+              }}
+              className="text-xs font-semibold text-blue-600 hover:underline disabled:opacity-50"
+            >
+              Resend Invite
+            </button>
+          )}
+        </div>
       ),
       role: <span className="capitalize font-medium">{rawRow.role}</span>,
       _raw: rawRow,

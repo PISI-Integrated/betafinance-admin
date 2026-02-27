@@ -329,7 +329,13 @@ interface IAdminListItem {
   name: string;
   email: string;
   phone?: string;
-  status?: "active" | "inactive" | "suspended";
+  status?:
+    | "active"
+    | "inactive"
+    | "suspended"
+    | "not_started"
+    | "pending_validation"
+    | "validated";
   createdAt: string;
   isSuspended: boolean;
   suspensionReason: string | null;

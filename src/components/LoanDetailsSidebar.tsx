@@ -79,7 +79,9 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
                 {/* Interest - Only for P2P */}
                 {isP2P && loan.interest && (
                   <div className="flex flex-col gap-y-1">
-                    <span className="text-[#344054] text-xs">Interest Rate</span>
+                    <span className="text-[#344054] text-xs">
+                      Interest Rate
+                    </span>
                     <span className="font-medium text-[#010813] text-sm">
                       {loan.interest}
                     </span>
@@ -91,10 +93,11 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
                   <div className="flex flex-col gap-y-1">
                     <span className="text-[#344054] text-xs">Type</span>
                     <span
-                      className={`w-fit text-sm font-medium px-2 py-1 rounded-lg ${loan.type === "Request"
+                      className={`w-fit text-sm font-medium px-2 py-1 rounded-lg ${
+                        loan.type === "Request"
                           ? "text-[#3B82F6] bg-[#EFF6FF]"
                           : "text-[#8B5CF6] bg-[#F5F3FF]"
-                        }`}
+                      }`}
                     >
                       {loan.type}
                     </span>
@@ -130,7 +133,7 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
 
           {/* Action Buttons - Only for Beta Loans */}
           {!isP2P && (
-            <div className="mt-6 pt-4 border-t border-gray-200">
+            <div className="mt- pt-4 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-[#010813] mb-3">
                 Actions
               </h3>
