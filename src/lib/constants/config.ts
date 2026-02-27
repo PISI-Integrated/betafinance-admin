@@ -49,6 +49,7 @@ const SPIN = {
 const ADMIN = {
   list: `/admin/admin-users`,
   invite: `/admin/invite-admin`,
+  resendInvite: `/admin/resend-admin-invite`,
 };
 
 export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN, ADMIN };

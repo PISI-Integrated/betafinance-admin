@@ -129,7 +129,13 @@ export interface AdminRow {
   username: string;
   phoneNumber: string;
   email: string;
-  status: "active" | "inactive" | "suspended";
+  status:
+    | "active"
+    | "inactive"
+    | "suspended"
+    | "not_started"
+    | "pending_validation"
+    | "validated";
   dateAdded: string;
   dateJoined: string;
   role: string;

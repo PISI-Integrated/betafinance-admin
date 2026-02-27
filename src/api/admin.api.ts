@@ -16,4 +16,10 @@ const useInviteAdminApi = () => {
   });
 };
 
-export { useGetAdminListApi, useInviteAdminApi };
+const useResendInviteApi = () => {
+  return useMutation<string, Error, { email: string }>({
+    mutationFn: (body) => api.post(ADMIN.resendInvite, body),
+  });
+};
+
+export { useGetAdminListApi, useInviteAdminApi, useResendInviteApi };

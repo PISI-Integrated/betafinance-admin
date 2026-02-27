@@ -12,7 +12,7 @@ const AdminDetailsSidebar = ({ user, onClose }: AdminDetailsSidebarProps) => {
   if (!user) return null;
 
   return (
-    <Card className="h-full overflow-hidden rounded-lg border-gray-200 p-0 pb-4">
+    <Card className="h-full overflow-hidden rounded-lg border-gray-200 p-0">
       <CardContent className="flex h-full flex-col p-0">
         {/* Header */}
         <div className="p-4 pb-2 border-b border-gray-200">
@@ -53,12 +53,19 @@ const AdminDetailsSidebar = ({ user, onClose }: AdminDetailsSidebarProps) => {
                     <span className="text-[#344054] text-xs">Status</span>
                     <span
                       className={`w-fit text-sm font-medium px-2 py-1 rounded-lg ${
-                        user.status === "active"
+                        user.status === "active" || user.status === "validated"
                           ? "text-[#079455] bg-[#ECFDF5]"
-                          : "text-[#AD3307] bg-[#FFECE5]"
+                          : user.status === "pending_validation"
+                            ? "text-[#D97706] bg-[#FFFBEB]"
+                            : "text-[#AD3307] bg-[#FFECE5]"
                       }`}
                     >
-                      {user.status}
+                      {user.status === "pending_validation"
+                        ? "Pending"
+                        : user.status === "validated" ||
+                            user.status === "active"
+                          ? "Active"
+                          : user.status.replace("_", " ")}
                     </span>
                   </div>
                 )}
@@ -74,9 +81,11 @@ const AdminDetailsSidebar = ({ user, onClose }: AdminDetailsSidebarProps) => {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Suspend Button */}
-          <Button variant="destructive" className=" w-full mt-4">
+        {/* Suspend Button */}
+        <div className="p-4 mt-auto border-t border-gray-100">
+          <Button variant="destructive" className="w-full">
             Suspend
           </Button>
         </div>
