@@ -30,6 +30,8 @@ const CUSTOMER = {
   updateUserDocuments: (userId: string, docsId: string) =>
     `${user_url}/${userId}/document/${docsId}`,
   suspendUser: (userId: string) => `${user_url}/${userId}/suspend`,
+  generateDocsDownloadLink: (file_url: string) =>
+    `upload/?file_url=${file_url}`,
 };
 
 const LOAN = {

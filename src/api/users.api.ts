@@ -61,6 +61,15 @@ const useSuspendUserApi = (userId: string) => {
   });
 };
 
+const useGenerateDocsDownloadLinkApi = (file_url: string) => {
+  return useMutation<{ presigned_url: string }, Error, void>({
+    mutationFn: () =>
+      api.get<{ presigned_url: string }>(
+        CUSTOMER.generateDocsDownloadLink(file_url),
+      ),
+  });
+};
+
 export {
   useGetCustomersApi,
   useGetCustomerAnalyticsApi,
@@ -68,4 +77,5 @@ export {
   useGetCustomerDocumentsApi,
   useUpdateDocsStatusApi,
   useSuspendUserApi,
+  useGenerateDocsDownloadLinkApi,
 };

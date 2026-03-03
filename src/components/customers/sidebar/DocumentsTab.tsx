@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   useFetchCustomerDocsService,
+  useGenerateDocsDownloadLinkService,
   useUpdateCustomerDocsService,
 } from "@/services/users.service";
 import { formatDate } from "@/lib/utils";
@@ -38,7 +39,7 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
 
   const pendingCount = useMemo(
     () => documents.filter((doc) => doc.status === "pending").length,
-    [documents],
+    [documents]
   );
 
   return (
@@ -58,7 +59,10 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
       {isDocsLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 w-full animate-pulse rounded-md bg-gray-100" />
+            <div
+              key={i}
+              className="h-24 w-full animate-pulse rounded-md bg-gray-100"
+            />
           ))}
         </div>
       ) : documents.length === 0 ? (
@@ -131,6 +135,25 @@ const DocumentRow = ({
 
   const docUrl = doc.file_path ?? doc.file_url_front ?? doc.file_url_back;
 
+  const { generateDocsDownloadLink, isGenerateDocsDownloadLinkLoading } =
+    useGenerateDocsDownloadLinkService(docUrl || "");
+
+  const [viewableLink, setViewableLink] = useState<string | null>(null);
+
+  const handlePreview = async () => {
+    if (viewableLink || !docUrl) return;
+
+    try {
+      const res = await generateDocsDownloadLink();
+      console.log(res);
+      if (res?.presigned_url) {
+        setViewableLink(res.presigned_url);
+      }
+    } catch (error) {
+      console.error("Failed to generate download link:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 rounded-md border px-3 py-2 ">
       <div className="flex justify-between items-start">
@@ -147,8 +170,8 @@ const DocumentRow = ({
             doc.status === "approved"
               ? "success"
               : doc.status === "rejected"
-                ? "destructive"
-                : "pending"
+              ? "destructive"
+              : "pending"
           }
           className="text-xs capitalize"
         >
@@ -159,7 +182,11 @@ const DocumentRow = ({
       <div className="flex justify-between items-center">
         <div className="flex flex-wrap items-center gap-2">
           {docUrl && (
-            <Dialog>
+            <Dialog
+              onOpenChange={(open) => {
+                if (open) handlePreview();
+              }}
+            >
               <DialogTrigger asChild>
                 <Button
                   size="sm"
@@ -176,14 +203,27 @@ const DocumentRow = ({
                   </DialogTitle>
                 </DialogHeader>
                 <div className="px-6 pb-4 text-xs text-[#4B5563] break-all">
-                  {docUrl}
+                  {viewableLink || docUrl}
                 </div>
-                <div className="h-[60vh] w-full border-t bg-black/5">
-                  <iframe
-                    src={docUrl}
-                    className="h-full w-full border-0"
-                    title={doc.file_name}
-                  />
+                <div className="h-[60vh] w-full border-t bg-black/5 flex items-center justify-center">
+                  {isGenerateDocsDownloadLinkLoading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                      <p className="text-sm text-gray-500">
+                        Generating preview link...
+                      </p>
+                    </div>
+                  ) : viewableLink ? (
+                    <iframe
+                      src={viewableLink}
+                      className="h-full w-full border-0"
+                      title={doc.file_name}
+                    />
+                  ) : (
+                    <div className="text-sm text-gray-500">
+                      Failed to load preview
+                    </div>
+                  )}
                 </div>
               </DialogContent>
             </Dialog>
@@ -196,7 +236,7 @@ const DocumentRow = ({
               size="sm"
               className="h-7 px-3 text-xs"
               disabled={isUpdating}
-              variant={'destructive'}
+              variant={"destructive"}
               onClick={() => handleUpdateStatus("rejected")}
             >
               Reject
@@ -215,4 +255,3 @@ const DocumentRow = ({
     </div>
   );
 };
-
