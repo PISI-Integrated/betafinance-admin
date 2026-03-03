@@ -7,6 +7,7 @@ import {
   useGetCustomerDocumentsApi,
   useUpdateDocsStatusApi,
   useSuspendUserApi,
+  useGenerateDocsDownloadLinkApi,
 } from "@/api/users.api";
 import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
@@ -109,6 +110,19 @@ const useSuspendCustomerService = (userId: string) => {
   };
 };
 
+const useGenerateDocsDownloadLinkService = (file_url: string) => {
+  const { mutateAsync, isPending } = useGenerateDocsDownloadLinkApi(file_url);
+
+  const generateDocsDownloadLink = async () => {
+    return await mutateAsync();
+  };
+
+  return {
+    generateDocsDownloadLink,
+    isGenerateDocsDownloadLinkLoading: isPending,
+  };
+};
+
 export {
   useFetchCustomersService,
   useFetchCustomerAnalyticsService,
@@ -116,4 +130,5 @@ export {
   useFetchCustomerDocsService,
   useUpdateCustomerDocsService,
   useSuspendCustomerService,
+  useGenerateDocsDownloadLinkService,
 };
