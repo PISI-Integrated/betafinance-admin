@@ -99,7 +99,7 @@ export function RankingSection({
           ) : (
             <Table>
               <TableBody>
-                {topRankingCreditScores?.slice(0, 4).map((item, rowIndex) => (
+                {topRankingCreditScores?.slice(0, 5).map((item, rowIndex) => (
                   <TableRow key={item.user_id} className="w-full">
                     <TableCell>
                       <div className="flex items-center gap-x-2">

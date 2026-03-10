@@ -27,7 +27,12 @@ const CustomersContent = () => {
       size,
     };
 
-    if (activeTab === "pending_validation" || activeTab === "rejected") {
+    if (activeTab === CustomerStatus.ACTIVE) {
+      params.kyc_status = "validated";
+    } else if (
+      activeTab === CustomerStatus.PENDING ||
+      activeTab === CustomerStatus.REJECTED
+    ) {
       params.kyc_status = activeTab as kycStatus;
     }
 
@@ -44,16 +49,24 @@ const CustomersContent = () => {
     ICustomersResponse["items"][0] | null
   >(null);
 
-  const data =
-    allCustomers?.items?.filter((user) =>
-      activeTab === CustomerStatus.ACTIVE && !user.isSuspended
-        ? user.kycStatus === "validated"
-        : activeTab === CustomerStatus.PENDING
-          ? user.kycStatus === "pending_validation"
-          : activeTab === CustomerStatus.SUSPENDED
-            ? user.isSuspended
-            : user.kycStatus === "rejected",
-    ) ?? [];
+  const data = useMemo(() => {
+    return (
+      allCustomers?.items?.filter((user) => {
+        switch (activeTab) {
+          case CustomerStatus.ACTIVE:
+            return user.kycStatus === "validated" && !user.isSuspended;
+          case CustomerStatus.PENDING:
+            return user.kycStatus === "pending_validation";
+          case CustomerStatus.SUSPENDED:
+            return user.isSuspended;
+          case CustomerStatus.REJECTED:
+            return user.kycStatus === "rejected";
+          default:
+            return true;
+        }
+      }) ?? []
+    );
+  }, [allCustomers?.items, activeTab]);
 
   const handleRowClick = (user: ICustomersResponse["items"][0]) => {
     setSelectedUser(user);
