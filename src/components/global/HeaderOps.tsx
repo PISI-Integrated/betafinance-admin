@@ -1,6 +1,7 @@
 import { routes } from "@/lib/constants";
-import { Download, Calendar } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "../ui/button";
+import { DateRangePicker } from "../ui/date-range-picker";
 
 const HeaderOps = ({ currentPath }: { currentPath: string }) => {
   const matchedItem = routes.sidebarItems.find(
@@ -21,22 +22,8 @@ const HeaderOps = ({ currentPath }: { currentPath: string }) => {
 
   return (
     <div className="flex items-center gap-x-2">
-      {hasDateFilters && (
-        <>
-          <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-[6px] py-2 text-sm">
-            <span className="text-xs text-gray-400 font-light hidden sm:inline">
-              Start date:
-            </span>
-            <span className="font-medium">12/02/25</span>
-            <Calendar className="h-4 w-4 text-gray-500" />
-          </div>
-          <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-[6px] py-2 text-sm">
-            <span className="text-xs text-gray-400 font-light hidden sm:inline">End date:</span>
-            <span className="font-medium">12/02/25</span>
-            <Calendar className="h-4 w-4 text-gray-500" />
-          </div>
-        </>
-      )}
+      {hasDateFilters && <DateRangePicker />}
+
       {hasDownload && (
         <Button className="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 md:px-4">
           <Download className="md:mr-2 h-4 w-4" />

@@ -12,8 +12,8 @@ import { KPICards } from "@/components/dashboard/KPICards";
 import { RankingSection } from "@/components/dashboard/RankingSection";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
-
-import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState, useMemo, Suspense } from "react";
 import {
   Select,
   SelectContent,
@@ -23,13 +23,20 @@ import {
 } from "@/components/ui/select";
 import { months, years } from "@/lib/constants/data";
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get("start_date") || undefined;
+  const endDate = searchParams.get("end_date") || undefined;
+
   const [period, setPeriod] =
     useState<ILoanCollectionSummaryDto["period"]>("month");
   const [year, setYear] = useState(2026);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
-  const { overviewData, isOverviewLoading } = useFetchOverviewService();
+  const { overviewData, isOverviewLoading } = useFetchOverviewService({
+    start_date: startDate,
+    end_date: endDate,
+  });
   const { topRankingLenders, isTopLendersLoading } =
     useFetchTopRankingLendersService();
   const { topRankingCreditScores, isTopScoresLoading } =
@@ -132,5 +139,13 @@ export default function Home() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

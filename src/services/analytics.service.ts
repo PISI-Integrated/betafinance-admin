@@ -8,8 +8,8 @@ import {
   useGetLoanCollectionSummaryApi,
 } from "@/api/analytics.api";
 
-const useFetchOverviewService = () => {
-  const { data, isLoading, refetch } = useGetOverviewsApi();
+const useFetchOverviewService = (params?: IOverviewParamsDto) => {
+  const { data, isLoading, refetch } = useGetOverviewsApi(params);
 
   return {
     overviewData: data,

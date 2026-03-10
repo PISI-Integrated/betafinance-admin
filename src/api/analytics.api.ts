@@ -2,10 +2,11 @@ import { api } from "@/lib/axios";
 import { ANALYTICS } from "@/lib/constants/config";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-const useGetOverviewsApi = () => {
+const useGetOverviewsApi = (params?: IOverviewParamsDto) => {
   return useQuery<IOverviewResponse, Error>({
-    queryKey: ["analytics", "overview"],
-    queryFn: () => api.get<IOverviewResponse>(ANALYTICS.overview),
+    queryKey: ["analytics", "overview", params],
+    queryFn: () => api.get<IOverviewResponse>(ANALYTICS.overview, params),
+    placeholderData: keepPreviousData,
   });
 };
 

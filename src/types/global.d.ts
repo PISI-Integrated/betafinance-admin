@@ -27,7 +27,11 @@ interface ILoginResponse {
 
 interface IOverviewResponse {
   total_users: number;
+  total_loans_collected: number;
+  total_amount_in_loans: number;
+  total_amount_in_loan_last_30_days: number;
   new_users_this_month: number;
+  new_users_today: number;
   user_growth_percentage: number;
   active_loans: number;
   new_loans_this_month: number;
@@ -38,6 +42,8 @@ interface IOverviewResponse {
   average_credit_score: number;
   total_credit_transactions: number;
   total_debit_transactions: number;
+  total_balance_transactions: number;
+  total_revenue: number;
 }
 
 interface ITopRankItem {
@@ -357,4 +363,9 @@ interface IInviteAdminDto {
 interface ISuspendUserDto {
   suspend: boolean;
   reason?: string;
+}
+
+interface IOverviewParamsDto {
+  start_date?: string;
+  end_date?: string;
 }
