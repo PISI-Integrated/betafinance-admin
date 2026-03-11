@@ -22,6 +22,7 @@ interface TableWithPaginationProps<T> extends PaginationProps {
   columns: Column<T>[];
   data: T[];
   onRowClick?: (row: T) => void;
+  isLoading?: boolean;
 }
 
 const TableWithPagination = <T,>({
@@ -32,6 +33,7 @@ const TableWithPagination = <T,>({
   totalPages,
   itemsPerPage,
   onPageChange,
+  isLoading,
 }: TableWithPaginationProps<T>) => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -57,32 +59,54 @@ const TableWithPagination = <T,>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                onClick={() => onRowClick?.(row)}
-                className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-blue-50"
-              >
-                {columns.map((column, colIndex) => (
-                  <TableCell
-                    key={colIndex}
-                    className="px-4 py-4 text-sm text-gray-900"
-                  >
-                    {row[column.accessor] as React.ReactNode}
-                  </TableCell>
-                ))}
-                <TableCell className="px-4 py-4 text-center">
-                  <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-gray-100">
-                    <MoreVertical className="h-4 w-4 text-gray-400" />
-                  </button>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {columns.map((_, colIndex) => (
+                    <TableCell key={colIndex} className="px-4 py-4">
+                      <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                    </TableCell>
+                  ))}
+                  <TableCell />
+                </TableRow>
+              ))
+            ) : data.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className="px-4 py-8 text-center text-sm text-gray-500"
+                >
+                  No data found
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              data.map((row, rowIndex) => (
+                <TableRow
+                  key={rowIndex}
+                  onClick={() => onRowClick?.(row)}
+                  className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-blue-50"
+                >
+                  {columns.map((column, colIndex) => (
+                    <TableCell
+                      key={colIndex}
+                      className="px-4 py-4 text-sm text-gray-900"
+                    >
+                      {row[column.accessor] as React.ReactNode}
+                    </TableCell>
+                  ))}
+                  <TableCell className="px-4 py-4 text-center">
+                    <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-gray-100">
+                      <MoreVertical className="h-4 w-4 text-gray-400" />
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {/* Pagination — unchanged styles */}
+      {/* Pagination */}
       <div className="flex items-center justify-between border-t border-gray-200 px-4 py-4">
         <p className="text-sm text-gray-500">
           Page {currentPage} of {totalPages}
@@ -104,10 +128,11 @@ const TableWithPagination = <T,>({
               variant={page === currentPage ? "default" : "ghost"}
               size="icon"
               onClick={() => handlePageChange(page)}
-              className={`h-8 w-8 ${page === currentPage
+              className={`h-8 w-8 ${
+                page === currentPage
                   ? "bg-blue-50 text-gray-900 hover:bg-blue-100"
                   : "text-gray-600"
-                }`}
+              }`}
             >
               {page}
             </Button>

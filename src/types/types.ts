@@ -166,14 +166,14 @@ export interface UserDetails {
 }
 
 export interface MarketerRow {
-  id: string;
-  totalRevenue: number;
-  totalCustomers: number;
-  activeCustomers: number;
-  monthlyCustomers: number;
-  username: string;
   name: string;
-  isActive: boolean;
+  prefix: string;
+  postback_url: string;
+  payout: string | number;
+  is_active: boolean;
+  id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface MarketerData {

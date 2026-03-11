@@ -1,13 +1,9 @@
-import { routes } from "@/lib/constants";
 import { Download } from "lucide-react";
 import { Button } from "../ui/button";
 import { DateRangePicker } from "../ui/date-range-picker";
+import { useRouter } from "next/navigation";
 
 const HeaderOps = ({ currentPath }: { currentPath: string }) => {
-  const matchedItem = routes.sidebarItems.find(
-    (item) => item.path === currentPath,
-  );
-
   // Pages with date filters and download button
   const hasDateFilters =
     currentPath === "/" ||
@@ -20,6 +16,14 @@ const HeaderOps = ({ currentPath }: { currentPath: string }) => {
     currentPath !== "/settings" &&
     currentPath !== "/marketers";
 
+  const router = useRouter();
+
+  const openCreateMarketerModal = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("add-marketer", "true");
+    router.push(`${currentPath}?${params.toString()}`);
+  };
+
   return (
     <div className="flex items-center gap-x-2">
       {hasDateFilters && <DateRangePicker />}
@@ -31,7 +35,10 @@ const HeaderOps = ({ currentPath }: { currentPath: string }) => {
         </Button>
       )}
       {currentPath === "/marketers" && (
-        <Button className="text-blue-600 text-sm font-normal bg-[#DEEBFF] px-3 md:px-4 shrink-0">
+        <Button
+          onClick={openCreateMarketerModal}
+          className="text-blue-600 text-sm font-normal bg-[#DEEBFF] px-3 md:px-4 shrink-0 hover:text-white"
+        >
           <span className="md:hidden">+ Create</span>
           <span className="hidden md:inline">+ Create new marketer</span>
         </Button>
