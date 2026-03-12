@@ -54,4 +54,10 @@ const ADMIN = {
   resendInvite: `/admin/resend-admin-invite`,
 };
 
-export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN, ADMIN };
+const MARKETERS = {
+  list: `/admin/marketers`,
+  create: `/admin/marketer`,
+  action: (marketerId: string) => `/admin/marketer/${marketerId}`,
+};
+
+export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN, ADMIN, MARKETERS };

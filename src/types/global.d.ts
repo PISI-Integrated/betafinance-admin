@@ -369,3 +369,33 @@ interface IOverviewParamsDto {
   start_date?: string;
   end_date?: string;
 }
+
+interface IMarketerParamsDto {
+  limit?: number;
+  skip?: number;
+  is_active?: boolean;
+}
+
+interface IMarketerResponse {
+  total: number;
+  items: [
+    {
+      name: string;
+      prefix: string;
+      postback_url: string;
+      payout: string;
+      is_active: boolean;
+      id: string;
+      created_at: string;
+      updated_at: string;
+    },
+  ];
+}
+
+interface ICreateMarketerDto {
+  name: string;
+  prefix: string;
+  postback_url?: string;
+  payout: number;
+  is_active: boolean;
+}
