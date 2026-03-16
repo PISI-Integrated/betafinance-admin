@@ -48,9 +48,9 @@ const useGetCustomerDocumentsApi = (
   });
 };
 
-const useUpdateDocsStatusApi = (userId: string, docsId: string) => {
-  return useMutation<string, Error, updateDocsStatusDto>({
-    mutationFn: (body) =>
+const useUpdateDocsStatusApi = (userId: string) => {
+  return useMutation<string, Error, updateDocsStatusDto & { docsId: string }>({
+    mutationFn: ({ docsId, ...body }) =>
       api.patch(CUSTOMER.updateUserDocuments(userId, docsId), body),
   });
 };

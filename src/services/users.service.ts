@@ -65,20 +65,23 @@ const useFetchCustomerDocsService = (
   };
 };
 
-const useUpdateCustomerDocsService = (userId: string, docsId: string) => {
-  const { mutateAsync, isPending } = useUpdateDocsStatusApi(userId, docsId);
+const useUpdateCustomerDocsService = (userId: string) => {
+  const { mutateAsync, isPending } = useUpdateDocsStatusApi(userId);
 
-  const updateDocsStatus = (body: updateDocsStatusDto) => {
-    mutateAsync(body, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["documents"] });
-        toast.success(`Change Document status to "${body.status}"`);
-      },
+  const updateDocsStatus = (docsId: string, body: updateDocsStatusDto) => {
+    return mutateAsync(
+      { docsId, ...body },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["documents"] });
+          toast.success(`Document ${body.status} successfully`);
+        },
 
-      onError: () => {
-        toast.error(`Document status change to "${body.status}" failed`);
+        onError: () => {
+          toast.error(`Document status change to "${body.status}" failed`);
+        },
       },
-    });
+    );
   };
 
   return {

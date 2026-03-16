@@ -16,6 +16,8 @@ import {
 import { formatDate } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import DocumentActionConfirmationModal from "./DocumentActionConfirmationModal";
+import toast from "react-hot-toast";
 
 interface DocumentsTabProps {
   userId: string;
@@ -39,8 +41,59 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
 
   const pendingCount = useMemo(
     () => documents.filter((doc) => doc.status === "pending").length,
-    [documents]
+    [documents],
   );
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalAction, setModalAction] = useState<"approve" | "reject">(
+    "approve",
+  );
+  const [pendingDoc, setPendingDoc] = useState<ICustomerDocument | null>(null);
+  const [isActioning, setIsActioning] = useState(false);
+
+  const { updateDocsStatus } = useUpdateCustomerDocsService(userId);
+
+  const openConfirmation = (
+    doc: ICustomerDocument,
+    action: "approve" | "reject",
+  ) => {
+    setPendingDoc(doc);
+    setModalAction(action);
+    setModalOpen(true);
+  };
+
+  const handleConfirmAction = async () => {
+    if (!pendingDoc) return;
+
+    const newStatus: docsStatusType =
+      modalAction === "approve" ? "approved" : "rejected";
+
+    // Find the sibling: same document_type, opposite side, still pending
+    const opposite = pendingDoc.side === "front" ? "back" : "front";
+    const sibling = documents.find(
+      (d) =>
+        d.document_type === pendingDoc.document_type &&
+        d.side === opposite &&
+        d.status === "pending" &&
+        d.id !== pendingDoc.id,
+    );
+
+    setIsActioning(true);
+    try {
+      await updateDocsStatus(pendingDoc.id, { status: newStatus });
+      // Auto-update the sibling if it exists and is still pending
+      if (sibling) {
+        await updateDocsStatus(sibling.id, { status: newStatus });
+      }
+      refetchDocuments();
+    } catch {
+      toast.error(`Failed to update document status`);
+    } finally {
+      setIsActioning(false);
+      setModalOpen(false);
+      setPendingDoc(null);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -77,9 +130,8 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
             {documents.map((doc) => (
               <DocumentRow
                 key={doc.id}
-                userId={userId}
                 doc={doc}
-                onUpdated={() => refetchDocuments()}
+                onRequestAction={(action) => openConfirmation(doc, action)}
               />
             ))}
           </div>
@@ -111,28 +163,41 @@ export const DocumentsTab = ({ userId }: DocumentsTabProps) => {
           </div>
         </div>
       )}
+
+      <DocumentActionConfirmationModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setPendingDoc(null);
+        }}
+        onConfirm={handleConfirmAction}
+        isLoading={isActioning}
+        action={modalAction}
+        documentType={pendingDoc?.document_type ?? ""}
+        hasSibling={
+          !!pendingDoc &&
+          documents.some(
+            (d) =>
+              d.document_type === pendingDoc.document_type &&
+              d.side !== pendingDoc.side &&
+              d.status === "pending" &&
+              d.id !== pendingDoc.id,
+          )
+        }
+      />
     </div>
   );
 };
 
+// ─── DocumentRow ──────────────────────────────────────────────────────────────
+
 const DocumentRow = ({
-  userId,
   doc,
-  onUpdated,
+  onRequestAction,
 }: {
-  userId: string;
   doc: ICustomerDocument;
-  onUpdated: () => void;
+  onRequestAction: (action: "approve" | "reject") => void;
 }) => {
-  const { updateDocsStatus, isDocsLoading: isUpdating } =
-    useUpdateCustomerDocsService(userId, doc.id);
-
-  const handleUpdateStatus = (status: docsStatusType) => {
-    if (isUpdating) return;
-    updateDocsStatus({ status });
-    void onUpdated();
-  };
-
   const docUrl = doc.file_path ?? doc.file_url_front ?? doc.file_url_back;
 
   const { generateDocsDownloadLink, isGenerateDocsDownloadLinkLoading } =
@@ -145,7 +210,6 @@ const DocumentRow = ({
 
     try {
       const res = await generateDocsDownloadLink();
-      console.log(res);
       if (res?.presigned_url) {
         setViewableLink(res.presigned_url);
       }
@@ -170,8 +234,8 @@ const DocumentRow = ({
             doc.status === "approved"
               ? "success"
               : doc.status === "rejected"
-              ? "destructive"
-              : "pending"
+                ? "destructive"
+                : "pending"
           }
           className="text-xs capitalize"
         >
@@ -235,17 +299,15 @@ const DocumentRow = ({
             <Button
               size="sm"
               className="h-7 px-3 text-xs"
-              disabled={isUpdating}
               variant={"destructive"}
-              onClick={() => handleUpdateStatus("rejected")}
+              onClick={() => onRequestAction("reject")}
             >
               Reject
             </Button>
             <Button
               size="sm"
               className="h-7 px-3 text-xs"
-              disabled={isUpdating}
-              onClick={() => handleUpdateStatus("approved")}
+              onClick={() => onRequestAction("approve")}
             >
               Approve
             </Button>
