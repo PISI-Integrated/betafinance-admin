@@ -399,3 +399,14 @@ interface ICreateMarketerDto {
   payout: number;
   is_active: boolean;
 }
+
+interface IAdminSettingsResponse {
+  p2p_platform_fee_percentage: number;
+  id: string;
+  updated_at: string;
+  updated_by_id: string;
+}
+
+interface IUpdateAdminSettingsDto {
+  p2p_platform_fee_percentage: number;
+}
