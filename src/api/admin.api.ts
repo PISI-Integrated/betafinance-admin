@@ -22,4 +22,23 @@ const useResendInviteApi = () => {
   });
 };
 
-export { useGetAdminListApi, useInviteAdminApi, useResendInviteApi };
+const useGetAdminSettingsApi = () => {
+  return useQuery<IAdminSettingsResponse, Error>({
+    queryKey: ["admin", "settings"],
+    queryFn: () => api.get<IAdminSettingsResponse>(ADMIN.settings),
+  });
+};
+
+const useUpdateAdminSettingsApi = () => {
+  return useMutation<string, Error, IUpdateAdminSettingsDto>({
+    mutationFn: (body) => api.patch(ADMIN.settings, body),
+  });
+};
+
+export {
+  useGetAdminListApi,
+  useInviteAdminApi,
+  useResendInviteApi,
+  useGetAdminSettingsApi,
+  useUpdateAdminSettingsApi,
+};

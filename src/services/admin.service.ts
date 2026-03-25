@@ -1,8 +1,10 @@
 "use client";
 import {
   useGetAdminListApi,
+  useGetAdminSettingsApi,
   useInviteAdminApi,
   useResendInviteApi,
+  useUpdateAdminSettingsApi,
 } from "@/api/admin.api";
 import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
@@ -67,8 +69,44 @@ const useResendInviteService = () => {
   };
 };
 
+const useFetchAdminSettingsService = () => {
+  const { data, isLoading, error } = useGetAdminSettingsApi();
+
+  return {
+    adminSettings: data,
+    adminSettingsLoading: isLoading,
+    adminSettingsError: error,
+  };
+};
+
+const useUpdateAdminSettingsService = () => {
+  const { mutateAsync, isPending, isError, error } =
+    useUpdateAdminSettingsApi();
+
+  const updateAdminSettings = (body: IUpdateAdminSettingsDto) => {
+    mutateAsync(body, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["admin", "settings"] });
+        toast.success("Settings updated successfully");
+      },
+      onError: () => {
+        toast.error("Failed to update settings");
+      },
+    });
+  };
+
+  return {
+    updateAdminSettings,
+    updateAdminSettingsLoading: isPending,
+    updateAdminSettingsError: error,
+    updateAdminSettingsIsError: isError,
+  };
+};
+
 export {
   useFetchAdminListService,
   useInviteAdminService,
   useResendInviteService,
+  useFetchAdminSettingsService,
+  useUpdateAdminSettingsService,
 };
