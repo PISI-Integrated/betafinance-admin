@@ -30,9 +30,13 @@ export const formatPercentage = (value: number): string => {
  * Get user initials from name
  */
 export const getUserInitials = (name: string): string => {
+  if (!name) return "NA";
+  const parts = name.split(" ").filter((part) => part.length > 0);
+  if (parts.length === 0) return "NA";
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
   return (
-    name?.split(" ")[0].charAt(0).toUpperCase() +
-    name?.split(" ")[1].charAt(0).toUpperCase()
+    parts[0].charAt(0).toUpperCase() +
+    parts[parts.length - 1].charAt(0).toUpperCase()
   );
 };
 

@@ -59,7 +59,7 @@ export function RankingSection({
                     <TableCell className="flex items-center gap-x-2">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-blue-100 text-sm font-semibold text-blue-600">
-                          {getUserInitials(item.name)}
+                          {getUserInitials(item?.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
@@ -123,7 +123,7 @@ export function RankingSection({
                     <TableCell className="flex items-center gap-x-2">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-blue-100 text-sm font-semibold text-blue-600">
-                          {getUserInitials(item.name)}
+                          {getUserInitials(item?.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
