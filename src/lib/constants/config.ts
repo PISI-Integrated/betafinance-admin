@@ -9,6 +9,8 @@ const AUTH = {
   refresh: (refreshToken: string) =>
     `${base_url}auth/refresh?refresh_token=${refreshToken}`,
   setPin: "/auth/set-new-pin",
+  logout: (refreshToken: string) =>
+    `${base_url}auth/logout?refresh_token=${refreshToken}`,
 };
 
 const ANALYTICS = {

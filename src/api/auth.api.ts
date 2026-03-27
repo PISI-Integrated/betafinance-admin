@@ -15,4 +15,11 @@ const useSetPinApi = () => {
   });
 };
 
-export { useLoginApi, useSetPinApi };
+const useLogoutApi = () => {
+  return useMutation<string, Error, string>({
+    mutationFn: (refreshToken: string) =>
+      api.post<string>(`${AUTH.logout(refreshToken)}`),
+  });
+};
+
+export { useLoginApi, useSetPinApi, useLogoutApi };

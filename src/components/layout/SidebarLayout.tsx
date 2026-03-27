@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import {
   Sidebar,
@@ -16,7 +15,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, Bell } from "lucide-react";
+import { ChevronDown, Bell, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { routes } from "@/lib/constants";
 import Header from "@/components/global/Header";
@@ -24,6 +23,8 @@ import AuthGuard from "./AuthGuard";
 import { getToken } from "@/lib/storage";
 import { getUserInitials } from "@/lib/utils/formatters";
 import logo from "../../../public/assets/logo.svg";
+import { Button } from "../ui/button";
+import { useLogoutService } from "@/services/auth.service";
 
 const nonDashboardPaths = ["/login", "/set-pin"];
 
@@ -35,6 +36,8 @@ function SidebarNav() {
   const firstPartItems = routes.sidebarItems.slice(0, 4);
   const lastPartItems = routes.sidebarItems.slice(4, 6);
   const finalPartItems = routes.sidebarItems.slice(6);
+
+  const { isLoggingOut, logoutAdmin } = useLogoutService();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -159,6 +162,16 @@ function SidebarNav() {
                 </Link>
               </SidebarMenuItem>
             ))}
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-3 rounded-none text-destructive border-0 w-full px-4"
+              onClick={logoutAdmin}
+              disabled={isLoggingOut}
+            >
+              <LogOut className="w-5 h-5 shrink-0" />
+              <span>Logout</span>
+            </Button>
           </SidebarMenu>
         </div>
       </SidebarContent>

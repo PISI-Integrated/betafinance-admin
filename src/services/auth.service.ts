@@ -1,6 +1,6 @@
 "use client";
-import { useLoginApi, useSetPinApi } from "@/api/auth.api";
-import { saveToken } from "@/lib/storage";
+import { useLoginApi, useLogoutApi, useSetPinApi } from "@/api/auth.api";
+import { deleteToken, getToken, saveToken } from "@/lib/storage";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -64,4 +64,33 @@ const useSetNewPinService = () => {
   };
 };
 
-export { useLoginService, useSetNewPinService };
+const useLogoutService = () => {
+  const router = useRouter();
+  const { mutateAsync: logout, isPending, error } = useLogoutApi();
+
+  const logoutAdmin = async () => {
+    const refreshToken = await getToken("refreshToken");
+    logout(refreshToken!, {
+      onSuccess: async () => {
+        await Promise.all([
+          deleteToken("accessToken"),
+          deleteToken("refreshToken"),
+          deleteToken("user"),
+        ]);
+        toast.success("Signed out successfully");
+        router.replace("/login");
+      },
+      onError: () => {
+        toast.error("Something went wrong");
+      },
+    });
+  };
+
+  return {
+    logoutAdmin,
+    isLoggingOut: isPending,
+    logoutError: error,
+  };
+};
+
+export { useLoginService, useSetNewPinService, useLogoutService };

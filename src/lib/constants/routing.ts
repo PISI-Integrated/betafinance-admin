@@ -55,12 +55,12 @@ export const routes = {
       activeIcon: Icon.SettingsActive,
       alt: "settings",
     },
-    {
-      title: "Help",
-      path: "/help",
-      icon: Icon.Help,
-      activeIcon: Icon.HelpActive,
-      alt: "help",
-    },
+    // {
+    //   title: "Help",
+    //   path: "/help",
+    //   icon: Icon.Help,
+    //   activeIcon: Icon.HelpActive,
+    //   alt: "help",
+    // },
   ],
 };
