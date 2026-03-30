@@ -1,6 +1,7 @@
 "use client";
 import {
   useGetAdminListApi,
+  useGetAdminProfileApi,
   useGetAdminSettingsApi,
   useInviteAdminApi,
   useResendInviteApi,
@@ -103,10 +104,21 @@ const useUpdateAdminSettingsService = () => {
   };
 };
 
+const useFetchAdminProfileService = () => {
+  const { data, isLoading, error } = useGetAdminProfileApi();
+
+  return {
+    adminProfile: data,
+    adminProfileLoading: isLoading,
+    adminProfileError: error,
+  };
+};
+
 export {
   useFetchAdminListService,
   useInviteAdminService,
   useResendInviteService,
   useFetchAdminSettingsService,
   useUpdateAdminSettingsService,
+  useFetchAdminProfileService,
 };

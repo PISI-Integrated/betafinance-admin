@@ -10,42 +10,47 @@ import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
 
 const useFetchSpinHistoryService = (params?: ISpinHistoryParamsDto) => {
-  const { data, isLoading, refetch } = useGetSpinHistoryApi(params);
+  const { data, isLoading, refetch, error } = useGetSpinHistoryApi(params);
 
   return {
     spinHistories: data,
     isHistoriesLoading: isLoading,
     refetchHistories: refetch,
+    spinHistoriesError: error,
   };
 };
 
 const useFetchSpinRewardsService = (params?: ISpinRewardsParamsDto) => {
-  const { data, isLoading, refetch } = useGetSpinRewardsApi(params);
+  const { data, isLoading, refetch, error } = useGetSpinRewardsApi(params);
 
   return {
     spinRewards: data,
     isRewardsLoading: isLoading,
     refetchRewards: refetch,
+    spinRewardsError: error,
   };
 };
 
 const useFetchSingleSpinRewardService = (rewardId: string) => {
-  const { data, isLoading, refetch } = useGetSingleSpinRewardsApi(rewardId);
+  const { data, isLoading, refetch, error } =
+    useGetSingleSpinRewardsApi(rewardId);
 
   return {
     spinReward: data,
     isRewardLoading: isLoading,
     refetchReward: refetch,
+    spinRewardError: error,
   };
 };
 
 const useFetchSpinRewardStatsService = () => {
-  const { data, isLoading, refetch } = useGetSpinRewardStats();
+  const { data, isLoading, refetch, error } = useGetSpinRewardStats();
 
   return {
     spinRewardStats: data,
     isRewardStatsLoading: isLoading,
     refetchRewardStats: refetch,
+    spinRewardStatsError: error,
   };
 };
 
@@ -64,7 +69,7 @@ const useUpdateRewardService = () => {
         onError: () => {
           toast.error(`Spin reward update failed`);
         },
-      }
+      },
     );
   };
 

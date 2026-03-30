@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useEffect } from "react";
 import TableWithPagination from "@/components/TableWithPagination";
 import { AdminStatus } from "@/lib/constants";
 import { AdminRow, Column } from "@/types/types";
@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { InviteAdminModal } from "./InviteAdminModal";
 import { Plus } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface AdminTableRow extends Omit<
   AdminRow,
@@ -147,6 +148,14 @@ const AdminContent = () => {
   const handlePageChange = (page: number) => {
     router.replace(pathname + "?" + createQueryParams("page", page.toString()));
   };
+
+  useEffect(() => {
+    if (adminListError) {
+      toast.error(
+        adminListError?.response.data.detail || "Something went wrong",
+      );
+    }
+  }, [adminListError]);
 
   return (
     <div className="space-y-6">

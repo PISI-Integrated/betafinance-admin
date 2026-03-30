@@ -9,6 +9,7 @@ import { useFetchCustomersService } from "@/services/users.service";
 import UserDetailsSidebar from "./sidebar/UserDetailSideBar";
 import TableSkeleton from "../TableSkeleton";
 import { formatDate } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const CustomersContent = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const CustomersContent = () => {
     return params;
   }, [activeTab, page, size]);
 
-  const { allCustomers, isCustomersLoading } =
+  const { allCustomers, isCustomersLoading, customerError } =
     useFetchCustomersService(customerParams);
   const totalPagesFromApi = Math.ceil(
     allCustomers?.total! / allCustomers?.page_size!,
@@ -84,6 +85,14 @@ const CustomersContent = () => {
   useEffect(() => {
     setPage(1);
   }, [activeTab]);
+
+  useEffect(() => {
+    if (customerError) {
+      toast.error(
+        customerError?.response.data.detail || "Something went wrong",
+      );
+    }
+  }, [customerError]);
 
   const tableData: ICustomersResponse["items"] = data.map((item) => ({
     ...item,

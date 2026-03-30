@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useFetchMarketersService } from "@/services/marketers.service";
 import { MarketerRow } from "@/types/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const MARKETERS_PER_PAGE = 10;
 
@@ -35,11 +36,12 @@ const MarketersContent = () => {
   );
   const isAddModalOpen = searchParams.get("add-marketer");
 
-  const { marketers, isMarketersLoading } = useFetchMarketersService({
-    limit: MARKETERS_PER_PAGE,
-    skip: (currentPage - 1) * MARKETERS_PER_PAGE,
-    is_active: activeTab === MarketerTabStatus.ACTIVE,
-  });
+  const { marketers, isMarketersLoading, marketersError } =
+    useFetchMarketersService({
+      limit: MARKETERS_PER_PAGE,
+      skip: (currentPage - 1) * MARKETERS_PER_PAGE,
+      is_active: activeTab === MarketerTabStatus.ACTIVE,
+    });
 
   const handleRowClick = (marketer: MarketerRow) => {
     setSelectedMarketerId(marketer.id);
@@ -93,6 +95,14 @@ const MarketersContent = () => {
       ),
       created_at: formatDate(item.created_at),
     })) || [];
+
+  useEffect(() => {
+    if (marketersError) {
+      toast.error(
+        marketersError?.response.data.detail || "Something went wrong",
+      );
+    }
+  }, [marketersError]);
 
   return (
     <div className="space-y-6">

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   useFetchSpinHistoryService,
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
+import toast from "react-hot-toast";
 
 const SpinContent = () => {
   const router = useRouter();
@@ -33,17 +34,19 @@ const SpinContent = () => {
   );
 
   // Rewards Fetching
-  const { spinRewards, isRewardsLoading } = useFetchSpinRewardsService({
-    page: activeTab === "rewards" ? page : 1,
-    size: 50,
-  });
+  const { spinRewards, isRewardsLoading, spinRewardsError } =
+    useFetchSpinRewardsService({
+      page: activeTab === "rewards" ? page : 1,
+      size: 50,
+    });
 
   // History Fetching
-  const { spinHistories, isHistoriesLoading } = useFetchSpinHistoryService({
-    page: activeTab === "history" ? page : 1,
-    page_size: 10,
-    sort_order: "desc",
-  } as ISpinHistoryParamsDto);
+  const { spinHistories, isHistoriesLoading, spinHistoriesError } =
+    useFetchSpinHistoryService({
+      page: activeTab === "history" ? page : 1,
+      page_size: 10,
+      sort_order: "desc",
+    } as ISpinHistoryParamsDto);
 
   const handleTabChange = (tab: "rewards" | "history") => {
     const params = new URLSearchParams(searchParams.toString());
@@ -68,6 +71,16 @@ const SpinContent = () => {
 
   const { spinRewardStats, isRewardStatsLoading } =
     useFetchSpinRewardStatsService();
+
+  useEffect(() => {
+    if (spinRewardsError || spinHistoriesError) {
+      toast.error(
+        spinRewardsError?.response.data.detail ||
+          spinHistoriesError?.response.data.detail ||
+          "Something went wrong",
+      );
+    }
+  }, [spinRewardsError, spinHistoriesError]);
 
   return (
     <div className="space-y-6">

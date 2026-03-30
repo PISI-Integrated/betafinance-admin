@@ -1,23 +1,23 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useFetchCustomersService } from "@/services/users.service";
+import { useFetchAdminProfileService } from "@/services/admin.service";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { allCustomers, isCustomersLoading, error } =
-    useFetchCustomersService();
+  const { adminProfile, adminProfileLoading, adminProfileError } =
+    useFetchAdminProfileService();
 
   useEffect(() => {
-    if (isCustomersLoading && !allCustomers) return;
+    if (adminProfileLoading && !adminProfile) return;
 
-    if (error) {
+    if (adminProfileError) {
       router.replace(`/login?from=${encodeURIComponent(pathname)}`);
     }
-  }, [error, isCustomersLoading, allCustomers, router, pathname]);
+  }, [adminProfileError, adminProfileLoading, adminProfile, router, pathname]);
 
-  if (isCustomersLoading && !allCustomers) {
+  if (adminProfileLoading && !adminProfile) {
     return (
       <div className="w-full h-screen flex justify-center items-center animate-pulse">
         Loading...
@@ -25,7 +25,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (isCustomersLoading) {
+  if (adminProfileLoading) {
     return (
       <div className="w-full h-screen flex justify-center items-center animate-pulse">
         Loading...

@@ -5,12 +5,13 @@ import {
 } from "@/api/loans.api";
 
 const useFetchAllLoansService = (params?: ILoansParamsDto) => {
-  const { data, isLoading, refetch } = useGetLoansApi(params);
+  const { data, isLoading, refetch, error } = useGetLoansApi(params);
 
   return {
     allLoans: data,
     isLoansLoading: isLoading,
     refetchLoans: refetch,
+    loanError: error,
   };
 };
 

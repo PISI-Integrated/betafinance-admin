@@ -1,3 +1,13 @@
+interface ICustomError {
+  response: {
+    data: {
+      detail?: string;
+      [key: string]: string[] | undefined;
+    };
+  };
+  status?: number;
+}
+
 interface ILoginDto {
   email: string;
   pin: string;
@@ -409,4 +419,20 @@ interface IAdminSettingsResponse {
 
 interface IUpdateAdminSettingsDto {
   p2p_platform_fee_percentage: number;
+}
+
+interface IAdminProfileResponse {
+  id: string;
+  phone: string;
+  name: string;
+  username: string;
+  email: string;
+  is_verified: boolean;
+  credit_score: number;
+  creditScore: number;
+  account_number: string | null;
+  accountNumber: string | null;
+  kycStatus: kycStatus;
+  created_at: string;
+  updated_at: string;
 }

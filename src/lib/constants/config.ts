@@ -55,6 +55,7 @@ const ADMIN = {
   invite: `/admin/invite-admin`,
   resendInvite: `/admin/resend-admin-invite`,
   settings: `/admin/settings`,
+  profile: `/user/profile/simple`,
 };
 
 const MARKETERS = {

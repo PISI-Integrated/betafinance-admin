@@ -21,6 +21,7 @@ import TableSkeleton from "../TableSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const LoansContent = () => {
   const router = useRouter();
@@ -51,7 +52,8 @@ const LoansContent = () => {
     return params;
   }, [loanType, activeStatus, page, size]);
 
-  const { allLoans, isLoansLoading } = useFetchAllLoansService(loanParams);
+  const { allLoans, isLoansLoading, loanError } =
+    useFetchAllLoansService(loanParams);
   const totalPagesFromApi = Math.ceil(allLoans?.total! / allLoans?.page_size!);
 
   const columns =
@@ -133,6 +135,12 @@ const LoansContent = () => {
       loan_type: loanType as loanType,
       loan_status: "repaid",
     });
+
+  useEffect(() => {
+    if (loanError) {
+      toast.error(loanError?.response.data.detail || "Something went wrong");
+    }
+  }, [loanError]);
 
   return (
     <div className="space-y-6">

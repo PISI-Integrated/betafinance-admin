@@ -19,7 +19,8 @@ const useFetchCustomersService = (params?: ICustomersParamsDto) => {
     allCustomers: data,
     isCustomersLoading: isLoading,
     refetchCustomers: refetch,
-    error,
+    customerError: error,
+    fetchStatus: status,
   };
 };
 
