@@ -58,7 +58,7 @@ const ADMIN = {
   profile: `/user/profile/simple`,
   permissions: `/admin/permissions`,
   roles: `/admin/roles`,
-  updateRole: (role_id: string) => `/admin/role/${role_id}`,
+  updateRole: (role_id: string) => `/admin/roles/${role_id}`,
 };
 
 const MARKETERS = {

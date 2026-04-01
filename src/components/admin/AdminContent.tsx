@@ -84,7 +84,7 @@ const AdminContent = () => {
         : admin.status || "active") as AdminRow["status"],
       dateAdded: formatDate(admin.createdAt, true),
       dateJoined: formatDate(admin.createdAt, true),
-      role: "Admin",
+      role: admin.roles?.length > 0 ? admin.roles[0].name : "N/A",
     };
 
     return {

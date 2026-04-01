@@ -355,6 +355,7 @@ interface IAdminListItem {
   createdAt: string;
   isSuspended: boolean;
   suspensionReason: string | null;
+  roles: IRolesResponse[];
 }
 
 interface IAdminListResponse {

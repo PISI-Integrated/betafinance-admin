@@ -37,8 +37,8 @@ const useInviteAdminService = () => {
         onSuccess();
         toast.success("Admin invited successfully");
       },
-      onError: () => {
-        toast.error("A user with that email or phone already exists.");
+      onError: (error) => {
+        toast.error(error.response?.data?.detail || "Failed to invite admin");
       },
     });
   };
@@ -138,19 +138,22 @@ const useFetchRolesService = () => {
   };
 };
 
-const useUpdateRoleService = (roleId: string) => {
-  const { mutateAsync, isPending, isError, error } = useUpdateRoleApi(roleId);
+const useUpdateRoleService = () => {
+  const { mutateAsync, isPending, isError, error } = useUpdateRoleApi();
 
-  const updateRole = (body: IRoleDto) => {
-    mutateAsync(body, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
-        toast.success("Role updated successfully");
+  const updateRole = (roleId: string, body: IRoleDto) => {
+    mutateAsync(
+      { roleId, body },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
+          toast.success("Role updated successfully");
+        },
+        onError: (error) => {
+          toast.error(error.response?.data?.detail || "Failed to update role");
+        },
       },
-      onError: (error) => {
-        toast.error(error.response?.data?.detail || "Failed to update role");
-      },
-    });
+    );
   };
 
   return {

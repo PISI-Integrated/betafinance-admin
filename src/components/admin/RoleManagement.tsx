@@ -2,13 +2,14 @@ import { useFetchRolesService } from "@/services/admin.service";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Shield, UserCog, Calendar, FileText } from "lucide-react";
-import { useState, ReactNode } from "react";
+import { Shield, UserCog, Calendar } from "lucide-react";
+import { useState, ReactNode, useEffect } from "react";
 import RoleDetailsSidebar from "./RoleDetailsSidebar";
 import TableWithPagination from "@/components/TableWithPagination";
 import { Column } from "@/types/types";
 import { formatDate } from "@/lib/utils";
 import { CreateRoleModal } from "./CreateRoleModal";
+import toast from "react-hot-toast";
 
 interface RoleTableRow {
   id: string;
@@ -23,8 +24,11 @@ interface RoleManagementProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const RoleManagement = ({ isCreateModalOpen, onOpenChange }: RoleManagementProps) => {
-  const { roles, rolesLoading } = useFetchRolesService();
+const RoleManagement = ({
+  isCreateModalOpen,
+  onOpenChange,
+}: RoleManagementProps) => {
+  const { roles, rolesLoading, rolesError } = useFetchRolesService();
   const [selectedRole, setSelectedRole] = useState<IRolesResponse | null>(null);
 
   const handleEditRole = (role: IRolesResponse) => {
@@ -70,6 +74,12 @@ const RoleManagement = ({ isCreateModalOpen, onOpenChange }: RoleManagementProps
     _raw: role,
   }));
 
+  useEffect(() => {
+    if (rolesError) {
+      toast.error(rolesError?.response.data.detail || "Something went wrong");
+    }
+  }, [rolesError]);
+
   if (rolesLoading) {
     return (
       <Card className="overflow-hidden border-none bg-white/80 backdrop-blur-sm ring-1 ring-gray-200/50">
@@ -86,7 +96,7 @@ const RoleManagement = ({ isCreateModalOpen, onOpenChange }: RoleManagementProps
       <div className={selectedRole ? "lg:col-span-3" : "lg:col-span-4"}>
         <Card className="overflow-hidden rounded-2xl border-none bg-white/80 backdrop-blur-sm ring-1 ring-gray-200/50">
           <CardContent className="p-0">
-            {tableData.length === 0 ? (
+            {!rolesError && tableData.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-32 gap-4">
                 <div className="bg-gray-100 p-6 rounded-full shadow-inner animate-pulse">
                   <UserCog className="h-12 w-12 text-gray-300" />

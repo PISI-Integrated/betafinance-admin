@@ -62,9 +62,9 @@ const useCreateRoleApi = () => {
   });
 };
 
-const useUpdateRoleApi = (roleId: string) => {
-  return useMutation<string, ICustomError, IRoleDto>({
-    mutationFn: (body) => api.patch(ADMIN.updateRole(roleId), body),
+const useUpdateRoleApi = () => {
+  return useMutation<string, ICustomError, { roleId: string; body: IRoleDto }>({
+    mutationFn: ({ roleId, body }) => api.patch(ADMIN.updateRole(roleId), body),
   });
 };
 
