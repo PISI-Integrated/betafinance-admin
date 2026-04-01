@@ -1,11 +1,15 @@
 "use client";
 import {
+  useCreateRoleApi,
   useGetAdminListApi,
   useGetAdminProfileApi,
   useGetAdminSettingsApi,
+  useGetPermissionsApi,
+  useGetRolesApi,
   useInviteAdminApi,
   useResendInviteApi,
   useUpdateAdminSettingsApi,
+  useUpdateRoleApi,
 } from "@/api/admin.api";
 import { queryClient } from "@/lib/query/queryClient";
 import toast from "react-hot-toast";
@@ -114,6 +118,72 @@ const useFetchAdminProfileService = () => {
   };
 };
 
+const useFetchPermissionsService = () => {
+  const { data, isLoading, error } = useGetPermissionsApi();
+
+  return {
+    permissions: data,
+    permissionsLoading: isLoading,
+    permissionsError: error,
+  };
+};
+
+const useFetchRolesService = () => {
+  const { data, isLoading, error } = useGetRolesApi();
+
+  return {
+    roles: data,
+    rolesLoading: isLoading,
+    rolesError: error,
+  };
+};
+
+const useUpdateRoleService = (roleId: string) => {
+  const { mutateAsync, isPending, isError, error } = useUpdateRoleApi(roleId);
+
+  const updateRole = (body: IRoleDto) => {
+    mutateAsync(body, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
+        toast.success("Role updated successfully");
+      },
+      onError: (error) => {
+        toast.error(error.response?.data?.detail || "Failed to update role");
+      },
+    });
+  };
+
+  return {
+    updateRole,
+    updateRoleLoading: isPending,
+    updateRoleError: error,
+    updateRoleIsError: isError,
+  };
+};
+
+const useCreateRoleService = () => {
+  const { mutateAsync, isPending, isError, error } = useCreateRoleApi();
+
+  const createRole = (body: IRoleDto) => {
+    mutateAsync(body, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["admin", "roles"] });
+        toast.success("Role created successfully");
+      },
+      onError: (error) => {
+        toast.error(error.response?.data?.detail || "Failed to create role");
+      },
+    });
+  };
+
+  return {
+    createRole,
+    createRoleLoading: isPending,
+    createRoleError: error,
+    createRoleIsError: isError,
+  };
+};
+
 export {
   useFetchAdminListService,
   useInviteAdminService,
@@ -121,4 +191,8 @@ export {
   useFetchAdminSettingsService,
   useUpdateAdminSettingsService,
   useFetchAdminProfileService,
+  useFetchPermissionsService,
+  useFetchRolesService,
+  useUpdateRoleService,
+  useCreateRoleService,
 };

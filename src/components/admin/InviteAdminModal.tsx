@@ -17,11 +17,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useInviteAdminService } from "@/services/admin.service";
+import {
+  useInviteAdminService,
+  useFetchRolesService,
+} from "@/services/admin.service";
 import {
   inviteAdminSchema,
   InviteAdminFormValues,
 } from "@/schema/admin.validation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface InviteAdminModalProps {
   open: boolean;
@@ -33,6 +38,7 @@ export function InviteAdminModal({
   onOpenChange,
 }: InviteAdminModalProps) {
   const { inviteAdmin, inviteAdminLoading } = useInviteAdminService();
+  const { roles, rolesLoading } = useFetchRolesService();
 
   const form = useForm<InviteAdminFormValues>({
     resolver: zodResolver(inviteAdminSchema),
@@ -40,6 +46,7 @@ export function InviteAdminModal({
       name: "",
       email: "",
       phone: "",
+      role_names: [],
     },
   });
 
@@ -62,36 +69,38 @@ export function InviteAdminModal({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 pt-4"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter admin's name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter admin's name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter admin's email address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter admin's email address"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -102,6 +111,72 @@ export function InviteAdminModal({
                   <FormControl>
                     <Input placeholder="Enter phone number" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role_names"
+              render={() => (
+                <FormItem>
+                  <div className="mb-4">
+                    <FormLabel className="text-base font-semibold">
+                      Roles
+                    </FormLabel>
+                    <p className="text-sm text-muted-foreground">
+                      Select the roles to assign to this administrator.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[150px] p-1 rounded-md">
+                    {rolesLoading
+                      ? Array.from({ length: 4 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex flex-row items-start space-x-3 space-y-0"
+                          >
+                            <Skeleton className="h-4 w-4 rounded" />
+                            <Skeleton className="h-4 w-[100px]" />
+                          </div>
+                        ))
+                      : roles?.map((role) => (
+                          <FormField
+                            key={role.id}
+                            control={form.control}
+                            name="role_names"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={role.id}
+                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(role.name)}
+                                      onCheckedChange={(checked: boolean) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              role.name,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== role.name,
+                                              ),
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal cursor-pointer select-none capitalize">
+                                    {role.name}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
