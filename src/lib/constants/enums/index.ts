@@ -28,4 +28,5 @@ export enum CustomerTabs {
 export enum AdminStatus {
   ACTIVE = "active",
   SUSPENDED = "inactive",
+  ROLES = "roles",
 }

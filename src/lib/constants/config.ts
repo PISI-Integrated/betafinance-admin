@@ -56,6 +56,9 @@ const ADMIN = {
   resendInvite: `/admin/resend-admin-invite`,
   settings: `/admin/settings`,
   profile: `/user/profile/simple`,
+  permissions: `/admin/permissions`,
+  roles: `/admin/roles`,
+  updateRole: (role_id: string) => `/admin/roles/${role_id}`,
 };
 
 const MARKETERS = {

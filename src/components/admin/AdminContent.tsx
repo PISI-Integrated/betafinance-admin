@@ -15,8 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { InviteAdminModal } from "./InviteAdminModal";
-import { Plus } from "lucide-react";
+import { Plus, ShieldCheck, UserCog } from "lucide-react";
 import toast from "react-hot-toast";
+import RoleManagement from "./RoleManagement";
 
 interface AdminTableRow extends Omit<
   AdminRow,
@@ -40,6 +41,7 @@ const AdminContent = () => {
 
   const [selectedUser, setSelectedUser] = useState<AdminRow | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isCreateRoleModalOpen, setIsCreateRoleModalOpen] = useState(false);
 
   const { adminList, adminListLoading, adminListError, total } =
     useFetchAdminListService({
@@ -82,7 +84,7 @@ const AdminContent = () => {
         : admin.status || "active") as AdminRow["status"],
       dateAdded: formatDate(admin.createdAt, true),
       dateJoined: formatDate(admin.createdAt, true),
-      role: "Admin",
+      role: admin.roles?.length > 0 ? admin.roles[0].name : "N/A",
     };
 
     return {
@@ -92,12 +94,12 @@ const AdminContent = () => {
       status: (
         <div className="flex items-center gap-2">
           <span
-            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
               rawRow.status === "active" || rawRow.status === "validated"
-                ? "bg-green-50 text-green-700"
+                ? "bg-emerald-50 text-emerald-700"
                 : rawRow.status === "pending_validation"
-                  ? "bg-orange-50 text-orange-700"
-                  : "bg-red-50 text-red-700"
+                  ? "bg-amber-50 text-amber-700"
+                  : "bg-rose-50 text-rose-700"
             }`}
           >
             {rawRow.status === "pending_validation"
@@ -115,14 +117,21 @@ const AdminContent = () => {
                 e.stopPropagation();
                 handleResendInvite(rawRow.email);
               }}
-              className="text-xs font-semibold text-blue-600 hover:underline disabled:opacity-50"
+              className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline disabled:opacity-50 transition-colors"
             >
               Resend Invite
             </button>
           )}
         </div>
       ),
-      role: <span className="capitalize font-medium">{rawRow.role}</span>,
+      role: (
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 text-blue-500/70" />
+          <span className="capitalize font-semibold text-gray-700">
+            {rawRow.role}
+          </span>
+        </div>
+      ),
       _raw: rawRow,
     };
   });
@@ -158,80 +167,132 @@ const AdminContent = () => {
   }, [adminListError]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-gray-200">
-        {/* Status Tabs */}
-        <div className="flex gap-4">
-          <button
-            className={`pb-3 text-sm font-medium capitalize transition-colors ${
-              activeStatus === AdminStatus.ACTIVE
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => handleStatusChange(AdminStatus.ACTIVE)}
-          >
-            Active
-          </button>
-          <button
-            className={`pb-3 text-sm font-medium capitalize transition-colors ${
-              activeStatus === AdminStatus.SUSPENDED
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-            onClick={() => handleStatusChange(AdminStatus.SUSPENDED)}
-          >
-            Inactive
-          </button>
-        </div>
-
-        <Button onClick={() => setIsInviteModalOpen(true)} className="mb-2">
-          <Plus className="mr-2 h-4 w-4" />
-          Invite Admin
-        </Button>
-      </div>
-
-      {/* Content */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className={selectedUser ? "lg:col-span-2" : "lg:col-span-3"}>
-          <Card className="overflow-hidden rounded-lg border-gray-200 bg-white">
-            <CardContent className="p-0">
-              {adminListLoading ? (
-                <div className="flex flex-col gap-4 p-4">
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-              ) : adminListError ? (
-                <div className="flex h-40 items-center justify-center text-red-500">
-                  Failed to load administrators
-                </div>
-              ) : tableData.length === 0 ? (
-                <div className="flex items-center justify-center py-12">
-                  <p className="text-sm text-gray-500">
-                    No administrators found
-                  </p>
-                </div>
-              ) : (
-                <TableWithPagination
-                  columns={columns}
-                  data={tableData}
-                  onRowClick={handleRowClick}
-                  currentPage={currentPage}
-                  totalPages={totalPages || 1}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                />
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-gray-200 gap-4">
+          <div className="flex gap-8 overflow-x-auto pb-px">
+            <button
+              className={`pb-4 text-sm  tracking-wider transition-all duration-300 relative whitespace-nowrap ${
+                activeStatus === AdminStatus.ACTIVE
+                  ? "text-blue-600"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+              onClick={() => handleStatusChange(AdminStatus.ACTIVE)}
+            >
+              Active Admins
+              {activeStatus === AdminStatus.ACTIVE && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-600 rounded-t-full" />
               )}
-            </CardContent>
-          </Card>
+            </button>
+            <button
+              className={`pb-4 text-sm  tracking-wider transition-all duration-300 relative whitespace-nowrap ${
+                activeStatus === AdminStatus.SUSPENDED
+                  ? "text-blue-600"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+              onClick={() => handleStatusChange(AdminStatus.SUSPENDED)}
+            >
+              Inactive Admins
+              {activeStatus === AdminStatus.SUSPENDED && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-600 rounded-t-full" />
+              )}
+            </button>
+            <button
+              className={`pb-4 text-sm  tracking-wider transition-all duration-300 relative whitespace-nowrap ${
+                activeStatus === AdminStatus.ROLES
+                  ? "text-blue-600"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+              onClick={() => handleStatusChange(AdminStatus.ROLES)}
+            >
+              Role Management
+              {activeStatus === AdminStatus.ROLES && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-600 rounded-t-full" />
+              )}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-4 mb-3 self-end lg:self-auto">
+            <Button
+              onClick={() =>
+                activeStatus === AdminStatus.ROLES
+                  ? setIsCreateRoleModalOpen(true)
+                  : setIsInviteModalOpen(true)
+              }
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 h-10 shadow-md transition-all hover:scale-105 active:scale-95 flex items-center gap-2 shrink-0"
+            >
+              <Plus className="h-5 w-5" />
+              {activeStatus === AdminStatus.ROLES
+                ? "Create Role"
+                : "Invite Admin"}
+            </Button>
+          </div>
         </div>
 
-        {selectedUser && (
-          <div className="lg:col-span-1">
-            <AdminDetailsSidebar
-              user={selectedUser}
-              onClose={handleCloseSidebar}
+        {activeStatus === AdminStatus.ROLES ? (
+          <div className="animate-in slide-in-from-bottom-4 duration-500">
+            <RoleManagement
+              isCreateModalOpen={isCreateRoleModalOpen}
+              onOpenChange={setIsCreateRoleModalOpen}
             />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 animate-in slide-in-from-bottom-2 duration-400">
+            <div className={selectedUser ? "lg:col-span-3" : "lg:col-span-4"}>
+              <Card className="overflow-hidden rounded-2xl border-none bg-white/80 backdrop-blur-sm ring-1 ring-gray-200/50">
+                <CardContent className="p-0">
+                  {adminListLoading ? (
+                    <div className="flex flex-col gap-6 p-8">
+                      <Skeleton className="h-12 w-full rounded-xl" />
+                      <Skeleton className="h-12 w-full rounded-xl" />
+                      <Skeleton className="h-12 w-full rounded-xl" />
+                    </div>
+                  ) : adminListError ? (
+                    <div className="flex h-64 flex-col items-center justify-center text-gray-400 gap-3">
+                      <ShieldCheck className="h-12 w-12 opacity-20" />
+                      <span className="font-medium">
+                        Failed to load administrators
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.location.reload()}
+                      >
+                        Retry
+                      </Button>
+                    </div>
+                  ) : tableData.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                      <div className="bg-gray-100 p-4 rounded-full">
+                        <UserCog className="h-10 w-10 text-gray-400" />
+                      </div>
+                      <p className="text-gray-500 font-medium tracking-tight">
+                        No administrators found matching your criteria
+                      </p>
+                    </div>
+                  ) : (
+                    <TableWithPagination
+                      columns={columns}
+                      data={tableData}
+                      onRowClick={handleRowClick}
+                      currentPage={currentPage}
+                      totalPages={totalPages || 1}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {selectedUser && (
+              <div className="lg:col-span-1 animate-in slide-in-from-right-4 duration-300">
+                <AdminDetailsSidebar
+                  user={selectedUser}
+                  onClose={handleCloseSidebar}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

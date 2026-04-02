@@ -25,7 +25,7 @@ const useLoginService = () => {
           router.replace(redirectParam || "/");
         },
         onError: (error) => {
-          toast.error("Something went wrong");
+          toast.error(error.response?.data.detail || "Something went wrong");
         },
       },
     );

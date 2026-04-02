@@ -355,6 +355,7 @@ interface IAdminListItem {
   createdAt: string;
   isSuspended: boolean;
   suspensionReason: string | null;
+  roles: IRolesResponse[];
 }
 
 interface IAdminListResponse {
@@ -368,6 +369,7 @@ interface IInviteAdminDto {
   name: string;
   email: string;
   phone: string;
+  role_names?: string[];
 }
 
 interface ISuspendUserDto {
@@ -421,6 +423,13 @@ interface IUpdateAdminSettingsDto {
   p2p_platform_fee_percentage: number;
 }
 
+interface IPermissionsResponse {
+  name: string;
+  description: string;
+  id: string;
+  created_at: string;
+}
+
 interface IAdminProfileResponse {
   id: string;
   phone: string;
@@ -435,4 +444,18 @@ interface IAdminProfileResponse {
   kycStatus: kycStatus;
   created_at: string;
   updated_at: string;
+}
+
+interface IRoleDto {
+  name: string;
+  description: string;
+  permission_names: string[];
+}
+
+interface IRolesResponse {
+  name: string;
+  description: string;
+  id: string;
+  created_at: string;
+  permissions: IPermissionsResponse[];
 }
