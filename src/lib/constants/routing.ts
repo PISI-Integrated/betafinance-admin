@@ -42,6 +42,13 @@ export const routes = {
       alt: "spin",
     },
     {
+      title: "Transactions",
+      path: "/transactions",
+      icon: Icon.Transaction,
+      activeIcon: Icon.TransactionActive,
+      alt: "transactions",
+    },
+    {
       title: "Admin",
       path: "/admin",
       icon: Icon.Admin,
@@ -55,12 +62,5 @@ export const routes = {
       activeIcon: Icon.SettingsActive,
       alt: "settings",
     },
-    // {
-    //   title: "Help",
-    //   path: "/help",
-    //   icon: Icon.Help,
-    //   activeIcon: Icon.HelpActive,
-    //   alt: "help",
-    // },
   ],
 };

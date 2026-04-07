@@ -18,6 +18,8 @@ import ArrowDown from "../../../public/assets/arrow-down.svg";
 import Minus from "../../../public/assets/minus.svg";
 import Spin from "../../../public/assets/game.svg";
 import SpinActive from "../../../public/assets/game-active.svg";
+import Transaction from "../../../public/assets/transaction.svg";
+import TransactionActive from "../../../public/assets/transaction-active.svg";
 
 export default {
   OverviewActive,
@@ -40,4 +42,6 @@ export default {
   Minus,
   Spin,
   SpinActive,
+  Transaction,
+  TransactionActive,
 } as const;

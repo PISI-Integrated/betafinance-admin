@@ -459,3 +459,42 @@ interface IRolesResponse {
   created_at: string;
   permissions: IPermissionsResponse[];
 }
+
+interface ITransactionListItem {
+  id: string;
+  userId: string;
+  userName: string;
+  userPhone: string;
+  amount: string;
+  type: "debit" | "credit";
+  description: string;
+  reference: string;
+  status: "completed" | "pending" | "failed";
+  paymentMethod: "card" | "wallet";
+  recipientBank: string | null;
+  recipientAccount: string | null;
+  recipientName: string | null;
+  loanId: string;
+  paystackReference: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ITransactionListResponse {
+  items: ITransactionListItem[];
+  page: number;
+  page_size: number;
+  total: number;
+}
+
+interface ITransactionParamsDto {
+  status: string;
+  type: string;
+  payment_method: string;
+  user_id: string;
+  search: string;
+  start_date: string;
+  end_date: string;
+  page: number;
+  size: number;
+}
