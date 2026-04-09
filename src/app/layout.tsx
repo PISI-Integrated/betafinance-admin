@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-hidden">
+    <html lang="en" className="overflow-hidden" data-scroll-behavior="smooth">
       <body className={`${inter.className} h-screen`}>
         <ThemeProvider
           attribute="class"

@@ -67,4 +67,18 @@ const MARKETERS = {
   action: (marketerId: string) => `/admin/marketer/${marketerId}`,
 };
 
-export { base_url, AUTH, ANALYTICS, CUSTOMER, LOAN, SPIN, ADMIN, MARKETERS };
+const TRANSACTIONS = {
+  list: `/admin/transactions`,
+};
+
+export {
+  base_url,
+  AUTH,
+  ANALYTICS,
+  CUSTOMER,
+  LOAN,
+  SPIN,
+  ADMIN,
+  MARKETERS,
+  TRANSACTIONS,
+};

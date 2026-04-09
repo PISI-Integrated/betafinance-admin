@@ -34,8 +34,8 @@ function SidebarNav() {
   const [user, setUser] = useState<ILoginResponse["user"] | null>(null);
 
   const firstPartItems = routes.sidebarItems.slice(0, 4);
-  const lastPartItems = routes.sidebarItems.slice(4, 6);
-  const finalPartItems = routes.sidebarItems.slice(6);
+  const lastPartItems = routes.sidebarItems.slice(4, 7);
+  const finalPartItems = routes.sidebarItems.slice(7);
 
   const { isLoggingOut, logoutAdmin } = useLogoutService();
 
