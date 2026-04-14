@@ -498,3 +498,20 @@ interface ITransactionParamsDto {
   page: number;
   size: number;
 }
+
+type transactionStatus = "completed" | "pending" | "failed";
+type transactionType = "debit" | "credit";
+
+interface IExportParamsDto {
+  start_date?: string;
+  end_date?: string;
+  format: "csv" | "pdf";
+  months?: number;
+  month?: number;
+  period?: "day" | "week" | "month" | "year";
+  year?: number;
+  loan_type?: loanType;
+  kyc_status?: kycStatus;
+  type?: transactionType;
+  status?: transactionStatus;
+}

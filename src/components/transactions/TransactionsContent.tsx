@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import toast from "react-hot-toast";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface TransactionRow {
   reference: React.ReactNode;
@@ -39,12 +41,29 @@ interface TransactionRow {
 }
 
 const TransactionsContent = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const activeTab = searchParams.get("tab") || "all";
+  const typeFilter = searchParams.get("type") || "all_types";
+  const statusFilter = searchParams.get("status") || "all_status";
+
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all_types");
-  const [statusFilter, setStatusFilter] = useState("all_status");
+  const debouncedSearch = useDebounce(search, 1000);
+
+  const updateQueryParam = (name: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all" || value === "all_types" || value === "all_status") {
+      params.delete(name);
+    } else {
+      params.set(name, value);
+    }
+    setPage(1); // Reset page on filter change
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   const transactionParams = useMemo(() => {
     const params: Partial<ITransactionParamsDto> = {
@@ -52,13 +71,13 @@ const TransactionsContent = () => {
       size,
     };
 
-    if (search) params.search = search;
+    if (debouncedSearch) params.search = debouncedSearch;
     if (activeTab !== "all") params.status = activeTab;
     if (typeFilter !== "all_types") params.type = typeFilter;
     if (statusFilter !== "all_status") params.status = statusFilter;
 
     return params as ITransactionParamsDto;
-  }, [page, size, search, activeTab, typeFilter, statusFilter]);
+  }, [page, size, debouncedSearch, activeTab, typeFilter, statusFilter]);
 
   const { transactionData, transactionLoading, transactionError } =
     useFetchAllTransactionsService(transactionParams);
@@ -193,9 +212,9 @@ const TransactionsContent = () => {
             Monitor and manage all platform transactions.
           </p>
         </div>
-        <Button className="bg-[#3366FF] hover:bg-[#2952CC] text-white px-6">
+        {/* <Button className="bg-[#3366FF] hover:bg-[#2952CC] text-white px-6">
           Generate Report
-        </Button>
+        </Button> */}
       </div>
 
       {/* Stats Cards */}
@@ -235,7 +254,10 @@ const TransactionsContent = () => {
           />
         </div>
 
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
+        <Select
+          value={typeFilter}
+          onValueChange={(val) => updateQueryParam("type", val)}
+        >
           <SelectTrigger className="w-[180px] bg-[rgba(145,_158,_171,_0.08)]">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
@@ -246,7 +268,10 @@ const TransactionsContent = () => {
           </SelectContent>
         </Select>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select
+          value={statusFilter}
+          onValueChange={(val) => updateQueryParam("status", val)}
+        >
           <SelectTrigger className="w-[200px] bg-[rgba(145,_158,_171,_0.08)]">
             <SelectValue placeholder="Filter By All Status" />
           </SelectTrigger>
@@ -282,7 +307,7 @@ const TransactionsContent = () => {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => updateQueryParam("tab", tab.id)}
               className={`pb-4 text-sm font-medium transition-colors relative flex items-center gap-2 ${
                 activeTab === tab.id
                   ? "text-blue-600"

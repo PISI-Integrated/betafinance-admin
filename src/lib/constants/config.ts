@@ -71,6 +71,16 @@ const TRANSACTIONS = {
   list: `/admin/transactions`,
 };
 
+const EXPORT = {
+  overview: `/admin/analytics/overview/export`,
+  monthlyTrends: `/admin/analytics/monthly-trends/export`,
+  userStats: `/admin/analytics/user-stats/export`,
+  loanSummary: `/admin/analytics/loan-collection-summary/export`,
+  loans: `/admin/loans/export`,
+  users: `/admin/users/export`,
+  transactions: `/admin/transactions/export`,
+};
+
 export {
   base_url,
   AUTH,
@@ -81,4 +91,5 @@ export {
   ADMIN,
   MARKETERS,
   TRANSACTIONS,
+  EXPORT,
 };

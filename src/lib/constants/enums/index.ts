@@ -1,6 +1,6 @@
 export enum LoanTabs {
   P2P = "p2p",
-  BETA_LOANS = "betaLoans",
+  BETA_LOANS = "b2c",
 }
 
 export enum LoanStatus {
