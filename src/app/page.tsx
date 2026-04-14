@@ -22,7 +22,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { months, years } from "@/lib/constants/data";
-import useFetchAllTransactionsService from "@/services/transactions.service";
 
 function HomeContent() {
   const searchParams = useSearchParams();
