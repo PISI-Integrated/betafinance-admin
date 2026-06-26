@@ -15,7 +15,10 @@ axiosInstance.interceptors.request.use(async (config) => {
 });
 
 let isRefreshing = false;
-let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (err: any) => void;
+}> = [];
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
@@ -33,6 +36,18 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
+
+    // Don't attempt token refresh for public auth endpoints
+    const publicAuthPaths = [
+      AUTH.login,
+      AUTH.forgotPassword,
+      AUTH.resetPassword,
+      AUTH.setPin,
+    ];
+    if (publicAuthPaths.some((path) => originalRequest.url?.includes(path))) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -57,7 +72,7 @@ axiosInstance.interceptors.response.use(
           saveToken("accessToken", data.access_token),
           saveToken("refreshToken", data.refresh_token),
         ]);
-        
+
         isRefreshing = false;
         processQueue(null, data.access_token);
 
