@@ -9,17 +9,39 @@ const useLoginApi = () => {
   });
 };
 
+const useForgotPasswordApi = () => {
+  return useMutation<IForgotPasswordResponse, ICustomError, IForgotPasswordDto>(
+    {
+      mutationFn: (body: IForgotPasswordDto) =>
+        api.post<IForgotPasswordResponse>(`${AUTH.forgotPassword}`, body),
+    },
+  );
+};
+
+const useResetPasswordApi = () => {
+  return useMutation<string, ICustomError, IResetPasswordDto>({
+    mutationFn: (body: IResetPasswordDto) =>
+      api.post<string>(`${AUTH.resetPassword}`, body),
+  });
+};
+
 const useSetPinApi = () => {
-  return useMutation<string, Error, ISetPinDto>({
+  return useMutation<string, ICustomError, ISetPinDto>({
     mutationFn: (body: ISetPinDto) => api.post<string>(`${AUTH.setPin}`, body),
   });
 };
 
 const useLogoutApi = () => {
-  return useMutation<string, Error, string>({
+  return useMutation<string, ICustomError, string>({
     mutationFn: (refreshToken: string) =>
       api.post<string>(`${AUTH.logout(refreshToken)}`),
   });
 };
 
-export { useLoginApi, useSetPinApi, useLogoutApi };
+export {
+  useLoginApi,
+  useForgotPasswordApi,
+  useSetPinApi,
+  useLogoutApi,
+  useResetPasswordApi,
+};

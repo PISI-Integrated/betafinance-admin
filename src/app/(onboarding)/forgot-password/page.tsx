@@ -1,29 +1,31 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginService } from "@/services/auth.service";
+import { useForgotPasswordService } from "@/services/auth.service";
 import { Form, FormField } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { LoginFormValues, loginSchema } from "@/schema/auth.validation";
+import {
+  ForgotPasswordFormValues,
+  forgotPasswordSchema,
+} from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
 import Image from "next/image";
-import { Lock, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import logo from "../../../../public/assets/logo.svg";
 import Link from "next/link";
 
-export default function LoginPage() {
-  const { loginAdmin, isLoggingIn } = useLoginService();
+export default function ForgotPasswordPage() {
+  const { forgotPasswordAdmin, isSendingCode } = useForgotPasswordService();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
-      pin: "",
     },
   });
 
-  const onRegister = (values: LoginFormValues) => {
-    loginAdmin(values.email, values.pin);
+  const onSubmit = (values: ForgotPasswordFormValues) => {
+    forgotPasswordAdmin({ email: values.email });
   };
 
   return (
@@ -40,13 +42,18 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-[400px] bg-white rounded-lg border border-black/10 p-6">
-        <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-8">
-          Admin Sign in
-        </h1>
+        <div className="mb-8">
+          <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-2">
+            Forgot Password
+          </h1>
+          <p className="text-gray-500 text-sm">
+            Enter your email to receive a reset link.
+          </p>
+        </div>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onRegister)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-y-6"
           >
             <FormField
@@ -64,39 +71,22 @@ export default function LoginPage() {
               )}
             />
 
-            <div className="space-y-2">
-              <FormField
-                control={form.control}
-                name="pin"
-                render={({ field }) => (
-                  <TextInput
-                    label="Pasword"
-                    type="password"
-                    placeholder="••••••••"
-                    icon={<Lock size={20} className="text-gray-400" />}
-                    field={field}
-                    labelClassName="text-gray-400 font-medium mb-1"
-                    className="h-12 bg-white border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all px-4"
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex justify-end -mt-4">
-              <Link
-                href="/forgot-password"
-                className="text-primary font-medium text-sm hover:underline"
-              >
-                Forgot Password?
-              </Link>
-            </div>
             <Button
-              loading={isLoggingIn}
+              loading={isSendingCode}
               type="submit"
               className="w-full p-2.5 text-sm font-bold bg-primary hover:bg-primary/90 text-white rounded-sm transition-all mt-4"
             >
-              Sign in
+              Send Reset Code
             </Button>
+
+            <div className="text-center mt-4">
+              <Link
+                href="/login"
+                className="text-primary font-medium text-sm hover:underline"
+              >
+                Back to Sign in
+              </Link>
+            </div>
           </form>
         </Form>
       </div>

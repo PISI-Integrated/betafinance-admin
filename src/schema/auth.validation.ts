@@ -15,5 +15,21 @@ export const setPinSchema = z
     path: ["confirmPin"],
   });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(4, "Password must be at least 4 digits"),
+    confirmPassword: z.string().min(4, "Password must be at least 4 digits"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type SetPinFormValues = z.infer<typeof setPinSchema>;
+export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;

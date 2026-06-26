@@ -26,7 +26,12 @@ import logo from "../../../public/assets/logo.svg";
 import { Button } from "../ui/button";
 import { useLogoutService } from "@/services/auth.service";
 
-const nonDashboardPaths = ["/login", "/set-pin"];
+const nonDashboardPaths = [
+  "/login",
+  "/set-pin",
+  "/forgot-password",
+  "/reset-password",
+];
 
 function SidebarNav() {
   const pathname = usePathname();

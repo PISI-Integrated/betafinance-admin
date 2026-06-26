@@ -11,6 +11,8 @@ const AUTH = {
   setPin: "/auth/set-new-pin",
   logout: (refreshToken: string) =>
     `${base_url}auth/logout?refresh_token=${refreshToken}`,
+  forgotPassword: "/auth/admin/forgot-password",
+  resetPassword: "/auth/admin/reset-password",
 };
 
 const ANALYTICS = {

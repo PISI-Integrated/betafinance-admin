@@ -14,13 +14,42 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
+
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            return axiosInstance(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
         const refreshToken = await getToken("refreshToken");
         const { data } = await axios.post(AUTH.refresh(refreshToken!));
@@ -28,10 +57,16 @@ axiosInstance.interceptors.response.use(
           saveToken("accessToken", data.access_token),
           saveToken("refreshToken", data.refresh_token),
         ]);
+        
+        isRefreshing = false;
+        processQueue(null, data.access_token);
+
         originalRequest.headers["Authorization"] =
           `Bearer ${data.access_token}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
+        isRefreshing = false;
+        processQueue(refreshError, null);
         return Promise.reject(refreshError);
       }
     }

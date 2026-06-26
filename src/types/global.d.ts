@@ -10,7 +10,8 @@ interface ICustomError {
 
 interface ILoginDto {
   email: string;
-  pin: string;
+  password: string;
+  pin?: string;
 }
 
 interface ISetPinDto {
@@ -33,6 +34,32 @@ interface ILoginResponse {
     virtualAccount: null;
     avatar: string | null;
   };
+}
+
+interface IResetPasswordResponse {
+  success: boolean;
+  message: string;
+  phone: string;
+  expiresInMinutes: number;
+  errorCode: string;
+  timestamp: string;
+}
+interface IForgotPasswordDto {
+  email: string;
+}
+
+interface IResetPasswordDto {
+  resettoken: string;
+  newpassword: string;
+}
+
+interface IForgotPasswordResponse {
+  success: boolean;
+  message: string;
+  resettoken: string;
+  expiresInMinutes: number;
+  errorCode: string;
+  timestamp: string;
 }
 
 interface IOverviewResponse {

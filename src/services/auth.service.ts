@@ -1,16 +1,22 @@
 "use client";
-import { useLoginApi, useLogoutApi, useSetPinApi } from "@/api/auth.api";
+import {
+  useForgotPasswordApi,
+  useLoginApi,
+  useLogoutApi,
+  useResetPasswordApi,
+  useSetPinApi,
+} from "@/api/auth.api";
 import { deleteToken, getToken, saveToken } from "@/lib/storage";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const useLoginService = () => {
   const router = useRouter();
-  const { mutate: login, isPending, error } = useLoginApi();
+  const { mutateAsync: login, isPending, error } = useLoginApi();
 
-  const loginAdvertiser = (email: string, pin: string) => {
+  const loginAdmin = (email: string, password: string) => {
     login(
-      { email, pin },
+      { email, password },
       {
         onSuccess: async (data) => {
           await Promise.all([
@@ -32,7 +38,7 @@ const useLoginService = () => {
   };
 
   return {
-    loginAdvertiser,
+    loginAdmin,
     isLoggingIn: isPending,
     logInError: error,
   };
@@ -61,6 +67,58 @@ const useSetNewPinService = () => {
     setNewPin,
     isSettingPin: isPending,
     setPinError: error,
+  };
+};
+
+const useForgotPasswordService = () => {
+  const {
+    mutateAsync: forgotPassword,
+    isPending,
+    error,
+  } = useForgotPasswordApi();
+
+  const forgotPasswordAdmin = (data: IForgotPasswordDto) => {
+    forgotPassword(data, {
+      onSuccess: () => {
+        toast.success("Reset code sent to your email address");
+      },
+      onError: () => {
+        toast.error(error?.response?.data?.detail || "Something went wrong");
+      },
+    });
+  };
+
+  return {
+    forgotPasswordAdmin,
+    isSendingCode: isPending,
+    sendCodeError: error,
+  };
+};
+
+const useResetPasswordService = () => {
+  const {
+    mutateAsync: resetPassword,
+    isPending,
+    error,
+  } = useResetPasswordApi();
+  const router = useRouter();
+
+  const resetPasswordAdmin = (data: IResetPasswordDto) => {
+    resetPassword(data, {
+      onSuccess: () => {
+        toast.success("Password reset successful");
+        router.push("/login");
+      },
+      onError: () => {
+        toast.error(error?.response?.data?.detail || "Something went wrong");
+      },
+    });
+  };
+
+  return {
+    resetPasswordAdmin,
+    isResettingPassword: isPending,
+    resetPasswordError: error,
   };
 };
 
@@ -93,4 +151,10 @@ const useLogoutService = () => {
   };
 };
 
-export { useLoginService, useSetNewPinService, useLogoutService };
+export {
+  useLoginService,
+  useSetNewPinService,
+  useLogoutService,
+  useForgotPasswordService,
+  useResetPasswordService,
+};
