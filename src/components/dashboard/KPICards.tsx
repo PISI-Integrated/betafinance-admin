@@ -15,38 +15,40 @@ import {
 interface KPICardsProps {
   overviewData: IOverviewResponse | undefined;
   isOverviewLoading: boolean;
+  region?: string;
 }
 
-export function KPICards({ overviewData, isOverviewLoading }: KPICardsProps) {
+export function KPICards({ overviewData, isOverviewLoading, region }: KPICardsProps) {
   const kpiCards = overviewData
     ? [
         {
           title: "Total Transaction Volume",
-          content: formatCurrency(overviewData.total_transaction_volume),
-          footer: formatCurrency(overviewData.volume_this_month),
+          content: formatCurrency(overviewData.total_transaction_volume, region),
+          footer: formatCurrency(overviewData.volume_this_month, region),
           subtitle: "in the last 30 days",
         },
         {
           title: "Total Revenue",
-          content: formatCurrency(overviewData.total_revenue),
+          content: formatCurrency(overviewData.total_revenue, region),
         },
         {
           title: "Total Balance",
-          content: formatCurrency(overviewData.total_balance_transactions),
+          content: formatCurrency(overviewData.total_balance_transactions, region),
         },
         {
           title: "Total Credit Transactions",
-          content: formatCurrency(overviewData.total_credit_transactions),
+          content: formatCurrency(overviewData.total_credit_transactions, region),
         },
         {
           title: "Total Debit Transactions",
-          content: formatCurrency(overviewData.total_debit_transactions),
+          content: formatCurrency(overviewData.total_debit_transactions, region),
         },
         {
           title: "Total Amount in Loans",
-          content: formatCurrency(overviewData.total_amount_in_loans),
+          content: formatCurrency(overviewData.total_amount_in_loans, region),
           footer: formatCurrency(
             overviewData.total_amount_in_loan_last_30_days,
+            region
           ),
           subtitle: "in the last 30 days",
         },

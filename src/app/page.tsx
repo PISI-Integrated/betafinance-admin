@@ -32,26 +32,35 @@ function HomeContent() {
     useState<ILoanCollectionSummaryDto["period"]>("month");
   const [year, setYear] = useState(2026);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [region, setRegion] = useState<regionType>("all");
 
   const { overviewData, isOverviewLoading } = useFetchOverviewService({
     start_date: startDate,
     end_date: endDate,
+    ...(region !== "all" && { region }),
   });
   const { topRankingLenders, isTopLendersLoading } =
-    useFetchTopRankingLendersService();
+    useFetchTopRankingLendersService({
+      ...(region !== "all" && { region }),
+    });
   const { topRankingCreditScores, isTopScoresLoading } =
-    useFetchTopRankingCreditScoresService();
+    useFetchTopRankingCreditScoresService({
+      ...(region !== "all" && { region }),
+    });
 
   const { recentActivity, isRecentActivityLoading } =
-    useFetchRecentActivityService();
+    useFetchRecentActivityService({
+      ...(region !== "all" && { region }),
+    });
 
   const loanCollectionParams = useMemo(
     () => ({
       period,
       year,
       ...(period === "day" && { month }),
+      ...(region !== "all" && { region }),
     }),
-    [period, year, month],
+    [period, year, month, region],
   );
 
   const { loanCollectionSummary, isLoanCollectionSummaryLoading } =
@@ -59,10 +68,27 @@ function HomeContent() {
 
   return (
     <main className="space-y-6 pb-10">
+      <div className="flex justify-end">
+        <Select
+          value={region}
+          onValueChange={(val) => setRegion(val as regionType)}
+        >
+          <SelectTrigger className="w-[180px] bg-white border-gray-200">
+            <SelectValue placeholder="All Regions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Regions</SelectItem>
+            <SelectItem value="NG">Nigeria</SelectItem>
+            <SelectItem value="UG">Uganda</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* KPI Cards */}
       <KPICards
         overviewData={overviewData}
         isOverviewLoading={isOverviewLoading}
+        region={region}
       />
       {/* Top Rankings and Credit Score */}
       <RankingSection
@@ -71,7 +97,7 @@ function HomeContent() {
         topRankingCreditScores={topRankingCreditScores}
         isTopScoresLoading={isTopScoresLoading}
       />
-      <DashboardCharts />
+      <DashboardCharts region={region} />
       {/* Recent Activity */}
       <RecentActivity
         recentActivity={recentActivity}

@@ -32,6 +32,10 @@ export function RankingSection({
         <CardContent className="p-0">
           {isTopLendersLoading ? (
             <RankingSkeleton />
+          ) : !topRankingLenders || topRankingLenders.length === 0 ? (
+            <div className="flex h-32 items-center justify-center p-4 text-center">
+              <p className="text-sm text-gray-500">No top ranking lenders found for this region.</p>
+            </div>
           ) : (
             <Table>
               <TableBody>
@@ -96,6 +100,10 @@ export function RankingSection({
         <CardContent className="p-0">
           {isTopScoresLoading ? (
             <RankingSkeleton />
+          ) : !topRankingCreditScores || topRankingCreditScores.length === 0 ? (
+            <div className="flex h-32 items-center justify-center p-4 text-center">
+              <p className="text-sm text-gray-500">No high credit score holders found for this region.</p>
+            </div>
           ) : (
             <Table>
               <TableBody>

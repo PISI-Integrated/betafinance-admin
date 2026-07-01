@@ -4,6 +4,13 @@ import TableWithPagination from "@/components/TableWithPagination";
 import { CustomerStatus, customerTableHeader } from "@/lib/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
 import { useFetchCustomersService } from "@/services/users.service";
 import UserDetailsSidebar from "./sidebar/UserDetailSideBar";
@@ -22,11 +29,17 @@ const CustomersContent = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
 
+  const [region, setRegion] = useState<regionType>("all");
+
   const customerParams = useMemo<ICustomersParamsDto>(() => {
     const params: ICustomersParamsDto = {
       page,
       size,
     };
+
+    if (region !== "all") {
+      params.region = region;
+    }
 
     if (activeTab === CustomerStatus.ACTIVE) {
       params.kyc_status = "validated";
@@ -38,7 +51,7 @@ const CustomersContent = () => {
     }
 
     return params;
-  }, [activeTab, page, size]);
+  }, [activeTab, page, size, region]);
 
   const { allCustomers, isCustomersLoading, customerError } =
     useFetchCustomersService(customerParams);
@@ -101,48 +114,66 @@ const CustomersContent = () => {
 
   return (
     <div className="space-y-6">
-      {/* Status Tabs */}
-      <div className="flex gap-4 border-b border-gray-200">
-        <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.ACTIVE
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-          onClick={() => handleTabChange(CustomerStatus.ACTIVE)}
-        >
-          Active
-        </button>
-        <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.PENDING
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-          onClick={() => handleTabChange(CustomerStatus.PENDING)}
-        >
-          KYC Review
-        </button>
-        <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.REJECTED
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-          onClick={() => handleTabChange(CustomerStatus.REJECTED)}
-        >
-          KYC Rejected
-        </button>
-        <button
-          className={`pb-3 text-sm font-medium capitalize transition-colors ${
-            activeTab === CustomerStatus.SUSPENDED
-              ? "border-b-2 border-blue-600 text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-          onClick={() => handleTabChange(CustomerStatus.SUSPENDED)}
-        >
-          Suspended
-        </button>
+      {/* Status Tabs and Filters */}
+      <div className="flex items-center justify-between border-b border-gray-200">
+        <div className="flex gap-4">
+          <button
+            className={`pb-3 text-sm font-medium capitalize transition-colors ${
+              activeTab === CustomerStatus.ACTIVE
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => handleTabChange(CustomerStatus.ACTIVE)}
+          >
+            Active
+          </button>
+          <button
+            className={`pb-3 text-sm font-medium capitalize transition-colors ${
+              activeTab === CustomerStatus.PENDING
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => handleTabChange(CustomerStatus.PENDING)}
+          >
+            KYC Review
+          </button>
+          <button
+            className={`pb-3 text-sm font-medium capitalize transition-colors ${
+              activeTab === CustomerStatus.REJECTED
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => handleTabChange(CustomerStatus.REJECTED)}
+          >
+            KYC Rejected
+          </button>
+          <button
+            className={`pb-3 text-sm font-medium capitalize transition-colors ${
+              activeTab === CustomerStatus.SUSPENDED
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+            onClick={() => handleTabChange(CustomerStatus.SUSPENDED)}
+          >
+            Suspended
+          </button>
+        </div>
+
+        <div className="mb-2">
+          <Select
+            value={region}
+            onValueChange={(val) => setRegion(val as regionType)}
+          >
+            <SelectTrigger className="w-[180px] bg-[rgba(145,_158,_171,_0.08)] border-none">
+              <SelectValue placeholder="All Regions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Regions</SelectItem>
+              <SelectItem value="NG">Nigeria</SelectItem>
+              <SelectItem value="UG">Uganda</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Content */}

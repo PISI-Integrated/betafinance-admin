@@ -10,21 +10,21 @@ const useGetOverviewsApi = (params?: IOverviewParamsDto) => {
   });
 };
 
-const useGetTopRankingLendersApi = () => {
+const useGetTopRankingLendersApi = (params?: { region?: regionType }) => {
   return useQuery<ITopRankssResponse, Error>({
-    queryKey: ["analytics", "top-lenders"],
-    queryFn: () => api.get<ITopRankssResponse>(ANALYTICS.topRankLenders),
+    queryKey: ["analytics", "top-lenders", params],
+    queryFn: () => api.get<ITopRankssResponse>(ANALYTICS.topRankLenders, params),
   });
 };
 
-const useGetTopRankingCreditScoresApi = () => {
+const useGetTopRankingCreditScoresApi = (params?: { region?: regionType }) => {
   return useQuery<ITopRankssResponse, Error>({
-    queryKey: ["analytics", "top-credit"],
-    queryFn: () => api.get<ITopRankssResponse>(ANALYTICS.topRankCreditScores),
+    queryKey: ["analytics", "top-credit", params],
+    queryFn: () => api.get<ITopRankssResponse>(ANALYTICS.topRankCreditScores, params),
   });
 };
 
-const useGetRecentActivityApi = (params?: { limit: number }) => {
+const useGetRecentActivityApi = (params?: { limit?: number; region?: regionType }) => {
   return useQuery<IRecentActivityResponse, Error>({
     queryKey: ["analytics", "recent-activity", params],
     queryFn: () =>
@@ -33,7 +33,7 @@ const useGetRecentActivityApi = (params?: { limit: number }) => {
   });
 };
 
-const useGetMonthlyTrendApi = (params?: { months: number }) => {
+const useGetMonthlyTrendApi = (params?: { months?: number; region?: regionType }) => {
   return useQuery<IMonthlyTrendResponse, Error>({
     queryKey: ["analytics", "monthly-trends", params],
     queryFn: () =>

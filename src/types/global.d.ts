@@ -217,6 +217,7 @@ interface ILoansParamsDto {
   loan_status?: loanStatus;
   page?: number;
   size?: number;
+  region?: regionType;
 }
 
 interface ILoansResponse {
@@ -240,6 +241,7 @@ interface ICustomersParamsDto {
   kyc_status?: kycStatus;
   page?: number;
   size?: number;
+  region?: regionType;
 }
 
 type rewardType = "airtime" | "discount" | "cash" | "bonus" | "none";
@@ -352,6 +354,7 @@ interface ILoanCollectionSummaryDto {
   period: "day" | "week" | "month" | "year";
   year: number;
   month?: number;
+  region?: regionType;
 }
 
 interface ILoanCollectionSummaryResponse {
@@ -407,6 +410,7 @@ interface ISuspendUserDto {
 interface IOverviewParamsDto {
   start_date?: string;
   end_date?: string;
+  region?: regionType;
 }
 
 interface IMarketerParamsDto {
@@ -494,6 +498,7 @@ interface ITransactionListItem {
   userPhone: string;
   amount: string;
   type: "debit" | "credit";
+  currency?: currencyType;
   description: string;
   reference: string;
   status: "completed" | "pending" | "failed";
@@ -514,6 +519,9 @@ interface ITransactionListResponse {
   total: number;
 }
 
+type regionType = "NG" | "UG" | "all";
+type currencyType = "UGX" | "NGN";
+
 interface ITransactionParamsDto {
   status: string;
   type: string;
@@ -524,6 +532,7 @@ interface ITransactionParamsDto {
   end_date: string;
   page: number;
   size: number;
+  region?: regionType;
 }
 
 type transactionStatus = "completed" | "pending" | "failed";

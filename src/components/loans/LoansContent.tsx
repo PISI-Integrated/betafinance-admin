@@ -11,6 +11,13 @@ import { loanData, LoanTabs } from "@/lib/constants";
 import TableWithPagination from "@/components/TableWithPagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Column, LoanBetaRow, LoanP2PRow } from "@/types/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import LoanDetailsSidebar from "../LoanDetailsSidebar";
 import {
   useFetchAllLoansService,
@@ -37,6 +44,8 @@ const LoansContent = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
 
+  const [region, setRegion] = useState<regionType>("all");
+
   // Prepare params for API call
   const loanParams = useMemo<ILoansParamsDto>(() => {
     const params: ILoansParamsDto = {
@@ -49,8 +58,12 @@ const LoansContent = () => {
       params.loan_status = activeStatus as loanStatus;
     }
 
+    if (region !== "all") {
+      params.region = region;
+    }
+
     return params;
-  }, [loanType, activeStatus, page, size]);
+  }, [loanType, activeStatus, page, size, region]);
 
   const { allLoans, isLoansLoading, loanError } =
     useFetchAllLoansService(loanParams);
@@ -69,7 +82,7 @@ const LoansContent = () => {
     return loansResponse.items.map((loan: ILoansResponse["items"][0]) => {
       const baseRow = {
         id: loan.id,
-        amount: formatCurrency(loan.amount),
+        amount: formatCurrency(loan.amount, region),
         borrower: loan.borrower,
         loanPeriod: `${loan.termdays} days`,
         date: formatDate(loan.createdat, true),
@@ -186,102 +199,110 @@ const LoansContent = () => {
             </div>
           ) : (
             <p className="text-2xl font-bold text-gray-900">
-              {formatCurrency(totalLoansAmount?.amount!)}
+              {formatCurrency(totalLoansAmount?.amount!, region)}
             </p>
           )}
         </CardContent>
       </Card>
 
-      {/* Status Tabs */}
-      <div className="flex gap-4 border-b border-gray-200">
-        {activeTab === LoanTabs.BETA_LOANS ? (
-          <>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "all"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("all")}
-            >
-              All
-            </button>
-            {/* <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "pending"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("pending")}
-            >
-              Pending
-            </button> */}
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "funded"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("funded")}
-            >
-              Active
-            </button>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "repaid"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("repaid")}
-            >
-              Repaid
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "all"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("all")}
-            >
-              All
-            </button>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "funded"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("funded")}
-            >
-              Active
-            </button>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "pending"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              onClick={() => handleStatusChange("pending")}
-            >
-              Pending
-            </button>
-            <button
-              className={`pb-3 text-sm font-medium transition-colors ${
-                activeStatus === "repaid"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-              // For P2P, \"Completed\" tab maps to \"repaid\" status
-              onClick={() => handleStatusChange("repaid")}
-            >
-              Completed
-            </button>
-          </>
-        )}
+      {/* Status Tabs and Filters */}
+      <div className="flex items-center justify-between border-b border-gray-200">
+        <div className="flex gap-4">
+          {activeTab === LoanTabs.BETA_LOANS ? (
+            <>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "all"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("all")}
+              >
+                All
+              </button>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "funded"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("funded")}
+              >
+                Active
+              </button>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "repaid"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("repaid")}
+              >
+                Repaid
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "all"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("all")}
+              >
+                All
+              </button>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "funded"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("funded")}
+              >
+                Active
+              </button>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "pending"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                onClick={() => handleStatusChange("pending")}
+              >
+                Pending
+              </button>
+              <button
+                className={`pb-3 text-sm font-medium transition-colors ${
+                  activeStatus === "repaid"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                // For P2P, "Completed" tab maps to "repaid" status
+                onClick={() => handleStatusChange("repaid")}
+              >
+                Completed
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Select
+            value={region}
+            onValueChange={(val) => setRegion(val as regionType)}
+          >
+            <SelectTrigger className="w-[180px] bg-[rgba(145,_158,_171,_0.08)] border-none">
+              <SelectValue placeholder="All Regions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Regions</SelectItem>
+              <SelectItem value="NG">Nigeria</SelectItem>
+              <SelectItem value="UG">Uganda</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Table */}

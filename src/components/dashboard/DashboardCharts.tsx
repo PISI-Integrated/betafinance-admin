@@ -57,18 +57,22 @@ const pieConfig = {
   },
 } satisfies ChartConfig;
 
-export function DashboardCharts() {
+export function DashboardCharts({ region }: { region?: regionType }) {
   const { loanCount: b2cCount, isLoanCountLoading: isB2CLoading } =
     useFetchLoansCountService({
       loan_type: "b2c",
+      ...(region !== "all" && { region }),
     });
 
   const { loanCount: p2pCount, isLoanCountLoading: isP2PLoading } =
     useFetchLoansCountService({
       loan_type: "p2p",
+      ...(region !== "all" && { region }),
     });
 
-  const { monthlyTrend, isMonthlyTrendLoading } = useFetchMonthlyTrendService();
+  const { monthlyTrend, isMonthlyTrendLoading } = useFetchMonthlyTrendService({
+    ...(region !== "all" && { region }),
+  });
 
   const dynamicBarData = monthlyTrend?.trends || [];
 

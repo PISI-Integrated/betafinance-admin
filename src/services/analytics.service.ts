@@ -18,8 +18,8 @@ const useFetchOverviewService = (params?: IOverviewParamsDto) => {
   };
 };
 
-const useFetchTopRankingLendersService = () => {
-  const { data, isLoading, refetch } = useGetTopRankingLendersApi();
+const useFetchTopRankingLendersService = (params?: { region?: regionType }) => {
+  const { data, isLoading, refetch } = useGetTopRankingLendersApi(params);
 
   return {
     topRankingLenders: data,
@@ -28,8 +28,8 @@ const useFetchTopRankingLendersService = () => {
   };
 };
 
-const useFetchTopRankingCreditScoresService = () => {
-  const { data, isLoading, refetch } = useGetTopRankingCreditScoresApi();
+const useFetchTopRankingCreditScoresService = (params?: { region?: regionType }) => {
+  const { data, isLoading, refetch } = useGetTopRankingCreditScoresApi(params);
 
   return {
     topRankingCreditScores: data,
@@ -38,7 +38,7 @@ const useFetchTopRankingCreditScoresService = () => {
   };
 };
 
-const useFetchRecentActivityService = (params?: { limit: number }) => {
+const useFetchRecentActivityService = (params?: { limit?: number; region?: regionType }) => {
   const { data, isLoading, refetch } = useGetRecentActivityApi(params);
 
   return {
@@ -48,7 +48,7 @@ const useFetchRecentActivityService = (params?: { limit: number }) => {
   };
 };
 
-const useFetchMonthlyTrendService = (params?: { months: number }) => {
+const useFetchMonthlyTrendService = (params?: { months?: number; region?: regionType }) => {
   const { data, isLoading, refetch } = useGetMonthlyTrendApi(params);
 
   return {

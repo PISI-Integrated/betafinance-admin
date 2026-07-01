@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
@@ -7,12 +7,11 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import TableWithPagination from "@/components/TableWithPagination";
 import { Column } from "@/types/types";
 import useFetchAllTransactionsService from "@/services/transactions.service";
 import { useFetchOverviewService } from "@/services/analytics.service";
-import { cn, formatCurrency, formatDate, formatEnumString } from "@/lib/utils";
+import { cn, formatDate, formatEnumString } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Search, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Input } from "../ui/input";
@@ -26,14 +25,15 @@ import {
 import React from "react";
 import toast from "react-hot-toast";
 import { useDebounce } from "@/hooks/useDebounce";
+import { formatCurrency } from "@/lib/utils/formatters";
 
 interface TransactionRow {
-  reference: React.ReactNode;
+  reference: ReactNode;
   userName: string;
   userPhone: string;
-  amount: React.ReactNode;
-  type: React.ReactNode;
-  status: React.ReactNode;
+  amount: ReactNode;
+  type: ReactNode;
+  status: ReactNode;
   createdAt: React.ReactNode;
   qoreIDFee?: React.ReactNode;
   productFee?: React.ReactNode;
@@ -52,6 +52,7 @@ const TransactionsContent = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [search, setSearch] = useState("");
+  const [region, setRegion] = useState<regionType>("all");
   const debouncedSearch = useDebounce(search, 1000);
 
   const updateQueryParam = (name: string, value: string) => {
@@ -75,11 +76,19 @@ const TransactionsContent = () => {
     if (activeTab !== "all") params.status = activeTab;
     if (typeFilter !== "all_types") params.type = typeFilter;
     if (statusFilter !== "all_status") params.status = statusFilter;
-
+    if (region !== "all") params.region = region;
     return params as ITransactionParamsDto;
-  }, [page, size, debouncedSearch, activeTab, typeFilter, statusFilter]);
+  }, [
+    page,
+    size,
+    debouncedSearch,
+    activeTab,
+    region,
+    typeFilter,
+    statusFilter,
+  ]);
 
-  const { transactionData, transactionLoading, transactionError } =
+  const { transactionData, transactionLoading } =
     useFetchAllTransactionsService(transactionParams);
 
   const totalPagesFromApi = Math.ceil(
@@ -119,7 +128,7 @@ const TransactionsContent = () => {
       userPhone: tx.userPhone,
       amount: (
         <span className="font-semibold text-gray-900">
-          {formatCurrency(Number(tx.amount))}
+          {formatCurrency(Number(tx.amount), region)}
         </span>
       ),
       createdAt: (
@@ -180,22 +189,31 @@ const TransactionsContent = () => {
   const stats = [
     {
       title: "Total Transaction Volume",
-      value: formatCurrency(overviewData?.total_transaction_volume ?? 0),
+      value: formatCurrency(
+        overviewData?.total_transaction_volume ?? 0,
+        region,
+      ),
       footer: "Overall platform volume",
     },
     {
       title: "Total Revenue",
-      value: formatCurrency(overviewData?.total_revenue ?? 0),
+      value: formatCurrency(overviewData?.total_revenue ?? 0, region),
       footer: "Net platform revenue",
     },
     {
       title: "Total Credit Transactions",
-      value: formatCurrency(overviewData?.total_credit_transactions ?? 0),
+      value: formatCurrency(
+        overviewData?.total_credit_transactions ?? 0,
+        region,
+      ),
       footer: "Incoming transactions",
     },
     {
       title: "Total Debit Transactions",
-      value: formatCurrency(overviewData?.total_debit_transactions ?? 0),
+      value: formatCurrency(
+        overviewData?.total_debit_transactions ?? 0,
+        region,
+      ),
       footer: "Outgoing transactions",
     },
   ];
@@ -218,9 +236,12 @@ const TransactionsContent = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex flex-col flex-wrap md:flex-row gap-4 w-full">
         {stats.map((stat, i) => (
-          <Card key={i} className="border-gray-200 shadow-none">
+          <Card
+            key={i}
+            className="border-gray-200 shadow-none min-w-[200px] flex-grow"
+          >
             <CardHeader className="pb-2">
               <CardDescription className="text-xs font-semibold text-gray-900 h-8 line-clamp-2">
                 {stat.title}
@@ -280,6 +301,20 @@ const TransactionsContent = () => {
             <SelectItem value="completed">Completed</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="failed">Failed</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={region}
+          onValueChange={(val) => setRegion(val as regionType)}
+        >
+          <SelectTrigger className="w-[180px] bg-[rgba(145,_158,_171,_0.08)]">
+            <SelectValue placeholder="All Regions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Regions</SelectItem>
+            <SelectItem value="NG">Nigeria</SelectItem>
+            <SelectItem value="UG">Uganda</SelectItem>
           </SelectContent>
         </Select>
       </div>
