@@ -128,7 +128,10 @@ const TransactionsContent = () => {
       userPhone: tx.userPhone,
       amount: (
         <span className="font-semibold text-gray-900">
-          {formatCurrency(Number(tx.amount), region)}
+          {formatCurrency(
+            Number(tx.amount),
+            tx.currency === "UGX" ? "UG" : "NG",
+          )}
         </span>
       ),
       createdAt: (
