@@ -46,7 +46,6 @@ const LoansContent = () => {
 
   const [region, setRegion] = useState<regionType>("all");
 
-  // Prepare params for API call
   const loanParams = useMemo<ILoansParamsDto>(() => {
     const params: ILoansParamsDto = {
       loan_type: loanType as loanType,
@@ -147,6 +146,7 @@ const LoansContent = () => {
     useFetchTotalLoansAmountService({
       loan_type: loanType as loanType,
       loan_status: "repaid",
+      region: region !== "all" ? region : undefined,
     });
 
   useEffect(() => {

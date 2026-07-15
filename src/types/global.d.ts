@@ -443,15 +443,64 @@ interface ICreateMarketerDto {
   is_active: boolean;
 }
 
+interface IFeeTier {
+  min_amount: number;
+  fee: number;
+}
+
+interface IFeeScheduleItem {
+  effective_from?: string | null;
+  flat_fee?: number | null;
+  tiers?: IFeeTier[] | null;
+  percentage?: number | null;
+}
+
+interface IInterestRateCapItem {
+  min_score: number;
+  cap: number;
+}
+
 interface IAdminSettingsResponse {
   p2p_platform_fee_percentage: number;
   id: string;
+  p2p_interest_rate_caps: {
+    NG: IInterestRateCapItem[];
+    UG: IInterestRateCapItem[];
+  };
+  withdrawal_fee_schedules: {
+    yo?: IFeeScheduleItem[];
+    dusupay?: IFeeScheduleItem[];
+    momo?: IFeeScheduleItem[];
+    paystack?: IFeeScheduleItem[];
+  };
+  deposit_fee_schedules: {
+    yo?: IFeeScheduleItem[];
+    dusupay?: IFeeScheduleItem[];
+    momo?: IFeeScheduleItem[];
+    paystack?: IFeeScheduleItem[];
+  };
   updated_at: string;
   updated_by_id: string;
 }
 
 interface IUpdateAdminSettingsDto {
   p2p_platform_fee_percentage: number;
+  p2p_interest_rate_caps: {
+    NG: IInterestRateCapItem[];
+    UG: IInterestRateCapItem[];
+  };
+  withdrawal_fee_schedules: {
+    yo?: IFeeScheduleItem[];
+    dusupay?: IFeeScheduleItem[];
+    momo?: IFeeScheduleItem[];
+    paystack?: IFeeScheduleItem[];
+  };
+  deposit_fee_schedules: {
+    yo?: IFeeScheduleItem[];
+    dusupay?: IFeeScheduleItem[];
+    momo?: IFeeScheduleItem[];
+    paystack?: IFeeScheduleItem[];
+  };
 }
 
 interface IPermissionsResponse {

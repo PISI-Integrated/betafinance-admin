@@ -78,3 +78,60 @@ export const formatEnumString = (value: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
+
+export function normalizePayload<T extends Record<string, any> | any[]>(
+  obj: T,
+): any {
+  if (obj === null || obj === undefined) return obj;
+
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) return null;
+    // normalize items and remove empty/null items
+    const items = obj
+      .map((item) => normalizePayload(item))
+      .filter((it) => it !== null && it !== undefined && !(typeof it === "object" && Object.keys(it).length === 0));
+    return items.length === 0 ? null : items;
+  }
+
+  if (typeof obj === "object") {
+    const out: Record<string, any> = {};
+    for (const [k, v] of Object.entries(obj as Record<string, any>)) {
+      // treat numeric zero and string zeros (including "0%") as null
+      if (v === 0 || (typeof v === "string" && v.trim() === "0")) {
+        out[k] = null;
+        continue;
+      }
+
+      if (typeof v === "string" && k.toLowerCase() === "percentage") {
+        const cleaned = v.trim().replace(/%$/, "");
+        if (
+          cleaned !== "" &&
+          !Number.isNaN(Number(cleaned)) &&
+          Number(cleaned) === 0
+        ) {
+          out[k] = null;
+          continue;
+        }
+      }
+
+      if (Array.isArray(v)) {
+        const items = v
+          .map((item) => normalizePayload(item))
+          .filter((it) => it !== null && it !== undefined && !(typeof it === "object" && Object.keys(it).length === 0));
+        if (items.length > 0) out[k] = items;
+        // else omit key
+      } else if (v && typeof v === "object") {
+        const nested = normalizePayload(v);
+        if (nested !== null && !(typeof nested === "object" && Object.keys(nested).length === 0)) {
+          out[k] = nested;
+        }
+      } else if (v !== null && v !== undefined) {
+        out[k] = v;
+      }
+    }
+    // if object has no keys, return null to signal emptiness
+    return Object.keys(out).length === 0 ? null : out;
+  }
+
+  return obj;
+}

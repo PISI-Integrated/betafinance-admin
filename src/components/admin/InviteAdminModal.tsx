@@ -25,6 +25,7 @@ import {
   inviteAdminSchema,
   InviteAdminFormValues,
 } from "@/schema/admin.validation";
+import { normalizePayload } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -63,7 +64,9 @@ export function InviteAdminModal({
     // @ts-ignore
     delete apiPayload.role_name;
 
-    inviteAdmin(apiPayload, () => {
+    const normalized = normalizePayload(apiPayload);
+
+    inviteAdmin(normalized, () => {
       form.reset();
       onOpenChange(false);
     });
