@@ -133,22 +133,6 @@ export default function SettingsContent() {
   };
 
   // Helpers to show only providers returned by the API and allow adding from known set
-  const depositFromApiKeys: Provider[] = adminSettings
-    ? (
-        Object.keys(adminSettings.deposit_fee_schedules || {}) as Provider[]
-      ).filter(
-        (k) => (adminSettings.deposit_fee_schedules as any)[k] !== undefined,
-      )
-    : [];
-
-  const withdrawalFromApiKeys: Provider[] = adminSettings
-    ? (
-        Object.keys(adminSettings.withdrawal_fee_schedules || {}) as Provider[]
-      ).filter(
-        (k) => (adminSettings.withdrawal_fee_schedules as any)[k] !== undefined,
-      )
-    : [];
-
   const [depositAddKey, setDepositAddKey] = useState<Provider | "">("");
   const [withdrawalAddKey, setWithdrawalAddKey] = useState<Provider | "">("");
 
@@ -157,7 +141,21 @@ export default function SettingsContent() {
     key: Provider,
   ) => {
     const path = `${scheduleType}.${key}` as const;
-    form.setValue(path as any, defaultSchedule());
+    form.setValue(path as any, defaultSchedule(), {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  const removeProviderFromForm = (
+    scheduleType: "deposit_fee_schedules" | "withdrawal_fee_schedules",
+    key: Provider,
+  ) => {
+    const path = `${scheduleType}.${key}` as const;
+    form.setValue(path as any, [], {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
   };
 
   const {
@@ -365,27 +363,31 @@ export default function SettingsContent() {
               <CardContent className="space-y-8">
                 {(() => {
                   const current = form.getValues("deposit_fee_schedules") || {};
-                  const currentNonEmptyKeys = Object.keys(current).filter(
+                  const keys = Object.keys(current).filter(
                     (k) =>
                       Array.isArray((current as any)[k]) &&
                       (current as any)[k].length > 0,
                   ) as Provider[];
-                  const keys = Array.from(
-                    new Set([...depositFromApiKeys, ...currentNonEmptyKeys]),
-                  );
 
                   return (
                     <>
                       {keys.map((key) => {
                         const provider = PROVIDERS.find((p) => p.key === key);
                         return (
-                          <FeeScheduleEditor
-                            key={key}
-                            scheduleType="deposit_fee_schedules"
-                            providerKey={key}
-                            providerName={provider?.name ?? key}
-                            control={form.control}
-                          />
+                          <div key={key} className="space-y-2">
+                            <FeeScheduleEditor
+                              scheduleType="deposit_fee_schedules"
+                              providerKey={key}
+                              providerName={provider?.name ?? key}
+                              control={form.control}
+                              onRemove={() =>
+                                removeProviderFromForm(
+                                  "deposit_fee_schedules",
+                                  key,
+                                )
+                              }
+                            />
+                          </div>
                         );
                       })}
 
@@ -446,27 +448,31 @@ export default function SettingsContent() {
                 {(() => {
                   const current =
                     form.getValues("withdrawal_fee_schedules") || {};
-                  const currentNonEmptyKeys = Object.keys(current).filter(
+                  const keys = Object.keys(current).filter(
                     (k) =>
                       Array.isArray((current as any)[k]) &&
                       (current as any)[k].length > 0,
                   ) as Provider[];
-                  const keys = Array.from(
-                    new Set([...withdrawalFromApiKeys, ...currentNonEmptyKeys]),
-                  );
 
                   return (
                     <>
                       {keys.map((key) => {
                         const provider = PROVIDERS.find((p) => p.key === key);
                         return (
-                          <FeeScheduleEditor
-                            key={key}
-                            scheduleType="withdrawal_fee_schedules"
-                            providerKey={key}
-                            providerName={provider?.name ?? key}
-                            control={form.control}
-                          />
+                          <div key={key} className="space-y-2">
+                            <FeeScheduleEditor
+                              scheduleType="withdrawal_fee_schedules"
+                              providerKey={key}
+                              providerName={provider?.name ?? key}
+                              control={form.control}
+                              onRemove={() =>
+                                removeProviderFromForm(
+                                  "withdrawal_fee_schedules",
+                                  key,
+                                )
+                              }
+                            />
+                          </div>
                         );
                       })}
 

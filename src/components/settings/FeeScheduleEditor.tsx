@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Plus, CalendarClock, Trash2 } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { SettingsFormValues, FeePhase } from "@/schema/settings.validation";
@@ -22,6 +23,7 @@ interface FeeScheduleEditorProps {
   providerKey: Provider;
   providerName: string;
   control: Control<SettingsFormValues>;
+  onRemove?: () => void;
 }
 
 function detectFeeType(phase: Partial<FeePhase>): FeeType {
@@ -46,6 +48,7 @@ export function FeeScheduleEditor({
   providerKey,
   providerName,
   control,
+  onRemove,
 }: FeeScheduleEditorProps) {
   const fieldPath = `${scheduleType}.${providerKey}` as const;
 
@@ -152,13 +155,27 @@ export function FeeScheduleEditor({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">
-          {providerName}
-        </span>
-        <span className="text-xs uppercase bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500 dark:text-slate-400 font-mono">
-          {providerKey}
-        </span>
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">
+            {providerName}
+          </span>
+          <span className="text-xs uppercase bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500 dark:text-slate-400 font-mono">
+            {providerKey}
+          </span>
+        </div>
+        {onRemove && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-red-500 hover:text-red-700"
+            onClick={onRemove}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Remove provider
+          </Button>
+        )}
       </div>
 
       {fields.map((field, index) => {
