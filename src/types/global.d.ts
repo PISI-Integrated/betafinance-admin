@@ -462,6 +462,8 @@ interface IInterestRateCapItem {
 
 interface IAdminSettingsResponse {
   p2p_platform_fee_percentage: number;
+  gnugrid_crb_fee_ugx: string;
+  gnugrid_crb_freshness_days: number;
   id: string;
   p2p_interest_rate_caps: {
     NG: IInterestRateCapItem[];
@@ -485,6 +487,8 @@ interface IAdminSettingsResponse {
 
 interface IUpdateAdminSettingsDto {
   p2p_platform_fee_percentage: number;
+  gnugrid_crb_fee_ugx: number;
+  gnugrid_crb_freshness_days: number;
   p2p_interest_rate_caps: {
     NG: IInterestRateCapItem[];
     UG: IInterestRateCapItem[];

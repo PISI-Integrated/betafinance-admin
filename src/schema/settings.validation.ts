@@ -78,6 +78,12 @@ export const settingsSchema = z.object({
     .number()
     .min(0, "Fee cannot be negative")
     .max(100, "Fee cannot exceed 100%"),
+  gnugrid_crb_fee_ugx: z.coerce
+    .number()
+    .min(0, "CRB fee cannot be negative"),
+  gnugrid_crb_freshness_days: z.coerce
+    .number()
+    .min(0, "Freshness days cannot be negative"),
   p2p_interest_rate_caps: z.object({
     NG: z.array(interestRateCapSchema),
     UG: z.array(interestRateCapSchema),

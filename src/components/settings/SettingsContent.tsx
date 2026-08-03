@@ -25,6 +25,7 @@ import {
   Wallet,
   Percent,
   CreditCard,
+  FileCheck,
 } from "lucide-react";
 import {
   settingsSchema,
@@ -77,6 +78,8 @@ export default function SettingsContent() {
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       p2p_platform_fee_percentage: 0,
+      gnugrid_crb_fee_ugx: 0,
+      gnugrid_crb_freshness_days: 0,
       p2p_interest_rate_caps: { NG: [], UG: [] },
       withdrawal_fee_schedules: { yo: [], dusupay: [], momo: [], paystack: [] },
       deposit_fee_schedules: { yo: [], dusupay: [], momo: [], paystack: [] },
@@ -85,6 +88,12 @@ export default function SettingsContent() {
       ? {
           p2p_platform_fee_percentage:
             adminSettings.p2p_platform_fee_percentage || 0,
+          gnugrid_crb_fee_ugx:
+            adminSettings.gnugrid_crb_fee_ugx != null
+              ? Number(adminSettings.gnugrid_crb_fee_ugx) || 0
+              : 0,
+          gnugrid_crb_freshness_days:
+            adminSettings.gnugrid_crb_freshness_days ?? 0,
           p2p_interest_rate_caps: {
             NG: adminSettings.p2p_interest_rate_caps?.NG || [],
             UG: adminSettings.p2p_interest_rate_caps?.UG || [],
@@ -235,6 +244,47 @@ export default function SettingsContent() {
                       label="P2P Platform Fee (%)"
                       type="number"
                       placeholder="e.g. 2.5"
+                      field={field as any}
+                    />
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* GNU Grid CRB Settings */}
+            <Card className="border-none shadow-sm bg-white dark:bg-card">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <FileCheck className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  <CardTitle className="text-xl">
+                    GNU Grid CRB Settings
+                  </CardTitle>
+                </div>
+                <CardDescription>
+                  Configure GNU Grid Credit Reference Bureau (CRB) check fee and freshness threshold.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="gnugrid_crb_fee_ugx"
+                  render={({ field }) => (
+                    <TextInput
+                      label="GNU Grid CRB Fee (UGX)"
+                      type="number"
+                      placeholder="e.g. 5000"
+                      field={field as any}
+                    />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="gnugrid_crb_freshness_days"
+                  render={({ field }) => (
+                    <TextInput
+                      label="CRB Freshness (Days)"
+                      type="number"
+                      placeholder="e.g. 30"
                       field={field as any}
                     />
                   )}
