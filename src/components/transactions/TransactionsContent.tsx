@@ -95,7 +95,9 @@ const TransactionsContent = () => {
     (transactionData?.total ?? 0) / (transactionData?.page_size ?? size),
   );
 
-  const { overviewData, isOverviewLoading } = useFetchOverviewService();
+  const { overviewData, isOverviewLoading } = useFetchOverviewService({
+    region: region != "all" ? region : undefined,
+  });
 
   const columns: Column<TransactionRow>[] = [
     { header: "TXN Ref", accessor: "reference" },
@@ -222,7 +224,7 @@ const TransactionsContent = () => {
   ];
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

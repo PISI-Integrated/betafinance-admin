@@ -175,7 +175,7 @@ function SidebarNav() {
               disabled={isLoggingOut}
             >
               <LogOut className="w-5 h-5 shrink-0" />
-              <span>Logout</span>
+              {state === "expanded" && <span>Logout</span>}
             </Button>
           </SidebarMenu>
         </div>

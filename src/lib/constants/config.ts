@@ -61,6 +61,9 @@ const ADMIN = {
   permissions: `/admin/permissions`,
   roles: `/admin/roles`,
   updateRole: (role_id: string) => `/admin/roles/${role_id}`,
+  providerBalances: "/admin/providers/balance",
+  wallet: "/admin/wallet",
+  walletBalances: "/admin/wallet/balances",
 };
 
 const MARKETERS = {

@@ -5,7 +5,10 @@ import {
   useGetAdminProfileApi,
   useGetAdminSettingsApi,
   useGetPermissionsApi,
+  useGetProviderBalancesApi,
   useGetRolesApi,
+  useGetWalletApi,
+  useGetWalletBalancesApi,
   useInviteAdminApi,
   useResendInviteApi,
   useUpdateAdminSettingsApi,
@@ -187,6 +190,36 @@ const useCreateRoleService = () => {
   };
 };
 
+const useFetchProviderBalancesService = () => {
+  const { data, isLoading, error } = useGetProviderBalancesApi();
+
+  return {
+    providerBalances: data,
+    providerBalancesLoading: isLoading,
+    providerBalancesError: error,
+  };
+};
+
+const useFetchWalletBalancesService = () => {
+  const { data, isLoading, error } = useGetWalletBalancesApi();
+
+  return {
+    walletBalances: data,
+    walletBalancesLoading: isLoading,
+    walletBalancesError: error,
+  };
+};
+
+const useFetchWalletService = () => {
+  const { data, isLoading, error } = useGetWalletApi();
+
+  return {
+    wallet: data,
+    walletLoading: isLoading,
+    walletError: error,
+  };
+};
+
 export {
   useFetchAdminListService,
   useInviteAdminService,
@@ -198,4 +231,7 @@ export {
   useFetchRolesService,
   useUpdateRoleService,
   useCreateRoleService,
+  useFetchProviderBalancesService,
+  useFetchWalletBalancesService,
+  useFetchWalletService,
 };

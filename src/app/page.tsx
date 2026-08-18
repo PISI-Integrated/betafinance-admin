@@ -9,6 +9,7 @@ import {
   useFetchTopRankingLendersService,
 } from "@/services/analytics.service";
 import { KPICards } from "@/components/dashboard/KPICards";
+import { ProviderBalances } from "@/components/dashboard/ProviderBalances";
 import { RankingSection } from "@/components/dashboard/RankingSection";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
@@ -22,6 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { months, years } from "@/lib/constants/data";
+import {
+  useFetchProviderBalancesService,
+  useFetchWalletBalancesService,
+  useFetchWalletService,
+} from "@/services/admin.service";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -66,6 +72,12 @@ function HomeContent() {
   const { loanCollectionSummary, isLoanCollectionSummaryLoading } =
     useFetchLoanCollectionSummaryService(loanCollectionParams);
 
+  const { providerBalances, providerBalancesLoading } =
+    useFetchProviderBalancesService();
+
+  const { walletBalances, walletBalancesLoading } =
+    useFetchWalletBalancesService();
+
   return (
     <main className="space-y-6 pb-10">
       <div className="flex justify-end">
@@ -89,6 +101,13 @@ function HomeContent() {
         overviewData={overviewData}
         isOverviewLoading={isOverviewLoading}
         region={region}
+      />
+      {/* Provider Balances */}
+      <ProviderBalances
+        providerBalances={providerBalances}
+        isLoading={providerBalancesLoading}
+        walletBalances={walletBalances}
+        isWalletLoading={walletBalancesLoading}
       />
       {/* Top Rankings and Credit Score */}
       <RankingSection

@@ -604,3 +604,30 @@ interface IExportParamsDto {
   type?: transactionType;
   status?: transactionStatus;
 }
+
+interface IProviderBalanceItem {
+  provider: string;
+  supported: boolean;
+  balances?: {
+    [key: string]: string | number;
+  };
+}
+
+interface IProviderBalancesResponse {
+  providers: IProviderBalanceItem[];
+}
+
+interface IWalletBalancesResponse {
+  balances: Record<currencyType, string>;
+}
+
+interface IWalletResponse {
+  balance: string;
+  virtual_account: {
+    account_number: string;
+    account_name: string;
+    bank_name: string;
+    is_active: boolean;
+    note: string;
+  };
+}

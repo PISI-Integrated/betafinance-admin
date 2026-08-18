@@ -68,6 +68,27 @@ const useUpdateRoleApi = () => {
   });
 };
 
+const useGetProviderBalancesApi = () => {
+  return useQuery<IProviderBalancesResponse[], ICustomError>({
+    queryKey: ["admin", "provider-balances"],
+    queryFn: () => api.get<IProviderBalancesResponse[]>(ADMIN.providerBalances),
+  });
+};
+
+const useGetWalletBalancesApi = () => {
+  return useQuery<IWalletBalancesResponse, ICustomError>({
+    queryKey: ["admin", "wallet-balances"],
+    queryFn: () => api.get<IWalletBalancesResponse>(ADMIN.walletBalances),
+  });
+};
+
+const useGetWalletApi = () => {
+  return useQuery<IWalletResponse, ICustomError>({
+    queryKey: ["admin", "wallet"],
+    queryFn: () => api.get<IWalletResponse>(ADMIN.wallet),
+  });
+};
+
 export {
   useGetAdminListApi,
   useInviteAdminApi,
@@ -79,4 +100,7 @@ export {
   useGetRolesApi,
   useCreateRoleApi,
   useUpdateRoleApi,
+  useGetProviderBalancesApi,
+  useGetWalletBalancesApi,
+  useGetWalletApi,
 };
