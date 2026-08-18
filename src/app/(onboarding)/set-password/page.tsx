@@ -1,10 +1,13 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetNewPinService } from "@/services/auth.service";
+import { useResetPasswordService } from "@/services/auth.service";
 import { Form, FormField } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { SetPinFormValues, setPinSchema } from "@/schema/auth.validation";
+import {
+  ResetPasswordFormValues,
+  resetPasswordSchema,
+} from "@/schema/auth.validation";
 import { TextInput } from "@/components/ui/TextInput";
 import Image from "next/image";
 import { Lock } from "lucide-react";
@@ -15,25 +18,31 @@ import { Suspense } from "react";
 function SetPinForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
-  const { setNewPin, isSettingPin } = useSetNewPinService();
+  const { resetPasswordAdmin, isResettingPassword } = useResetPasswordService();
 
-  const form = useForm<SetPinFormValues>({
-    resolver: zodResolver(setPinSchema),
+  const form = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      pin: "",
-      confirmPin: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = (values: SetPinFormValues) => {
-    setNewPin(values.pin, token);
+  const onSubmit = (values: ResetPasswordFormValues) => {
+    const payload = {
+      resettoken: token,
+      newpassword: values.password,
+    };
+    resetPasswordAdmin(payload);
   };
 
   return (
     <div className="w-full max-w-[400px] bg-white rounded-lg border border-black/10 p-6">
-      <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-2">Set New Pin</h1>
+      <h1 className="text-[22px] font-bold text-[#0A0A0A] mb-2">
+        Set New Password
+      </h1>
       <p className="text-sm text-gray-500 mb-8">
-        Create a secure 4-digit PIN for your account
+        Create a secure password for your account
       </p>
 
       <Form {...form}>
@@ -43,13 +52,12 @@ function SetPinForm() {
         >
           <FormField
             control={form.control}
-            name="pin"
+            name="password"
             render={({ field }) => (
               <TextInput
-                label="New Pin"
+                label="New Password"
                 type="password"
                 placeholder="••••"
-                maxLength={4}
                 icon={<Lock size={20} className="text-gray-400" />}
                 field={field}
                 labelClassName="text-gray-400 font-medium mb-1"
@@ -60,13 +68,12 @@ function SetPinForm() {
 
           <FormField
             control={form.control}
-            name="confirmPin"
+            name="confirmPassword"
             render={({ field }) => (
               <TextInput
-                label="Confirm Pin"
+                label="Confirm Password"
                 type="password"
                 placeholder="••••"
-                maxLength={4}
                 icon={<Lock size={20} className="text-gray-400" />}
                 field={field}
                 labelClassName="text-gray-400 font-medium mb-1"
@@ -76,11 +83,11 @@ function SetPinForm() {
           />
 
           <Button
-            loading={isSettingPin}
+            loading={isResettingPassword}
             type="submit"
             className="w-full p-2.5 text-sm font-bold bg-primary hover:bg-primary/90 text-white rounded-sm transition-all mt-4"
           >
-            Set Pin
+            Set Password
           </Button>
         </form>
       </Form>

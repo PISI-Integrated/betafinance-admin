@@ -28,7 +28,7 @@ import { useLogoutService } from "@/services/auth.service";
 
 const nonDashboardPaths = [
   "/login",
-  "/set-pin",
+  "/set-password",
   "/forgot-password",
   "/reset-password",
 ];
