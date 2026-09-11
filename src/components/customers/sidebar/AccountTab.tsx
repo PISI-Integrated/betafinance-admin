@@ -29,7 +29,7 @@ export const AccountTab = ({
         <InfoRow label="Date joined:" value={formatDate(user.date_joined)} />
         <InfoRow
           label="Highest amount lent:"
-          value={formatCurrency(loaned.highest_amount_lent)}
+          value={formatCurrency(loaned.highest_amount_lent, user.currency)}
         />
         <InfoRow
           label="Number of loans given:"
@@ -40,11 +40,14 @@ export const AccountTab = ({
       <Section title="Borrowed">
         <InfoRow
           label="Total amount borrowed:"
-          value={formatCurrency(borrowed.total_amount_borrowed)}
+          value={formatCurrency(borrowed.total_amount_borrowed, user.currency)}
         />
         <InfoRow
           label="Highest amount borrowed:"
-          value={formatCurrency(borrowed.highest_amount_borrowed)}
+          value={formatCurrency(
+            borrowed.highest_amount_borrowed,
+            user.currency,
+          )}
         />
         <InfoRow
           label="Number of loans collected:"
@@ -67,11 +70,11 @@ export const AccountTab = ({
       <Section title="Loaned">
         <InfoRow
           label="Total amount lent:"
-          value={formatCurrency(loaned.total_amount_lent)}
+          value={formatCurrency(loaned.total_amount_lent, user.currency)}
         />
         <InfoRow
           label="Highest amount lent:"
-          value={formatCurrency(loaned.highest_amount_lent)}
+          value={formatCurrency(loaned.highest_amount_lent, user.currency)}
         />
         <InfoRow
           label="Number of loans given:"

@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number, region?: string) {
-  const currency = region === "UG" ? "UGX" : "NGN";
+  const currency = region?.includes("UG") ? "UGX" : "NGN";
   const locale = region === "UG" ? "en-UG" : "en-NG";
   const formatted = new Intl.NumberFormat(locale, {
     style: "currency",
@@ -38,8 +38,12 @@ export const formatTime = (dateString: string) =>
     timeZone: "Africa/Lagos",
   });
 
-export const formatAmount = (amount: string, type: "debit" | "credit") =>
-  `${type === "credit" ? "+" : "-"}₦${Number(amount).toLocaleString()}`;
+export const formatAmount = (
+  amount: string,
+  type: "debit" | "credit",
+  region?: string,
+) =>
+  `${type === "credit" ? "+" : "-"}${formatCurrency(Number(amount), region)}`;
 
 export const getTimeBucket = (date: Date) => {
   const now = new Date();
@@ -89,7 +93,12 @@ export function normalizePayload<T extends Record<string, any> | any[]>(
     // normalize items and remove empty/null items
     const items = obj
       .map((item) => normalizePayload(item))
-      .filter((it) => it !== null && it !== undefined && !(typeof it === "object" && Object.keys(it).length === 0));
+      .filter(
+        (it) =>
+          it !== null &&
+          it !== undefined &&
+          !(typeof it === "object" && Object.keys(it).length === 0),
+      );
     return items.length === 0 ? null : items;
   }
 
@@ -117,12 +126,20 @@ export function normalizePayload<T extends Record<string, any> | any[]>(
       if (Array.isArray(v)) {
         const items = v
           .map((item) => normalizePayload(item))
-          .filter((it) => it !== null && it !== undefined && !(typeof it === "object" && Object.keys(it).length === 0));
+          .filter(
+            (it) =>
+              it !== null &&
+              it !== undefined &&
+              !(typeof it === "object" && Object.keys(it).length === 0),
+          );
         if (items.length > 0) out[k] = items;
         // else omit key
       } else if (v && typeof v === "object") {
         const nested = normalizePayload(v);
-        if (nested !== null && !(typeof nested === "object" && Object.keys(nested).length === 0)) {
+        if (
+          nested !== null &&
+          !(typeof nested === "object" && Object.keys(nested).length === 0)
+        ) {
           out[k] = nested;
         }
       } else if (v !== null && v !== undefined) {

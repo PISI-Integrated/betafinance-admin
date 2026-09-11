@@ -53,7 +53,11 @@ export const ActivityTab = ({
               icon={activity.type === "credit" ? "↙" : "↗"}
               label={activity.description}
               time={formatTime(activity.created_at)}
-              amount={formatAmount(activity.amount, activity.type)}
+              amount={formatAmount(
+                activity.amount,
+                activity.type,
+                activity.currency,
+              )}
             />
           ))}
         </ActivitySection>

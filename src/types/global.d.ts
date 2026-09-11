@@ -141,6 +141,7 @@ interface ICustomerAnalyticsResponse {
     account_number: string;
     date_joined: string;
     credit_score: number;
+    currency: currencyType;
   };
   borrowed: {
     total_amount_borrowed: number;
@@ -183,6 +184,7 @@ interface ICustomerActivityResponse {
   recipient_account: string | null;
   loan_id: string;
   updated_at: string;
+  currency: currencyType;
 }
 
 interface ICustomerDocsParamsDto {
