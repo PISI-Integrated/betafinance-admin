@@ -2,13 +2,6 @@ export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
 };
 
-export const formatCurrency = (amount: number, region?: string): string => {
-  if (region === "UG") {
-    return `UGX ${formatNumber(amount)}`;
-  }
-  return `₦${formatNumber(amount)}`;
-};
-
 export const formatPercentage = (value: number): string => {
   return `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 };

@@ -13,5 +13,6 @@ const months = [
   { value: 11, label: "November" },
   { value: 12, label: "December" },
 ];
+const PAGE_SIZE = 10;
 
-export { years, months };
+export { years, months, PAGE_SIZE };

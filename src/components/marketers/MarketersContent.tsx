@@ -10,8 +10,7 @@ import { useFetchMarketersService } from "@/services/marketers.service";
 import { MarketerRow } from "@/types/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
-
-const MARKETERS_PER_PAGE = 10;
+import { PAGE_SIZE } from "@/lib/constants/data";
 
 const marketerColumns = [
   { header: "Name", accessor: "name" as keyof MarketerRow },
@@ -38,8 +37,8 @@ const MarketersContent = () => {
 
   const { marketers, isMarketersLoading, marketersError } =
     useFetchMarketersService({
-      limit: MARKETERS_PER_PAGE,
-      skip: (currentPage - 1) * MARKETERS_PER_PAGE,
+      limit: PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE,
       is_active: activeTab === MarketerTabStatus.ACTIVE,
     });
 
@@ -75,7 +74,7 @@ const MarketersContent = () => {
     }
   }, [searchParams, activeTab, currentPage]);
 
-  const totalPages = Math.ceil((marketers?.total || 0) / MARKETERS_PER_PAGE);
+  const totalPages = Math.ceil((marketers?.total || 0) / PAGE_SIZE);
 
   const formattedData =
     marketers?.items.map((item) => ({
@@ -142,7 +141,7 @@ const MarketersContent = () => {
                 data={formattedData as any}
                 currentPage={currentPage}
                 totalPages={totalPages}
-                itemsPerPage={MARKETERS_PER_PAGE}
+                itemsPerPage={PAGE_SIZE}
                 onPageChange={handlePageChange}
                 onRowClick={(row: any) => handleRowClick(row)}
                 isLoading={isMarketersLoading}

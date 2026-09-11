@@ -23,12 +23,12 @@ import {
   useFetchAllLoansService,
   useFetchTotalLoansAmountService,
 } from "@/services/loans.service";
-import { formatCurrency } from "@/lib/utils/formatters";
 import TableSkeleton from "../TableSkeleton";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { PAGE_SIZE } from "@/lib/constants/data";
 
 const LoansContent = () => {
   const router = useRouter();
@@ -42,7 +42,6 @@ const LoansContent = () => {
   const loanType = activeTab === LoanTabs.P2P ? "p2p" : "b2c";
 
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
 
   const [region, setRegion] = useState<regionType>("all");
 
@@ -50,7 +49,7 @@ const LoansContent = () => {
     const params: ILoansParamsDto = {
       loan_type: loanType as loanType,
       page,
-      size,
+      size: PAGE_SIZE,
     };
 
     if (activeStatus !== "all") {
@@ -62,7 +61,7 @@ const LoansContent = () => {
     }
 
     return params;
-  }, [loanType, activeStatus, page, size, region]);
+  }, [loanType, activeStatus, page, region]);
 
   const { allLoans, isLoansLoading, loanError } =
     useFetchAllLoansService(loanParams);
@@ -81,9 +80,10 @@ const LoansContent = () => {
     return loansResponse.items.map((loan: ILoansResponse["items"][0]) => {
       const baseRow = {
         id: loan.id,
-        amount: formatCurrency(loan.amount, region),
+        amount: formatCurrency(loan.amount, loan.currency!),
+        amountRepaid: formatCurrency(loan.amountRepaid, loan.currency!),
         borrower: loan.borrower,
-        loanPeriod: `${loan.termdays} days`,
+        loanPeriod: `${loan.termdays} day(s)`,
         date: formatDate(loan.createdat, true),
         status: (
           <Badge
@@ -322,7 +322,7 @@ const LoansContent = () => {
                   data={data}
                   onRowClick={handleRowClick}
                   currentPage={page}
-                  itemsPerPage={size}
+                  itemsPerPage={PAGE_SIZE}
                   totalPages={totalPagesFromApi ?? 0}
                   onPageChange={setPage}
                 />

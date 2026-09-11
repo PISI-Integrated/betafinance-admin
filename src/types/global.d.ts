@@ -142,6 +142,7 @@ interface ICustomerAnalyticsResponse {
     date_joined: string;
     credit_score: number;
     currency: currencyType;
+    region: regionType;
   };
   borrowed: {
     total_amount_borrowed: number;
@@ -236,6 +237,8 @@ interface ILoansResponse {
     loantype: loanType;
     interestrate: number;
     createdat: string;
+    amountRepaid: number;
+    currency: currencyType;
   }[];
 }
 

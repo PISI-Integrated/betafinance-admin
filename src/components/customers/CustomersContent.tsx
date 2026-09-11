@@ -17,6 +17,7 @@ import UserDetailsSidebar from "./sidebar/UserDetailSideBar";
 import TableSkeleton from "../TableSkeleton";
 import { formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { PAGE_SIZE } from "@/lib/constants/data";
 
 const CustomersContent = () => {
   const router = useRouter();
@@ -27,14 +28,13 @@ const CustomersContent = () => {
   const activeTab = searchParams.get("tab") || CustomerStatus.ACTIVE;
 
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
 
   const [region, setRegion] = useState<regionType>("all");
 
   const customerParams = useMemo<ICustomersParamsDto>(() => {
     const params: ICustomersParamsDto = {
       page,
-      size,
+      size: PAGE_SIZE,
     };
 
     if (region !== "all") {
@@ -51,7 +51,7 @@ const CustomersContent = () => {
     }
 
     return params;
-  }, [activeTab, page, size, region]);
+  }, [activeTab, page, region]);
 
   const { allCustomers, isCustomersLoading, customerError } =
     useFetchCustomersService(customerParams);
@@ -196,7 +196,7 @@ const CustomersContent = () => {
                   data={tableData ?? []}
                   onRowClick={handleRowClick}
                   currentPage={page}
-                  itemsPerPage={size}
+                  itemsPerPage={PAGE_SIZE}
                   totalPages={totalPagesFromApi ?? 0}
                   onPageChange={setPage}
                 />

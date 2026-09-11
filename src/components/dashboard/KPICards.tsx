@@ -6,11 +6,8 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/lib/utils/formatters";
+import { formatCurrency } from "@/lib/utils";
+import { formatNumber, formatPercentage } from "@/lib/utils/formatters";
 
 interface KPICardsProps {
   overviewData: IOverviewResponse | undefined;
@@ -18,12 +15,19 @@ interface KPICardsProps {
   region?: string;
 }
 
-export function KPICards({ overviewData, isOverviewLoading, region }: KPICardsProps) {
+export function KPICards({
+  overviewData,
+  isOverviewLoading,
+  region,
+}: KPICardsProps) {
   const kpiCards = overviewData
     ? [
         {
           title: "Total Transaction Volume",
-          content: formatCurrency(overviewData.total_transaction_volume, region),
+          content: formatCurrency(
+            overviewData.total_transaction_volume,
+            region,
+          ),
           footer: formatCurrency(overviewData.volume_this_month, region),
           subtitle: "in the last 30 days",
         },
@@ -33,22 +37,31 @@ export function KPICards({ overviewData, isOverviewLoading, region }: KPICardsPr
         },
         {
           title: "Total Balance",
-          content: formatCurrency(overviewData.total_balance_transactions, region),
+          content: formatCurrency(
+            overviewData.total_balance_transactions,
+            region,
+          ),
         },
         {
           title: "Total Credit Transactions",
-          content: formatCurrency(overviewData.total_credit_transactions, region),
+          content: formatCurrency(
+            overviewData.total_credit_transactions,
+            region,
+          ),
         },
         {
           title: "Total Debit Transactions",
-          content: formatCurrency(overviewData.total_debit_transactions, region),
+          content: formatCurrency(
+            overviewData.total_debit_transactions,
+            region,
+          ),
         },
         {
           title: "Total Amount in Loans",
           content: formatCurrency(overviewData.total_amount_in_loans, region),
           footer: formatCurrency(
             overviewData.total_amount_in_loan_last_30_days,
-            region
+            region,
           ),
           subtitle: "in the last 30 days",
         },

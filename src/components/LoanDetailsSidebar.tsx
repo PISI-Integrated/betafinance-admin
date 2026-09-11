@@ -19,18 +19,15 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
   const isP2P = isP2PLoan(loan);
 
   return (
-    <Card className="h-full overflow-hidden rounded-lg border-gray-200 p-0 pb-4">
+    <Card className="h-fit overflow-hidden rounded-lg border-gray-200 p-0 pb-4">
       <CardContent className="flex h-full flex-col p-0">
         {/* Header */}
         <div className="p-4 pb-2 border-b border-gray-200">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-lg font-semibold text-[#010813]">
-                {loan.amount}
-              </h2>
-              <p className="text-[#A9ACB1] text-xs font-medium">
                 {isP2P ? "P2P Loan" : "Beta Loan"}
-              </p>
+              </h2>
             </div>
             <button
               onClick={onClose}
@@ -46,10 +43,25 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
           <div className="space-y-6">
             {/* Loan Details Section */}
             <div>
-              <h3 className="text-sm font-semibold text-[#010813] mb-3">
-                Loan Details
-              </h3>
               <div className="space-y-3">
+                {/* Amount Requested */}
+                <div className="flex flex-col gap-y-1">
+                  <span className="text-[#344054] text-xs">
+                    Amount Requested
+                  </span>
+                  <span className="font-semibold text-[#010813] text-lg">
+                    {loan.amount}
+                  </span>
+                </div>
+                {/* Amount Repaid */}
+                <div className="flex flex-col gap-y-1">
+                  <span className="text-[#344054] text-xs">
+                    Total Amount Repaid
+                  </span>
+                  <span className="font-semibold text-[#010813] text-lg">
+                    {loan.amountRepaid}
+                  </span>
+                </div>
                 {/* Borrower */}
                 <div className="flex flex-col gap-y-1">
                   <span className="text-[#344054] text-xs">Borrower</span>
@@ -132,7 +144,7 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
           </div>
 
           {/* Action Buttons - Only for Beta Loans */}
-          {!isP2P && (
+          {/* {!isP2P && (
             <div className="mt- pt-4 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-[#010813] mb-3">
                 Actions
@@ -146,7 +158,7 @@ const LoanDetailsSidebar = ({ loan, onClose }: LoanDetailsSidebarProps) => {
                 </Button>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </CardContent>
     </Card>

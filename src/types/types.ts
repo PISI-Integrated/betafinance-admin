@@ -67,6 +67,7 @@ export interface LoanData {
 export interface LoanP2PRow {
   id: string;
   amount: string;
+  amountRepaid: string;
   type?: string;
   interest?: string;
   lender?: string;
@@ -79,6 +80,7 @@ export interface LoanP2PRow {
 export interface LoanBetaRow {
   id: string;
   amount: string;
+  amountRepaid: string;
   borrower: string;
   loanPeriod: string;
   date: string;

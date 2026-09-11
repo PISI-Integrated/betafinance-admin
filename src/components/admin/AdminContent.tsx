@@ -18,6 +18,7 @@ import { InviteAdminModal } from "./InviteAdminModal";
 import { Plus, ShieldCheck, UserCog } from "lucide-react";
 import toast from "react-hot-toast";
 import RoleManagement from "./RoleManagement";
+import { PAGE_SIZE } from "@/lib/constants/data";
 
 interface AdminTableRow extends Omit<
   AdminRow,
@@ -37,7 +38,6 @@ const AdminContent = () => {
   const searchParams = useSearchParams();
   const activeStatus = searchParams.get("status") || AdminStatus.ACTIVE;
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-  const itemsPerPage = 10;
 
   const [selectedUser, setSelectedUser] = useState<AdminRow | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -46,7 +46,7 @@ const AdminContent = () => {
   const { adminList, adminListLoading, adminListError, total } =
     useFetchAdminListService({
       page: currentPage,
-      page_size: itemsPerPage,
+      page_size: PAGE_SIZE,
     });
 
   const { resendInvite, resendInviteLoading } = useResendInviteService();
@@ -136,7 +136,7 @@ const AdminContent = () => {
     };
   });
 
-  const totalPages = Math.ceil((total || 0) / itemsPerPage);
+  const totalPages = Math.ceil((total || 0) / PAGE_SIZE);
 
   const handleRowClick = (row: AdminTableRow) => {
     setSelectedUser(row._raw);
@@ -277,7 +277,7 @@ const AdminContent = () => {
                       onRowClick={handleRowClick}
                       currentPage={currentPage}
                       totalPages={totalPages || 1}
-                      itemsPerPage={itemsPerPage}
+                      itemsPerPage={PAGE_SIZE}
                       onPageChange={handlePageChange}
                     />
                   )}

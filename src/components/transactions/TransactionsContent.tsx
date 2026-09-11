@@ -11,7 +11,7 @@ import TableWithPagination from "@/components/TableWithPagination";
 import { Column } from "@/types/types";
 import useFetchAllTransactionsService from "@/services/transactions.service";
 import { useFetchOverviewService } from "@/services/analytics.service";
-import { cn, formatDate, formatEnumString } from "@/lib/utils";
+import { cn, formatCurrency, formatDate, formatEnumString } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Search, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Input } from "../ui/input";
@@ -25,7 +25,7 @@ import {
 import React from "react";
 import toast from "react-hot-toast";
 import { useDebounce } from "@/hooks/useDebounce";
-import { formatCurrency } from "@/lib/utils/formatters";
+import { PAGE_SIZE } from "@/lib/constants/data";
 
 interface TransactionRow {
   reference: ReactNode;
@@ -50,7 +50,6 @@ const TransactionsContent = () => {
   const statusFilter = searchParams.get("status") || "all_status";
 
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState<regionType>("all");
   const debouncedSearch = useDebounce(search, 1000);
@@ -62,14 +61,14 @@ const TransactionsContent = () => {
     } else {
       params.set(name, value);
     }
-    setPage(1); // Reset page on filter change
+    setPage(1);
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const transactionParams = useMemo(() => {
     const params: Partial<ITransactionParamsDto> = {
       page,
-      size,
+      size: PAGE_SIZE,
     };
 
     if (debouncedSearch) params.search = debouncedSearch;
@@ -78,21 +77,13 @@ const TransactionsContent = () => {
     if (statusFilter !== "all_status") params.status = statusFilter;
     if (region !== "all") params.region = region;
     return params as ITransactionParamsDto;
-  }, [
-    page,
-    size,
-    debouncedSearch,
-    activeTab,
-    region,
-    typeFilter,
-    statusFilter,
-  ]);
+  }, [page, debouncedSearch, activeTab, region, typeFilter, statusFilter]);
 
   const { transactionData, transactionLoading } =
     useFetchAllTransactionsService(transactionParams);
 
   const totalPagesFromApi = Math.ceil(
-    (transactionData?.total ?? 0) / (transactionData?.page_size ?? size),
+    (transactionData?.total ?? 0) / (transactionData?.page_size ?? PAGE_SIZE),
   );
 
   const { overviewData, isOverviewLoading } = useFetchOverviewService({
@@ -105,7 +96,7 @@ const TransactionsContent = () => {
     { header: "Phone Number", accessor: "userPhone" },
     { header: "Type", accessor: "type" },
     { header: "Gross Paid", accessor: "amount" },
-    { header: "Verification Status", accessor: "status" },
+    { header: "Status", accessor: "status" },
     { header: "Time", accessor: "createdAt" },
   ];
 
@@ -130,10 +121,7 @@ const TransactionsContent = () => {
       userPhone: tx.userPhone,
       amount: (
         <span className="font-semibold text-gray-900">
-          {formatCurrency(
-            Number(tx.amount),
-            tx.currency === "UGX" ? "UG" : "NG",
-          )}
+          {formatCurrency(Number(tx.amount), tx.currency)}
         </span>
       ),
       createdAt: (
@@ -377,7 +365,7 @@ const TransactionsContent = () => {
             data={data}
             currentPage={page}
             totalPages={totalPagesFromApi}
-            itemsPerPage={size}
+            itemsPerPage={PAGE_SIZE}
             onPageChange={setPage}
             isLoading={transactionLoading}
           />
